@@ -1,7 +1,31 @@
 if (typeof GPUDevice !== 'undefined') {
-  const errorScopeStack/*: {type: GPUErrorFilter, errors: GPUError[]}[]*/ = [];
+  const deviceToErrorScopeStack/*: WeakMap<GPUDevice, {filter: GPUErrorFilter, errors: GPUError[]}[]>*/ = new WeakMap();
   const origPushErrorScope = GPUDevice.prototype.pushErrorScope;
   const origPopErrorScope = GPUDevice.prototype.popErrorScope;
+
+  function getFilterForGPUError(error/*: GPUError*/)/*: GPUErrorFilter*/ {
+    if (error instanceof GPUValidationError) {
+      return 'validation';
+    }
+    if (error instanceof GPUOutOfMemoryError) {
+      return 'out-of-memory';
+    }
+    if (error instanceof GPUInternalError) {
+      return 'internal';
+    }
+    throw new Error('unknown GPUError type');
+  }
+
+  function emitGPUError(device/*: GPUDevice*/, error/*: GPUError*/) {
+    const filter = getFilterForGPUError(error);
+    const errorScopeStack = deviceToErrorScopeStack.get(device);
+    const currentErrorScope = errorScopeStack.findLast(scope => scope.filter === filter);
+    if (currentErrorScope) {
+      currentErrorScope.errors.push(error);
+    } else {
+      device.dispatchEvent(new GPUUncapturedErrorEvent('uncapturedError', { error }));
+    }
+  }
 
   function addErrorWrapper(api, fnName) {
     const origFn = api.prototype[fnName];
@@ -15,11 +39,7 @@ if (typeof GPUDevice !== 'undefined') {
             console.error(fnName, args);
             console.error(error.message);
             console.error(stack.stack);
-            if (errorScopeStack.length > 0) {
-              errorScopeStack[errorScopeStack.length - 1].errors.push(error);
-            } else {
-              this.dispatchEvent(new GPUUncapturedErrorEvent('validation', { error }));
-            }
+            emitGPUError(this, error);
           }
          });
       return result;
@@ -42,22 +62,22 @@ if (typeof GPUDevice !== 'undefined') {
     .forEach(n => addErrorWrapper(GPUDevice, n));
 
   GPUDevice.prototype.pushErrorScope = (function(origFn) {
-    return function(/*this: GPUDevice,*/ type/*: GPUErrorFilter*/) {
-      origFn.call(this, type);
-      errorScopeStack.push({type, errors: []});
+    return function(/*this: GPUDevice,*/ filter/*: GPUErrorFilter*/) {
+      origFn.call(this, filter);
+      const errorScopeStack = deviceToErrorScopeStack.get(this);
+      errorScopeStack.push({filter, errors: []});
     };
   })(GPUDevice.prototype.pushErrorScope)
 
   GPUDevice.prototype.popErrorScope = (function(origFn) {
     return async function(/*this: GPUDevice*/) {
+      const errorScopeStack = deviceToErrorScopeStack.get(this);
       const errorScope = errorScopeStack.pop();
       if (errorScope === undefined) {
-        const error = new Error();
-        error.name = 'OperationError';
-        return Promise.reject(error);
+        throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
       }
       const err = await origFn.call(this);
-      return errorScope.errors.length > 0 ? errorScope.errors[0] : err;
+      return errorScope.errors.length > 0 ? errorScope.errors.pop() : err;
     };
   })(GPUDevice.prototype.popErrorScope)
 
@@ -68,6 +88,7 @@ if (typeof GPUDevice !== 'undefined') {
         device.addEventListener('uncapturederror', function(e) {
           console.error(e.error.message);
         });
+        deviceToErrorScopeStack.set(device, []);
       }
       return device;
     }
