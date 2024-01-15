@@ -1,0 +1,56 @@
+{
+  "name": "WebGPU Dev Extension",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "description": "Provide some features helpful for WebGPU Development",
+  "default_locale": "en",
+  "minimum_chrome_version": "113",
+  "permissions": [
+    "debugger"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/add-descriptors.js",
+        "scripts/auto-label.js",
+        "scripts/count-devices.js",
+        "scripts/dump-shaders.js",
+        "scripts/force-compatibility-mode.js",
+        "scripts/force-high-performance.js",
+        "scripts/force-low-power.js",
+        "scripts/gpu-injected.js",
+        "scripts/show-adapter-info.js",
+        "scripts/show-errors.js",
+        "scripts/track-pass-state.js",
+        "scripts/webgpu-compat-validation.js",
+        "scripts/webgpu_recorder.js"
+       ],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/gpu-content-script.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "/images/icon-16.png",
+      "32":  "/images/icon-32.png",
+      "48":  "/images/icon-48.png",
+      "128": "/images/icon-128.png",
+      "512": "/images/icon-512.png"
+    }
+  },
+  "icons": {
+    "16":  "/images/icon-16.png",
+    "32":  "/images/icon-32.png",
+    "48":  "/images/icon-48.png",
+    "128": "/images/icon-128.png",
+    "512": "/images/icon-512.png"
+  }
+}

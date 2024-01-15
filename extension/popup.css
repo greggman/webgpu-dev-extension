@@ -1,0 +1,86 @@
+:root {
+  --fg-color: black;
+  --bg-color: white;
+  --head-bg: orange;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg-color: #FFF;
+    --bg-color: #444;
+    --head-bg: darkblue;
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+  user-select: none;
+}
+
+#head {
+  background: var(--head-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+  padding: 0.125em 0.5em 0.125em 0.5em;
+  white-space: nowrap;
+}
+#head a {
+  color: var(--fgol)
+}
+#github img {
+  padding-left: 1em;
+  padding-top: 5px;
+  height: 20px;
+}
+#controls {
+  position: relative;
+}
+button {
+  height: 30px;
+  width: 30px;
+  outline: none;
+  margin: 10px;
+  border: none;
+  border-radius: 2px;
+}
+
+button.current {
+  box-shadow: 0 0 0 2px white,
+              0 0 0 4px black;
+}
+
+.full-width {
+  width: 100%;
+}
+fieldset {
+  border: 1px solid gray;
+}
+.radio {
+  display: flex;
+  border: 1px solid gray;
+  padding: 0.5em;
+  margin: 0.25em;
+}
+.radio>div {
+  display: flex;
+  align-items: end;
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+}
+.slider>div {
+  min-width: 3em;
+}
+.select {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+}
+.select label {
+  margin-right: 0.25em;
+}
