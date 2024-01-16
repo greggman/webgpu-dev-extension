@@ -6,7 +6,6 @@
   "default_locale": "en",
   "minimum_chrome_version": "113",
   "permissions": [
-    "debugger"
   ],
   "web_accessible_resources": [
     {
