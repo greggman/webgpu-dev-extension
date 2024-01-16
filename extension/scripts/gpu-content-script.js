@@ -15,7 +15,7 @@ function injectScript(file) {
 
 let settings = {};
 try {
-  settings = JSON.parse(sessionStorage.getItem('settings'));
+  settings = JSON.parse(sessionStorage.getItem('webgpu-dev-extension-settings'));
 } catch (e) {
 }
 

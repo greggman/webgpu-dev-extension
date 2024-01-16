@@ -39,12 +39,12 @@ function updateSettings(newSettings) {
 }
 
 export async function loadSettings() {
-  const keys = await getExtensionLocalStorage(['settings']);
+  const keys = await getExtensionLocalStorage(['webgpu-dev-extension-settings']);
   if (keys && keys.settings) {
     updateSettings(keys.settings);
   }
 }
 
 export function saveSettings() {
-  setExtensionLocalStorage({settings});
+  setExtensionLocalStorage({'webgpu-dev-extension-settings': settings});
 }
