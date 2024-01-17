@@ -35,3 +35,5 @@ if (typeof GPUDevice !== 'undefined') {
 
   addDescriptorWrapper(GPUTexture, 'createView');
 }
+
+document.currentScript.remove();

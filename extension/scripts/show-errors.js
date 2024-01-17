@@ -94,3 +94,5 @@ if (typeof GPUDevice !== 'undefined') {
     }
   })(GPUAdapter.prototype.requestDevice);
 }
+
+document.currentScript.remove();

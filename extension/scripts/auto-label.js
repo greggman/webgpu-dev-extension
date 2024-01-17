@@ -33,3 +33,5 @@ if (typeof GPUDevice !== 'undefined') {
 
   addLabelWrapper(GPUTexture, 'createView');
 }
+
+document.currentScript.remove();

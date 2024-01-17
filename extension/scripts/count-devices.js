@@ -41,3 +41,5 @@ if (typeof GPUAdapter !== 'undefined') {
     }
   })(GPUDevice.prototype.destroy);
 }
+
+document.currentScript.remove();

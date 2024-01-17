@@ -108,3 +108,5 @@ if (typeof GPUDevice !== 'undefined') {
   });
  
 }
+
+document.currentScript.remove();

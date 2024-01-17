@@ -6,3 +6,5 @@ if (typeof GPUDevice !== 'undefined') {
     };
   })(GPUDevice.prototype.createShaderModule);
 }
+
+document.currentScript.remove();

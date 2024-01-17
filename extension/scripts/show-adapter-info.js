@@ -14,3 +14,5 @@ if (navigator.gpu) {
     };
   })(navigator.gpu.requestAdapter);
 }
+
+document.currentScript.remove();
