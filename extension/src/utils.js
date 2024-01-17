@@ -40,8 +40,8 @@ function updateSettings(newSettings) {
 
 export async function loadSettings() {
   const keys = await getExtensionLocalStorage(['webgpu-dev-extension-settings']);
-  if (keys && keys.settings) {
-    updateSettings(keys.settings);
+  if (keys && keys['webgpu-dev-extension-settings']) {
+    updateSettings(keys['webgpu-dev-extension-settings']);
   }
 }
 
