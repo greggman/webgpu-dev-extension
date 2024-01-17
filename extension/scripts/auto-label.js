@@ -31,7 +31,34 @@ if (typeof GPUDevice !== 'undefined') {
   addLabelWrapper(GPUDevice, 'createTexture');
   addLabelWrapper(GPUDevice, 'importExternalTexture');
 
-  addLabelWrapper(GPUTexture, 'createView');
+  {
+    const textureToViewCount = new WeakMap();
+    GPUTexture.prototype.createView = (function(origFn) {
+      return function(_desc) {
+        const count = (textureToViewCount.get(this) || 0) + 1;
+        textureToViewCount.set(this, count);
+        const desc = {
+          label: `view${count}-[${this.label}]`,
+          ..._desc || {},
+        };
+        return origFn.call(this, desc);
+      };
+    })(GPUTexture.prototype.createView);
+  }
+
+
+  {
+    let count = 0;
+    GPUCanvasContext.prototype.getCurrentTexture = (function(origFn) {
+      return function(...args) {
+        const texture = origFn.call(this, ...args);
+        if (texture.label === '') {
+          texture.label = `canvasTexture${++count}[${this.canvas.id || ''}]`;
+        }
+        return texture;
+      };
+    })(GPUCanvasContext.prototype.getCurrentTexture);
+  }
 }
 
 document.currentScript.remove();
