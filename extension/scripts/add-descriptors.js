@@ -33,7 +33,16 @@ if (typeof GPUDevice !== 'undefined') {
   addDescriptorWrapper(GPUDevice, 'createShaderModule');
   addDescriptorWrapper(GPUDevice, 'importExternalTexture');
 
-  addDescriptorWrapper(GPUTexture, 'createView');
+  GPUTexture.prototype.createView = (function(origFn) {
+    return function(desc = {}) {
+      const view = origFn.call(this, desc);
+      view.description = {
+        ...desc,
+        texture: this,
+      };
+      return view;
+    };
+  })(GPUTexture.prototype.createView);
 }
 
 document.currentScript.remove();
