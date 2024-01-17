@@ -8,11 +8,9 @@ window.browser = (function () {
 })();
 
 function injectScript(file) {
-  console.log('ij-b4');
   const s = document.createElement('script');
   s.setAttribute('src', file);
   (document.head ?? document.documentElement).appendChild(s);
-  console.log('ij-af');
 }
 
 let settings = {};
