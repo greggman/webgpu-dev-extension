@@ -52,6 +52,17 @@ window.browser.runtime.onMessage.addListener((m, sender, sendResponse) => {
 });
 
 if (settings.countActiveDevices) {
+  console.log('inject: webgpu-utils');
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  injectScript(chrome.runtime.getURL('3rdparty/webgpu-utils.js'));
+  console.log('inject: count-devices');
   injectScript(chrome.runtime.getURL('scripts/count-devices.js'));
 }
 

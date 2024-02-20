@@ -1,6 +1,16 @@
+//import {
+//  makeShaderDataDefinitions,
+//  makeBindGroupLayoutDescriptors,
+//} from 'https://greggman.github.io/webgpu-utils/dist/1.x/webgpu-utils.module.js';
+console.log('count-devices');
 if (typeof GPUAdapter !== 'undefined') {
   let maxActiveDevices = 0;
   let allDevices = [];
+
+  const {
+    makeBindGroupLayoutDescriptors,
+    makeShaderDataDefinitions,
+  } = webgpuUtils;
 
   // 
   function updateDevices() {
@@ -23,13 +33,13 @@ if (typeof GPUAdapter !== 'undefined') {
     const origFn = api.prototype[fnName];
     api.prototype[fnName] = function(...args) {
       const result = origFn.call(this, ...args);
-      fn(this, results, args);
+      fn(this, result, args);
       return result;
     };
   }
 
   function wrapAPIFunctions(api, funcs) {
-    for (const [fnName, fn] of Object.keys(funcs)) {
+    for (const [fnName, fn] of Object.entries(funcs)) {
       wrapAPIFunction(api, fnName, fn);
     }
   }
@@ -37,14 +47,15 @@ if (typeof GPUAdapter !== 'undefined') {
   function wrapAsyncAPIFunction(api, fnName, fn) {
     const origFn = api.prototype[fnName];
     api.prototype[fnName] = async function(...args) {
+      console.log(fnName);
       const result = await origFn.call(this, ...args);
-      fn(this, results, args);
+      fn(this, result, args);
       return result;
     };
   }
 
   function wrapAsyncAPIFunctions(api, funcs) {
-    for (const [fnName, fn] of Object.keys(funcs)) {
+    for (const [fnName, fn] of Object.entries(funcs)) {
       wrapAsyncAPIFunction(api, fnName, fn);
     }
   }
@@ -71,7 +82,7 @@ if (typeof GPUAdapter !== 'undefined') {
 
   const interpolateRE = /\binterpolate\b/;
   const flatRE = /\bflat\b/;
-  const s_pipelineToRequiredGroupIndices = new WeakSet();
+  const s_pipelineToRequiredGroupIndices = new WeakMap();
   const s_layoutToAutoLayoutPipeline = new WeakMap();
   const s_bindGroupToAutoLayoutPipeline = new WeakMap();
   const s_passToState = new WeakMap();
@@ -121,7 +132,7 @@ if (typeof GPUAdapter !== 'undefined') {
       if (bindGroup) {
         const neededPipeline = s_bindGroupToAutoLayoutPipeline.get(bindGroup);
         if (neededPipeline && neededPipeline !== pipeline) {
-          throw new Error('pipeline mis-match');
+          console.log('pipeline mis-match');
         }
       }
     }
@@ -163,7 +174,7 @@ if (typeof GPUAdapter !== 'undefined') {
 
   wrapAPIFunctions(GPUCommandEncoder, {
     beginRenderPass: addPassState,
-    beginComputePAss: addPassState,
+    beginComputePass: addPassState,
   });
 
   wrapAPIFunctions(GPURenderPassEncoder, {
