@@ -94,3 +94,16 @@ For example in Chrome
 
   Attempt to capture WebGPU calls to an HTML file using [webgpu_recorder](https://github.com/brendan-duncan/webgpu_recorder)
 
+## Development
+
+I don't know all the procedures for other browser but in Chrome, load the extension by cloning this repo and then
+
+1. go to `about://extensions`
+2. enable developer mode
+3. pick "Load Unpacked"
+4. Select the "extension" folder from this repo
+
+From there, most of JavaScript files that augment the WebGPU API are live. If you edit them, just re-loading the page using the extension
+will pick the changes. For UI files, and for `gpu-content-script.js`, the script that injects the other scripts into your page, it
+will only update when you pick the refresh button in `about://extensions`. The refresh button looks like a circular arrow ↺ inside
+each individual extension's info.
