@@ -64,7 +64,8 @@ For example in Chrome
 
   Adds labels to objects that don't have them. So for example buffers will
   get labels `'buffer1'`, `'buffer2'`, etc... which should help you tell
-  them apart in the debugger
+  them apart in the debugger. Canvas textures, textures from `getCurrentTexture`,
+  are labelled `"canvasTexture<num>[<id-of-html-element>]"`.
 
 ### Show Adapter Info
 
@@ -78,7 +79,9 @@ For example in Chrome
   Add a `state` property to a `GPURenderPassEncoder`, `GPUComputePassEncoder` and
   `GPURenderBundleEncoder` that tracks the current pipeline, bindGroups, vertexBuffers,
   indexBuffer, viewport, etc.... so you can inspect them in the debugger.
-  
+
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/pass-state.png" width="600">
+
 ### Count Active Devices
 
   Prints to the console the number of active WebGPU devices
