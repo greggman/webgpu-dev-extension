@@ -1,7 +1,22 @@
 # WebGPU Dev Extension
 
-This is an extension to do some experiments with WebGPU. At the moment it's
-mostly for exploration but maybe someday it will morph into something useful.
+This is an extension to help with WebGPU development
+
+## Installation:
+
+The latest *published* version is available here:
+
+* [Chrome](https://chromewebstore.google.com/detail/webgpu-dev-extension/gkeaijopdhfempknmaggbjbedicopjgm)
+* [Firefox (TBD)]
+* [Safari (TBD)]
+
+Otherwise you can install top of tree locally by downloading or cloning this repo and then adding it as a developer.
+For example in Chrome
+
+1. go to `about://extensions`
+2. enable developer mode
+3. pick "Load Unpacked"
+4. Select the "extension" folder from this repo
 
 ## Options
 
