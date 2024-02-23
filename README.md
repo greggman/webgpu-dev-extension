@@ -34,6 +34,10 @@ For example in Chrome
   3. The parameters of the function that caused the error are not always available.
      This is an attempt to include those parameters.
 
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/with-extension.png">
+
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/without-extension.png">
+
 ### Add Descriptors
 
   Adds the descriptors used to create many objects to those objects. For example:
@@ -44,6 +48,8 @@ For example in Chrome
   pipelines, pipelineLayouts, pass encoders, query sets, samplers, shader modules,
   external textures, ...
 
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/view.png">
+
 ### Force Mode
 
   Lets you choose one of `'none'`, `'low-power'`, `'high-performance'`, and `'compatibility-mode'`
@@ -52,11 +58,20 @@ For example in Chrome
 
   Dumps the pages shaders
 
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/dump-shaders.png">
+
 ### Auto Label
 
   Adds labels to objects that don't have them. So for example buffers will
   get labels `'buffer1'`, `'buffer2'`, etc... which should help you tell
   them apart in the debugger
+
+### Show Adapter Info
+
+  Shows the adapter info anytime `requestAdapter` is called. This is useful to see which GPU was
+  selected on a dual GPU computer.
+
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-adapter-info.png">
 
 ### Track Pass State
 
