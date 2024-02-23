@@ -34,9 +34,9 @@ For example in Chrome
   3. The parameters of the function that caused the error are not always available.
      This is an attempt to include those parameters.
 
-  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/with-extension.png">
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/with-extension.png" width="600">
 
-  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/without-extension.png">
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/without-extension.png" width="600">
 
 ### Add Descriptors
 
@@ -48,7 +48,7 @@ For example in Chrome
   pipelines, pipelineLayouts, pass encoders, query sets, samplers, shader modules,
   external textures, ...
 
-  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/view.png">
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/view.png" width="600">
 
 ### Force Mode
 
@@ -58,7 +58,7 @@ For example in Chrome
 
   Dumps the pages shaders
 
-  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/dump-shaders.png">
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/dump-shaders.png" width="600">
 
 ### Auto Label
 
@@ -71,7 +71,7 @@ For example in Chrome
   Shows the adapter info anytime `requestAdapter` is called. This is useful to see which GPU was
   selected on a dual GPU computer.
 
-  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-adapter-info.png">
+  <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-adapter-info.png" width="600">
 
 ### Track Pass State
 
