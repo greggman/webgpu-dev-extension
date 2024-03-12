@@ -10,6 +10,7 @@ window.browser = (function () {
 function injectScript(file) {
   const s = document.createElement('script');
   s.setAttribute('src', file);
+  s.setAttribute('async', false);
   (document.head ?? document.documentElement).appendChild(s);
 }
 
