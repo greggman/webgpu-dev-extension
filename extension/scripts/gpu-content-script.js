@@ -56,6 +56,10 @@ if (settings.countActiveDevices) {
   injectScript(chrome.runtime.getURL('scripts/count-devices.js'));
 }
 
+if (settings.blockFeatures) {
+  injectScript(chrome.runtime.getURL(`scripts/block-features.js`));
+}
+
 if (settings.capture) {
   injectScript(chrome.runtime.getURL('scripts/webgpu_recorder.js'));
   injectScript(chrome.runtime.getURL('scripts/gpu-injected.js'));

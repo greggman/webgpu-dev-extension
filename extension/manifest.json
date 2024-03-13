@@ -12,6 +12,7 @@
       "resources": [
         "scripts/add-descriptors.js",
         "scripts/auto-label.js",
+        "scripts/block-features.js",
         "scripts/count-devices.js",
         "scripts/dump-shaders.js",
         "scripts/force-compatibility-mode.js",

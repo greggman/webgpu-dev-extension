@@ -1,20 +1,26 @@
 :root {
-  --fg-color: black;
-  --bg-color: white;
+  color-scheme: light dark;
   --head-bg: orange;
+  --fg-color: black;
 }
+
+
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fg-color: #FFF;
-    --bg-color: #444;
     --head-bg: darkblue;
+    --fg-color: white;
   }
 }
 
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
-  background-color: var(--bg-color);
-  color: var(--fg-color);
   user-select: none;
 }
 
@@ -28,7 +34,7 @@ body {
   white-space: nowrap;
 }
 #head a {
-  color: var(--fgol)
+  color: var(--fg-color)
 }
 #github img {
   padding-left: 1em;

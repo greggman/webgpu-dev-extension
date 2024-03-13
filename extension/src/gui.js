@@ -38,7 +38,6 @@ class Slider extends Control {
   constructor(obj, prop, min, max, step) {
     super(obj, prop);
     const id = getId();
-    const that = this;
     this.inputElem = el('input', {
       id,
       min,
@@ -46,10 +45,10 @@ class Slider extends Control {
       step: step || '1',
       type: 'range', 
       value: obj[prop],
-      onInput: function() {
+      onInput: () => {
         obj[prop] = parseFloat(this.value);
-        that.valueElem.textContent = this.value;
-        that.changed();
+        this.valueElem.textContent = this.value;
+        this.changed();
       },
     });
     this.labelElem = el('label', {for: id, textContent: prop}),
@@ -71,14 +70,13 @@ class Checkbox extends Control {
   constructor(obj, prop) {
     super(obj, prop);
     const id = getId();
-    const that = this;
     this.inputElem = el('input', {
       id, 
       type: 'checkbox', 
       checked: obj[prop],
-      onChange: function() {
+      onChange: () => {
         obj[prop] = this.checked;
-        that.changed();
+        this.changed();
       },
     });
     this.labelElem = el('label', {for: id, textContent: prop}),
@@ -95,7 +93,6 @@ class Checkbox extends Control {
 class Radio extends Control {
   constructor(obj, prop, options) {
     super(obj, prop);
-    const that = this;
 
     options = new Map(Array.isArray(options)
         ? options.map((a, i) => [a, i])
@@ -110,9 +107,9 @@ class Radio extends Control {
         id,
         type: 'radio',
         ...(obj[prop] === value && {checked: true}),
-        onChange: function() {
+        onChange: () => {
           obj[prop] = value;
-          that.changed();
+          this.changed();
         },
       });
       this._valueToInputMap.set(value, input);
@@ -134,33 +131,65 @@ class Radio extends Control {
 class Text extends Control {
   constructor(obj, prop, options) {
     super(obj, prop);
-    const that = this;
 
-    const input = el('input', {
+    this.inputElem = el('input', {
       type: 'text',
       className: 'full-width',
       value: obj[prop],
-      onInput: function() {
-        obj[prop] = input.value;
-        that.changed();
+      onInput: () => {
+        obj[prop] = this.inputElem.value;
+        this.changed();
       },
     });
     const div = el('fieldset', {className: 'text'}, [
       el('legend', {textContent: prop}),
-      input,
+      this.inputElem,
     ]);
     this.elem.appendChild(div);
   }
+  name(v) {
+    this.elem.querySelector('legend').textContent = v;
+    return this;
+  }
   set(v) {
     super.set(v);
-    input.value = v;
+    this.inputElem.value = this.get();
   }
 }
+
+class TextArea extends Control {
+  constructor(obj, prop, options) {
+    super(obj, prop);
+
+    this.textarea = el('textarea', {
+      className: 'full-width',
+      value: obj[prop],
+      onInput: () => {
+        obj[prop] = this.textarea.value;
+        this.changed();
+      },
+    });
+    this.textarea.value = obj[prop];
+    const div = el('fieldset', {className: 'text'}, [
+      el('legend', {textContent: prop}),
+      this.textarea,
+    ]);
+    this.elem.appendChild(div);
+  }
+  name(v) {
+    this.elem.querySelector('legend').textContent = v;
+    return this;
+  }
+  set(v) {
+    super.set(v);
+    this.textarea.value = this.get();
+  }
+}
+
 
 class MultiSelect extends Control {
   constructor(obj, prop, options) {
     super(obj, prop);
-    const that = this;
     const settings = Object.fromEntries(options.map(k => [k, obj[prop].includes(k)]));
     const update = () => {
       obj[prop].length = 0;
@@ -189,14 +218,13 @@ class Select extends Control {
   constructor(obj, prop, options) {
     super(obj, prop);
     const id = getId();
-    const that = this;
     this.options = options.slice();
     this.selectElem = el('select', {
       id,
       onInput: () => {
         const v = options[this.selectElem.selectedIndex];
         obj[prop] = Array.isArray(v) ? v[0] : v;
-        that.changed();
+        this.changed();
       },
     }, options.map(v => {
       const [value, label] = Array.isArray(v) ? v : [v, v];
@@ -267,7 +295,12 @@ export class GUI {
     this.elem.appendChild(el('hr'));
   }
   add(obj, prop, ...args) {
-    const control = createControl(obj, prop, ...args);
+    return this.addControl(createControl(obj, prop, ...args));
+  }
+  addText(obj, prop, ...args) {
+    return this.addControl(new TextArea(obj, prop, ...args));
+  }
+  addControl(control) {
     control.addEventListener('change', () => this.changed());
     this.elem.appendChild(control.elem);
     return control;

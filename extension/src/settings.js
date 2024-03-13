@@ -1,6 +1,7 @@
 const defaultSettings = {
   addDescriptors: false,
   autoLabel: false,
+  blockFeatures: '',
   capture: false,
   compat: false,
   countActiveDevices: false,
