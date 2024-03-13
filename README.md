@@ -86,6 +86,15 @@ For example in Chrome
 
   Prints to the console the number of active WebGPU devices
 
+### Block Features
+
+  Lets you block webgpu features. For example, type in `shader-f16` and the shader-f16 feature will be blocked.
+  You can use this to test that your code, that is supposed to run without the feature, actually runs without the
+  feature.
+
+  Enter one or more features separated by space, comma, or new line. `*` is a wildcard so `*` = all, `texture*` =
+  all features that start with `texture`. `*f16` = all features that end in `f16`.
+
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode
