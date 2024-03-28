@@ -24,7 +24,7 @@ if (!settings) {
   settings = {};
 }
 
-const show = Object.values(settings).reduce((show, v) => show || (v !== false && v !== NamedNodeMap), false); 
+const show = Object.values(settings).reduce((show, v) => show || (v !== '' && v !== false && v !== 'none'), false); 
 if (show) {
   console.log('webgpu-dev-extension settings:', settings);
 }
