@@ -69,6 +69,10 @@ if (settings.compat) {
   injectScript(chrome.runtime.getURL('scripts/webgpu-compat-validation.js'));
 }
 
+if (settings.customFormatters) {
+  injectScript(chrome.runtime.getURL('scripts/custom-formatters.js'));
+}
+
 switch (settings.forceMode) {
   case 'low-power':
     injectScript(chrome.runtime.getURL('scripts/force-low-power.js'));

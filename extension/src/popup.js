@@ -28,6 +28,7 @@ async function main() {
   gui.add(settings, 'showErrors').name('Show Errors');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');
+  gui.add(settings, 'customFormatters').name('DevTools Custom Formatters');
   gui.add(settings, 'trackPassState').name('Track Pass State');
   gui.add(settings, 'countActiveDevices').name('Count Active Devices');
   gui.add(settings, 'dumpShaders').name('Dump Shaders');

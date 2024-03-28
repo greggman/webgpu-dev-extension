@@ -82,6 +82,15 @@ For example in Chrome
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/pass-state.png" width="600">
 
+### DevTools Custom Formatters
+
+Shows `GPUBuffer.usage` and `GPUTexture.usage` with named bits
+
+* without this checked: `GPUTexture { ... usage: 6, ... }`
+* with this checked: `GPUTexture { ... usage: 6 (COPY_DST|TEXTURE_BINDING), ... }`
+
+note: You must turn on custom formatters in the DevTools (Settings->Preferences->Console->Custom formatters).
+
 ### Count Active Devices
 
   Prints to the console the number of active WebGPU devices
