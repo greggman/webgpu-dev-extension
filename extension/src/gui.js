@@ -75,7 +75,7 @@ class Checkbox extends Control {
       type: 'checkbox', 
       checked: obj[prop],
       onChange: () => {
-        obj[prop] = this.checked;
+        obj[prop] = this.inputElem.checked;
         this.changed();
       },
     });
@@ -101,6 +101,7 @@ class Radio extends Control {
     const sharedName = getId();
     const div = el('div', {className: 'radio'}, [...options].map(([name, value]) => {
 
+      throw new Error('on change need fix');
       const id = getId();
       const input = el('input', {
         name: sharedName,
