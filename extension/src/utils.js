@@ -1,33 +1,22 @@
 /* eslint-env webextensions */
 import {settings} from './settings.js';
 
-function getCurrentTabId() {
-  return new Promise(resolve =>
-    window.browser.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-      resolve(tabs[0].id);
-    }));
+async function getCurrentTabId() {
+  const tabs = await window.browser.tabs.query({ active: true, currentWindow: true });
+  return tabs[0].id;
 }
 
-async function sendMessage(cmd, data) {
+async function sendMessageWithResponse(cmd, data) {
   const tabId = await getCurrentTabId();
-  window.browser.tabs.sendMessage(tabId, {cmd, data}, function(response) { }); 
-}
-
-function sendMessageWithResponse(cmd, data) {
-  return new Promise(async resolve => {
-    const tabId = await getCurrentTabId();
-    window.browser.tabs.sendMessage(tabId, {cmd, data}, (f) => {
-      resolve(f);
-    }); 
-  });
+  return await window.browser.tabs.sendMessage(tabId, {cmd, data});
 }
 
 export async function getExtensionLocalStorage(keys) {
   return await sendMessageWithResponse('getSessionStorage', keys);
 }
 
-export function setExtensionLocalStorage(obj) {
-  sendMessage('setSessionStorage', obj);
+export async function setExtensionLocalStorage(obj) {
+  return await sendMessageWithResponse('setSessionStorage', obj);
 }
 
 function updateSettings(newSettings) {
@@ -45,6 +34,6 @@ export async function loadSettings() {
   }
 }
 
-export function saveSettings() {
-  setExtensionLocalStorage({'webgpu-dev-extension-settings': settings});
+export async function saveSettings() {
+  return await setExtensionLocalStorage({'webgpu-dev-extension-settings': settings});
 }

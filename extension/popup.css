@@ -2,14 +2,14 @@
   color-scheme: light dark;
   --head-bg: orange;
   --fg-color: black;
+  --fg-error: red;
 }
-
-
 
 @media (prefers-color-scheme: dark) {
   :root {
     --head-bg: darkblue;
     --fg-color: white;
+    --fg-error: #F44;
   }
 }
 
@@ -40,6 +40,9 @@ body {
   padding-left: 1em;
   padding-top: 5px;
   height: 20px;
+}
+#error {
+  color: var(--fg-error);
 }
 #controls {
   position: relative;

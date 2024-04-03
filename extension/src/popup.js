@@ -16,12 +16,32 @@ window.browser = (function () {
         browser;
 })();
 
+const callAsyncFnWithErrorCheck = (() => {
+  let sameErrorCount = 1;
+  let lastErrorMsg = '';
+  const errorElem = document.querySelector('#error');
+  return async function (fn) {
+    try {
+      errorElem.textContent = '';
+      errorElem.style.display = 'none';
+      await fn();
+    } catch (e) {
+      const err = e.toString();
+      sameErrorCount = err === lastErrorMsg ? sameErrorCount + 1 : 1;
+      lastErrorMsg = err;
+      errorElem.textContent = `${sameErrorCount > 1 ? `(${sameErrorCount})` : ''}${err}:\n\nThis could mean the extension is blocked by your browser's policies`;
+      errorElem.style.display = '';
+    }
+  }
+})();
 
 async function main() {
-  await loadSettings();
+  await callAsyncFnWithErrorCheck(loadSettings);
+
+  const save = () => callAsyncFnWithErrorCheck(saveSettings);;
 
   const controlsElem = document.querySelector('#controls');
-  const gui = new GUI().onChange(saveSettings);
+  const gui = new GUI().onChange(save);
   controlsElem.appendChild(gui.elem);
 
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
