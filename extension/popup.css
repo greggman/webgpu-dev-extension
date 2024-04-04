@@ -13,6 +13,10 @@
   }
 }
 
+fieldset:disabled {
+  opacity: 25%;
+}
+
 html {
   box-sizing: border-box;
 }

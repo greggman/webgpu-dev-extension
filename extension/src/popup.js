@@ -8,7 +8,6 @@ import {
 } from './utils.js';
 import {GUI} from './gui.js';
 
-
 window.browser = (function () {
     return window.msBrowser ||
         window.browser ||
@@ -16,32 +15,48 @@ window.browser = (function () {
         browser;
 })();
 
+const setError = (() => {
+  const errorElem = document.querySelector('#error');
+  return function(msg) {
+    errorElem.textContent = msg || '';
+    errorElem.style.display = msg ? '' : 'none';
+  };
+})();
+
 const callAsyncFnWithErrorCheck = (() => {
   let sameErrorCount = 1;
   let lastErrorMsg = '';
-  const errorElem = document.querySelector('#error');
   return async function (fn) {
     try {
-      errorElem.textContent = '';
-      errorElem.style.display = 'none';
+      setError();
       await fn();
     } catch (e) {
       const err = e.toString();
       sameErrorCount = err === lastErrorMsg ? sameErrorCount + 1 : 1;
       lastErrorMsg = err;
-      errorElem.textContent = `${sameErrorCount > 1 ? `(${sameErrorCount})` : ''}${err}:\n\nThis could mean the extension is blocked by your browser's policies`;
-      errorElem.style.display = '';
+      setError(`${sameErrorCount > 1 ? `(${sameErrorCount})` : ''}${err}:
+
+Try reloading the page: Otherwise, this could mean the extension is blocked by your browser's policies`);
     }
   }
 })();
 
 async function main() {
-  await callAsyncFnWithErrorCheck(loadSettings);
+  const mainElem = document.querySelector('#main');
+  const tabs = await window.browser.tabs.query({ active: true, currentWindow: true });
+  const isChromeTab = tabs[0].url?.startsWith('chrome:');
+
+  if (isChromeTab) {
+    setError('this extension does not work on settings pages nor a new tab page');
+    mainElem.style.display = 'none';
+  } else {
+    await callAsyncFnWithErrorCheck(loadSettings);
+  }
 
   const save = () => callAsyncFnWithErrorCheck(saveSettings);;
 
-  const controlsElem = document.querySelector('#controls');
   const gui = new GUI().onChange(save);
+  const controlsElem = document.querySelector('#controls');
   controlsElem.appendChild(gui.elem);
 
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
