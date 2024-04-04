@@ -43,13 +43,17 @@ Try reloading the page: Otherwise, this could mean the extension is blocked by y
 
 async function main() {
   const mainElem = document.querySelector('#main');
-  const tabs = await window.browser.tabs.query({ active: true, currentWindow: true });
-  const isChromeTab = tabs[0].url?.startsWith('chrome:');
+  const [activeTab] = await window.browser.tabs.query({ active: true, currentWindow: true });
+  const isChromeTab = activeTab.url?.startsWith('chrome:');
 
   if (isChromeTab) {
     setError('this extension does not work on settings pages nor a new tab page');
     mainElem.style.display = 'none';
   } else {
+    await chrome.scripting.executeScript({
+      target : {tabId : activeTab.id, allFrames : true},
+      files : [ 'scripts/gpu-content-script.js' ],
+    });
     await callAsyncFnWithErrorCheck(loadSettings);
   }
 

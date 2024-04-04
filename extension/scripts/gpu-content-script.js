@@ -1,5 +1,12 @@
 'use strict';
 
+(function() {
+
+if (window.gpuContentScript) {
+  return;
+}
+window.gpuContentScript = true;
+
 window.browser = (function () {
     return window.msBrowser ||
         window.browser ||
@@ -108,3 +115,5 @@ if (settings.showErrors) {
 if (settings.showAdapterInfo) {
   injectScript(chrome.runtime.getURL('scripts/show-adapter-info.js'));
 }
+
+})();
