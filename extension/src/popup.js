@@ -50,11 +50,16 @@ async function main() {
     setError('this extension does not work on settings pages nor a new tab page');
     mainElem.style.display = 'none';
   } else {
-    await chrome.scripting.executeScript({
-      target : {tabId : activeTab.id, allFrames : true},
-      files : [ 'scripts/gpu-content-script.js' ],
-    });
-    await callAsyncFnWithErrorCheck(loadSettings);
+    try {
+      await chrome.scripting.executeScript({
+        target : {tabId : activeTab.id, allFrames : true},
+        files : [ 'scripts/gpu-content-script.js' ],
+      });
+      await callAsyncFnWithErrorCheck(loadSettings);
+    } catch (e) {
+      setError(e.toString());
+      mainElem.style.display = 'none';
+    }
   }
 
   const save = () => callAsyncFnWithErrorCheck(saveSettings);;
