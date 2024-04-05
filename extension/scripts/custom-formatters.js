@@ -78,6 +78,11 @@ if (typeof GPUAdapter !== 'undefined') {
     ];
   }
 
+  function getSetAsArrayJsonML(value, config) {
+    const array = [...value.values()];
+    return ['object', {object: array}];
+  }
+
   const gpuBufferPropertyFormatters = {
     usage(key, value, config) {
       return getBitmaskJsonML(GPUBufferUsage, value, config);
@@ -93,6 +98,18 @@ if (typeof GPUAdapter !== 'undefined') {
   const gpuHeapPropertyFormatters = {
     properties(key, value, config) {
       return getBitmaskJsonML(GPUHeapProperty, value, config);
+    },
+  };
+
+  const gpuAdapterPropertyFormatters = {
+    features(key, value, config) {
+      return getSetAsArrayJsonML(value, config);
+    },
+  };
+
+  const gpuDevicePropertyFormatters = {
+    features(key, value, config) {
+      return getSetAsArrayJsonML(value, config);
     },
   };
 
@@ -134,6 +151,28 @@ if (typeof GPUAdapter !== 'undefined') {
     }
   };
 
+  const gpuAdapterConfig = {
+    header: {
+      ...headerConfig,
+      propertyFormatters: gpuAdapterPropertyFormatters,
+    },
+    body: {
+      ...bodyConfig,
+      propertyFormatters: gpuAdapterPropertyFormatters,
+    }
+  };
+
+  const gpuDeviceConfig = {
+    header: {
+      ...headerConfig,
+      propertyFormatters: gpuDevicePropertyFormatters,
+    },
+    body: {
+      ...bodyConfig,
+      propertyFormatters: gpuDevicePropertyFormatters,
+    }
+  };
+
   function getConfig(object) {
     if (object instanceof GPUBuffer) {
       return gpuBufferConfig;
@@ -143,6 +182,12 @@ if (typeof GPUAdapter !== 'undefined') {
     }
     if (typeof GPUMemoryHeapInfo !== 'undefined' && object instanceof GPUMemoryHeapInfo) {
       return gpuHeapPropertyConfig;
+    }
+    if (object instanceof GPUAdapter) {
+      return gpuAdapterConfig;
+    }
+    if (object instanceof GPUDevice) {
+      return gpuDeviceConfig;
     }
     return undefined;
   }
