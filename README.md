@@ -84,10 +84,17 @@ For example in Chrome
 
 ### DevTools Custom Formatters
 
-Shows `GPUBuffer.usage` and `GPUTexture.usage` with named bits
+Shows `GPUBuffer.usage` and `GPUTexture.usage` with named bits as well as `GPUAdapter.features` and `GPUDevice.features`
+
+#### `GPUTexture` and `GPUBuffer`
 
 * without this checked: `GPUTexture { ... usage: 6, ... }`
 * with this checked: `GPUTexture { ... usage: 6 (COPY_DST|TEXTURE_BINDING), ... }`
+
+### `GPUDevice` and `GPUAdapter`
+
+* without this checked: `GPUDevice.features`
+* with this checked: `GPUDevice.features: ['shader-f16', 'timestamp-query', ...]`
 
 note: You must turn on custom formatters in the DevTools (Settings->Preferences->Console->Custom formatters).
 
