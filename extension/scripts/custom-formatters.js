@@ -79,7 +79,7 @@ if (typeof GPUAdapter !== 'undefined') {
   }
 
   function getSetAsArrayJsonML(value, config) {
-    const array = [...value.values()];
+    const array = [...value.values()].sort();
     return ['object', {object: array}];
   }
 
