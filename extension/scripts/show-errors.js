@@ -83,7 +83,7 @@ if (typeof GPUDevice !== 'undefined') {
 
   GPUAdapter.prototype.requestDevice = (function(origFn) {
     return async function(...args) {
-      const device = await origFn.call(this, args);
+      const device = await origFn.call(this, ...args);
       if (device) {
         device.addEventListener('uncapturederror', function(e) {
           console.error(e.error.message);
