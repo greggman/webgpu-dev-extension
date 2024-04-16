@@ -38,6 +38,7 @@ For example in Chrome
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/without-extension.png" width="600">
 
+---
 ### Add Descriptors
 
   Adds the descriptors used to create many objects to those objects. For example:
@@ -50,16 +51,19 @@ For example in Chrome
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/view.png" width="600">
 
+---
 ### Force Mode
 
   Lets you choose one of `'none'`, `'low-power'`, `'high-performance'`, and `'compatibility-mode'`
 
+---
 ### Dump Shaders
 
   Dumps the pages shaders
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/dump-shaders.png" width="600">
 
+---
 ### Auto Label
 
   Adds labels to objects that don't have them. So for example buffers will
@@ -67,6 +71,7 @@ For example in Chrome
   them apart in the debugger. Canvas textures, textures from `getCurrentTexture`,
   are labelled `"canvasTexture<num>[<id-of-html-element>]"`.
 
+---
 ### Show Adapter Info
 
   Shows the adapter info anytime `requestAdapter` is called. This is useful to see which GPU was
@@ -74,6 +79,7 @@ For example in Chrome
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-adapter-info.png" width="600">
 
+---
 ### Track Pass State
 
   Add a `state` property to a `GPURenderPassEncoder`, `GPUComputePassEncoder` and
@@ -82,6 +88,7 @@ For example in Chrome
 
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/pass-state.png" width="600">
 
+---
 ### DevTools Custom Formatters
 
 Shows `GPUBuffer.usage` and `GPUTexture.usage` with named bits as well as `GPUAdapter.features` and `GPUDevice.features`
@@ -91,17 +98,19 @@ Shows `GPUBuffer.usage` and `GPUTexture.usage` with named bits as well as `GPUAd
 * without this checked: `GPUTexture { ... usage: 6, ... }`
 * with this checked: `GPUTexture { ... usage: 6 (COPY_DST|TEXTURE_BINDING), ... }`
 
-### `GPUDevice` and `GPUAdapter`
+#### `GPUDevice` and `GPUAdapter`
 
 * without this checked: `GPUDevice.features`
 * with this checked: `GPUDevice.features: ['shader-f16', 'timestamp-query', ...]`
 
 note: You must turn on custom formatters in the DevTools (Settings->Preferences->Console->Custom formatters).
 
+---
 ### Count Active Devices
 
   Prints to the console the number of active WebGPU devices
 
+---
 ### Block Features
 
   Lets you block webgpu features. For example, type in `shader-f16` and the shader-f16 feature will be blocked.
@@ -111,28 +120,34 @@ note: You must turn on custom formatters in the DevTools (Settings->Preferences-
   Enter one or more features separated by space, comma, or new line. `*` is a wildcard so `*` = all, `texture*` =
   all features that start with `texture`. `*f16` = all features that end in `f16`.
 
+---
 ### API Breakpoints
 
   Adds a `debugger` statement to the specified WebGPU API functions.
 
   Enter one or more API method names separated by space, comma, or new line. `*` is a wildcard
-  so `*` = all.
+  so `*` = all. Each match is for whole string so 
 
-  eg. `destroy` adds breakpoints to `GPUDevice.destroy`, `GPUBuffer.destroy`,
+  eg. `*destroy` adds breakpoints to `GPUDevice.destroy`, `GPUBuffer.destroy`,
   `GPUQuerySet.destroy` and `GPUTexture.destroy` where as `*fer.des*` would only
-  add a breakpoint to `GPUBuffer.destroy`.
+  add a breakpoint to `GPUBuffer.destroy`. Names are `API.methodName` so entering
+  `copyTextureToBuffer` matches nothing. Use `*copyTextureToBuffer` or the full name like
+  `GPUCommandEncoder.copyTextureToBuffer`.
 
   In DevTools, for each breakpoint added there is a `disable` variable you can set to disable
   the breakpoint for that particular API method.
 
+---
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode
 
+---
 ### Capture
 
   Attempt to capture WebGPU calls to an HTML file using [webgpu_recorder](https://github.com/brendan-duncan/webgpu_recorder)
 
+---
 ## Development
 
 I don't know all the procedures for other browser but in Chrome, load the extension by cloning this repo and then
