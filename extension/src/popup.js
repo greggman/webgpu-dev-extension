@@ -78,6 +78,8 @@ async function main() {
   gui.add(settings, 'dumpShaders').name('Dump Shaders');
   gui.add(settings, 'forceMode', ['none', 'low-power', 'high-performance', 'compatibility-mode']).name('Force Mode');
   gui.addText(settings, 'blockFeatures').name('Block Features (* = all)');
+  gui.addText(settings, 'breakpoints').name('API Breakpoints (* = all)');
+
   //gui.addDivider();
   //gui.add(settings, 'capture').name('Capture');
   //gui.add(settings, 'compat').name('Emulate Compat');

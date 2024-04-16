@@ -116,4 +116,8 @@ if (settings.showAdapterInfo) {
   injectScript(chrome.runtime.getURL('scripts/show-adapter-info.js'));
 }
 
+if (settings.breakpoints) {
+  injectScript(chrome.runtime.getURL(`scripts/breakpoints.js`));
+}
+
 })();

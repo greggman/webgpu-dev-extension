@@ -11,6 +11,7 @@ const defaultSettings = {
   showAdapterInfo: false,
   showErrors: false,
   trackPassState: false,
+  breakpoints: '',
 };
 
 export const settings = {...defaultSettings};

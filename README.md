@@ -111,6 +111,20 @@ note: You must turn on custom formatters in the DevTools (Settings->Preferences-
   Enter one or more features separated by space, comma, or new line. `*` is a wildcard so `*` = all, `texture*` =
   all features that start with `texture`. `*f16` = all features that end in `f16`.
 
+### API Breakpoints
+
+  Adds a `debugger` statement to the specified WebGPU API functions.
+
+  Enter one or more API method names separated by space, comma, or new line. `*` is a wildcard
+  so `*` = all.
+
+  eg. `destroy` adds breakpoints to `GPUDevice.destroy`, `GPUBuffer.destroy`,
+  `GPUQuerySet.destroy` and `GPUTexture.destroy` where as `*fer.des*` would only
+  add a breakpoint to `GPUBuffer.destroy`.
+
+  In DevTools, for each breakpoint added there is a `disable` variable you can set to disable
+  the breakpoint for that particular API method.
+
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode

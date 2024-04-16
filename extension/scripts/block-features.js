@@ -6,7 +6,7 @@ if (typeof GPUAdapter !== 'undefined') {
   }
 
   const blockFeatureStrings = (settings.blockFeatures || '').split(/[,\s]+/).map(v => v.trim());
-  const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replace('*', '.*')}$`));
+  const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replaceAll('*', '.*')}$`));
   if (blockFeatureStrings.length > 0) {
     console.log('blocking WebGPU Features:', blockFeatureStrings.join(', '));
   }
@@ -25,7 +25,11 @@ if (typeof GPUAdapter !== 'undefined') {
       const adapter = await origFn.call(this, desc);
       if (adapter) {
         Object.defineProperty(adapter, 'features', {
-          value: new Set([...adapter.features].filter(v => !isBlocked(v))),
+          value: new Set([...adapter.features].filter(feature => {
+            const blocked = !isBlocked(feature);
+            console.log('blocked WebGPU feature:', feature);
+            return blocked;
+          })),
         });
       }
       return adapter;
