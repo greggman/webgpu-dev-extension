@@ -138,6 +138,11 @@ note: You must turn on custom formatters in the DevTools (Settings->Preferences-
   the breakpoint for that particular API method.
 
 ---
+### Disable WebGPU
+
+  Returns `null` from `requestAdapter`.
+
+---
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode

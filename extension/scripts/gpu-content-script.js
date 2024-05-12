@@ -33,7 +33,7 @@ if (!settings) {
 
 const show = Object.values(settings).reduce((show, v) => show || (v !== '' && v !== false && v !== 'none'), false); 
 if (show) {
-  console.log('webgpu-dev-extension settings:', settings);
+  console.log('webgpu-dev-extension settings:', Object.fromEntries(Object.entries(settings).filter(([, v]) => !!v && v !== 'none')));
 }
 
 function sendMessage(cmd, data) {
@@ -118,6 +118,10 @@ if (settings.showAdapterInfo) {
 
 if (settings.breakpoints) {
   injectScript(chrome.runtime.getURL(`scripts/breakpoints.js`));
+}
+
+if (settings.disableWebGPU) {
+  injectScript(chrome.runtime.getURL(`scripts/disable-webgpu.js`));
 }
 
 })();

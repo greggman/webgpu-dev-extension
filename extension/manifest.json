@@ -18,6 +18,7 @@
         "scripts/block-features.js",
         "scripts/count-devices.js",
         "scripts/custom-formatters.js",
+        "scripts/disable-webgpu.js",
         "scripts/dump-shaders.js",
         "scripts/force-compatibility-mode.js",
         "scripts/force-high-performance.js",
