@@ -9,6 +9,7 @@ const defaultSettings = {
   disableWebGPU: false,
   forceMode: 'none',
   dumpShaders: false,
+  removeWebGPU: false,
   showAdapterInfo: false,
   showErrors: false,
   trackPassState: false,

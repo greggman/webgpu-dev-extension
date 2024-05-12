@@ -143,6 +143,11 @@ note: You must turn on custom formatters in the DevTools (Settings->Preferences-
   Returns `null` from `requestAdapter`.
 
 ---
+### Remove WebGPU
+
+  Removes `navigator.gpu` and other `GPU` classes
+
+---
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode

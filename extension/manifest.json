@@ -24,6 +24,7 @@
         "scripts/force-high-performance.js",
         "scripts/force-low-power.js",
         "scripts/gpu-injected.js",
+        "scripts/remove-webgpu.js",
         "scripts/show-adapter-info.js",
         "scripts/show-errors.js",
         "scripts/track-pass-state.js",
