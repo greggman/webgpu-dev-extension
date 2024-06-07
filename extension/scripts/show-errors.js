@@ -1,5 +1,6 @@
 if (typeof GPUDevice !== 'undefined') {
   const deviceToErrorScopeStack/*: WeakMap<GPUDevice, {filter: GPUErrorFilter, errors: GPUError[]}[]>*/ = new WeakMap();
+  const objectToDevice = new WeakMap();
   const origPushErrorScope = GPUDevice.prototype.pushErrorScope;
   const origPopErrorScope = GPUDevice.prototype.popErrorScope;
 
@@ -27,22 +28,34 @@ if (typeof GPUDevice !== 'undefined') {
     }
   }
 
+  function errorWrapper(device, fnName, origFn, ...args) {
+    const stack = new Error();
+    origPushErrorScope.call(device, 'validation');
+    const result = origFn.call(this, ...args);
+    origPopErrorScope.call(device)
+      .then(error => {
+        if (error) {
+          console.error('WebGPU ERROR in:', fnName, args);
+          console.error(error.message);
+          console.error(stack.stack);
+          emitGPUError(device, error);
+        }
+       });
+    return result;
+  }
+
   function addErrorWrapper(api, fnName) {
     const origFn = api.prototype[fnName];
     api.prototype[fnName] = function(...args) {
-      const stack = new Error();
-      origPushErrorScope.call(this, 'validation');
-      const result = origFn.call(this, ...args);
-      origPopErrorScope.call(this)
-        .then(error => {
-          if (error) {
-            console.error(fnName, args);
-            console.error(error.message);
-            console.error(stack.stack);
-            emitGPUError(this, error);
-          }
-         });
-      return result;
+      return errorWrapper.call(this, this, fnName, origFn, ...args)
+    }
+  }
+
+  function addErrorWrapperWithDevice(api, fnName) {
+    const origFn = api.prototype[fnName];
+    api.prototype[fnName] = function(...args) {
+      const device = objectToDevice.get(this);
+      return errorWrapper.call(this, device, fnName, origFn, ...args);
     }
   }
 
@@ -60,6 +73,8 @@ if (typeof GPUDevice !== 'undefined') {
   getAPIFunctionNames(GPUDevice)
     .filter(n => !skip.has(n))
     .forEach(n => addErrorWrapper(GPUDevice, n));
+  getAPIFunctionNames(GPUQueue)
+    .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
 
   GPUDevice.prototype.pushErrorScope = (function(origFn) {
     return function(/*this: GPUDevice,*/ filter/*: GPUErrorFilter*/) {
@@ -89,6 +104,7 @@ if (typeof GPUDevice !== 'undefined') {
           console.error(e.error.message);
         });
         deviceToErrorScopeStack.set(device, []);
+        objectToDevice.set(device.queue, device);
       }
       return device;
     }
