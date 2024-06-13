@@ -8,7 +8,7 @@ import {
 } from './utils.js';
 import {GUI} from './gui.js';
 
-window.browser = (function () {
+window.browser = (function() {
     return window.msBrowser ||
         window.browser ||
         window.chrome ||
@@ -26,7 +26,7 @@ const setError = (() => {
 const callAsyncFnWithErrorCheck = (() => {
   let sameErrorCount = 1;
   let lastErrorMsg = '';
-  return async function (fn) {
+  return async function(fn) {
     try {
       setError();
       await fn();
@@ -38,7 +38,7 @@ const callAsyncFnWithErrorCheck = (() => {
 
 Try reloading the page: Otherwise, this could mean the extension is blocked by your browser's policies`);
     }
-  }
+  };
 })();
 
 async function main() {
@@ -62,13 +62,14 @@ async function main() {
     }
   }
 
-  const save = () => callAsyncFnWithErrorCheck(saveSettings);;
+  const save = () => callAsyncFnWithErrorCheck(saveSettings);
 
   const gui = new GUI().onChange(save);
   const controlsElem = document.querySelector('#controls');
   controlsElem.appendChild(gui.elem);
 
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
+  gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
   gui.add(settings, 'showErrors').name('Show Errors');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');

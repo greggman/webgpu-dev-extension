@@ -12,6 +12,7 @@ const defaultSettings = {
   removeWebGPU: false,
   showAdapterInfo: false,
   showErrors: false,
+  webgpuDebugHelper: false,
   trackPassState: false,
   breakpoints: '',
 };

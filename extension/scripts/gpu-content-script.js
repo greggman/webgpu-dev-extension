@@ -1,5 +1,6 @@
-'use strict';
-
+/* eslint-env browser */
+/* global browser */
+/* global chrome */
 (function() {
 
 if (window.gpuContentScript) {
@@ -7,7 +8,7 @@ if (window.gpuContentScript) {
 }
 window.gpuContentScript = true;
 
-window.browser = (function () {
+window.browser = (function() {
     return window.msBrowser ||
         window.browser ||
         window.chrome ||
@@ -25,20 +26,21 @@ let settings = {};
 try {
   settings = JSON.parse(sessionStorage.getItem('webgpu-dev-extension-settings'));
 } catch (e) {
+  /* */
 }
 
 if (!settings) {
   settings = {};
 }
 
-const show = Object.values(settings).reduce((show, v) => show || (v !== '' && v !== false && v !== 'none'), false); 
+const show = Object.values(settings).reduce((show, v) => show || (v !== '' && v !== false && v !== 'none'), false);
 if (show) {
   console.log('webgpu-dev-extension settings:', Object.fromEntries(Object.entries(settings).filter(([, v]) => !!v && v !== 'none')));
 }
 
-function sendMessage(cmd, data) {
-  window.browser.runtime.sendMessage({cmd, data});
-}
+// function sendMessage(cmd, data) {
+//   window.browser.runtime.sendMessage({cmd, data});
+// }
 
 const commands = {
   setSessionStorage(obj) {
@@ -60,7 +62,7 @@ window.browser.runtime.onMessage.addListener((m, sender, sendResponse) => {
 });
 
 if (settings.removeWebGPU) {
-  injectScript(chrome.runtime.getURL(`scripts/remove-webgpu.js`));
+  injectScript(chrome.runtime.getURL('scripts/remove-webgpu.js'));
 }
 
 if (settings.countActiveDevices) {
@@ -68,7 +70,7 @@ if (settings.countActiveDevices) {
 }
 
 if (settings.blockFeatures) {
-  injectScript(chrome.runtime.getURL(`scripts/block-features.js`));
+  injectScript(chrome.runtime.getURL('scripts/block-features.js'));
 }
 
 if (settings.capture) {
@@ -112,7 +114,9 @@ if (settings.trackPassState) {
   injectScript(chrome.runtime.getURL('scripts/track-pass-state.js'));
 }
 
-if (settings.showErrors) {
+if (settings.webgpuDebugHelper) {
+  injectScript(chrome.runtime.getURL('scripts/webgpu-debug-helper.js'));
+} else if (settings.showErrors) {
   injectScript(chrome.runtime.getURL('scripts/show-errors.js'));
 }
 
@@ -121,11 +125,11 @@ if (settings.showAdapterInfo) {
 }
 
 if (settings.breakpoints) {
-  injectScript(chrome.runtime.getURL(`scripts/breakpoints.js`));
+  injectScript(chrome.runtime.getURL('scripts/breakpoints.js'));
 }
 
 if (settings.disableWebGPU) {
-  injectScript(chrome.runtime.getURL(`scripts/disable-webgpu.js`));
+  injectScript(chrome.runtime.getURL('scripts/disable-webgpu.js'));
 }
 
 })();
