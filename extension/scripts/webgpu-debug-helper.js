@@ -1,4 +1,4 @@
-/* webgpu-debug-helper@0.1.2, license MIT */
+/* webgpu-debug-helper@0.1.3, license MIT */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
     factory();
@@ -6882,9 +6882,8 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
     ];
     function* forEachDynamicBinding(info) {
         let dynamicOffsetIndex = 0;
-        const layout = info.layoutPlus.bindGroupLayoutDescriptor;
         for (const entry of info.entries) {
-            const bindingDescriptor = layout.entries[entry.binding];
+            const bindingDescriptor = info.layoutPlus.entriesById[entry.binding];
             if (bindingDescriptor.buffer?.hasDynamicOffset) {
                 const bufferBinding = entry.resource;
                 const bufferLayout = bindingDescriptor.buffer;
@@ -7232,12 +7231,14 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
     }
     function bindGroupLayoutDescriptorToBindGroupLayoutDescriptorPlus(src, autoId) {
         const bindGroupLayoutDescriptor = {
-            entries: [...src.entries].map(reifyBindGroupLayoutEntry).sort((a, b) => a.binding - b.binding),
+            entries: [...src.entries].map(reifyBindGroupLayoutEntry),
         };
+        const entriesById = Object.fromEntries(bindGroupLayoutDescriptor.entries.map(e => [e.binding, e]));
         const dynamicOffsetCount = bindGroupLayoutDescriptor.entries.reduce((a, v) => a + (v.buffer?.hasDynamicOffset ? 1 : 0), 0);
         const signature = `${JSON.stringify(bindGroupLayoutDescriptor)}${autoId ? `:autoId(${autoId})` : ''})`;
         return {
             bindGroupLayoutDescriptor,
+            entriesById,
             dynamicOffsetCount,
             signature,
         };
