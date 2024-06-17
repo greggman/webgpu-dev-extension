@@ -27,16 +27,18 @@ For example in Chrome
   Normally `GPUCommandEncoder`, `GPURenderPassEncoder`, `GPUComputePassEncoder` and
   `GPURenderBundleEncoder` do not emit errors. Instead, they just record the first error
   and then you don't actually get the error until you `end` the pass and `finish` the
-  encoder. With this option checked, most of the encoder errors will throw an JavaScript
+  encoder. With this option checked, most of the encoder errors will throw a JavaScript
   error immediately.
 
   What is the point of this option vs the next (show error)? Show error is a small script
   that only checks functions on `GPUDevice` and `GPUQueue` as those are the only objects
-  that actually emit errors in WebGPu.
+  that actually emit errors in WebGPU.
 
   WebGPU Debug Helper is a very large script. It might be buggy so I've kept both
   options so if you find a bug you can try to use the less capable but simpler
-  "Show Errors" option.
+  "Show Errors" option. Of course if you do find a bug, please
+  [create an issue](https://github.com/greggman/webgpu-dev-extension/issues/) and
+  with a repo.
 
 ### Show Errors
 
