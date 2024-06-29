@@ -18,6 +18,12 @@ For example in Chrome
 3. pick "Load Unpacked"
 4. Select the "extension" folder from this repo
 
+## NOTE! Extension doesn't appear issue!!!
+
+Currently, the plugin UI does not work if you are stopped at a breakpoint in the debugger.
+Unpause execution in the debugger or close the DevTools and the UI should appear.
+(PRs/ideas welcome! [See this issue](https://github.com/greggman/webgpu-dev-extension/issues/5))
+
 ## Options
 
 ### WebGPU Debug Helper
@@ -40,6 +46,7 @@ For example in Chrome
   [create an issue](https://github.com/greggman/webgpu-dev-extension/issues/) and
   with a repo.
 
+---
 ### Show Errors
 
   This has 3 points
