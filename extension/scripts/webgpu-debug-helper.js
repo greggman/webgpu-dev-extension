@@ -4,1975 +4,111 @@
     factory();
 })((function () { 'use strict';
 
-    // exported from the WebGPU CTS by adding the following line to src/webgpu/format_info.ts
-    //
-    //    console.log(JSON.stringify(kAllTextureFormatInfo, null, 2));
-    /** `kDepthStencilFormatResolvedAspect[format][aspect]` returns the aspect-specific format for a
-     *  depth-stencil format, or `undefined` if the format doesn't have the aspect.
-     */
-    const kDepthStencilFormatResolvedAspect = {
-        // kUnsizedDepthStencilFormats
-        depth24plus: {
-            all: 'depth24plus',
-            'depth-only': 'depth24plus',
-            'stencil-only': undefined,
-        },
-        'depth24plus-stencil8': {
-            all: 'depth24plus-stencil8',
-            'depth-only': 'depth24plus',
-            'stencil-only': 'stencil8',
-        },
-        // kSizedDepthStencilFormats
-        depth16unorm: {
-            all: 'depth16unorm',
-            'depth-only': 'depth16unorm',
-            'stencil-only': undefined,
-        },
-        depth32float: {
-            all: 'depth32float',
-            'depth-only': 'depth32float',
-            'stencil-only': undefined,
-        },
-        'depth32float-stencil8': {
-            all: 'depth32float-stencil8',
-            'depth-only': 'depth32float',
-            'stencil-only': 'stencil8',
-        },
-        stencil8: {
-            all: 'stencil8',
-            'depth-only': undefined,
-            'stencil-only': 'stencil8',
-        },
-    };
-    function getDepthStencilFormatResolvedAspect(format, aspect) {
-        const info = kDepthStencilFormatResolvedAspect[format];
-        return info ? info[aspect] : undefined;
-    }
-    const kAllTextureFormatInfo = {
-        "r8unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 1,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 1
-        },
-        "r8snorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "multisample": false,
-            "bytesPerBlock": 1
-        },
-        "r8uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 1,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 1
-        },
-        "r8sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 1,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 1
-        },
-        "rg8unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 2,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "rg8snorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "multisample": false,
-            "bytesPerBlock": 2
-        },
-        "rg8uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 2,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "rg8sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 2,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "rgba8unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 1
-            },
-            "multisample": true,
-            "baseFormat": "rgba8unorm",
-            "bytesPerBlock": 4
-        },
-        "rgba8unorm-srgb": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 1
-            },
-            "multisample": true,
-            "baseFormat": "rgba8unorm",
-            "bytesPerBlock": 4
-        },
-        "rgba8snorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 4
-        },
-        "rgba8uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rgba8sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "bgra8unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 1
-            },
-            "multisample": true,
-            "baseFormat": "bgra8unorm",
-            "bytesPerBlock": 4
-        },
-        "bgra8unorm-srgb": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 1
-            },
-            "multisample": true,
-            "baseFormat": "bgra8unorm",
-            "bytesPerBlock": 4
-        },
-        "r16uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 2,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "r16sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 2,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "r16float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 2,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "rg16uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rg16sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rg16float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 4,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rgba16uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 8
-        },
-        "rgba16sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 8
-        },
-        "rgba16float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 8
-        },
-        "r32uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": true,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 4
-        },
-        "r32sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": true,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 4
-        },
-        "r32float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "unfilterable-float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": true,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 4,
-                "alignment": 4
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rg32uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 8
-        },
-        "rg32sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 8
-        },
-        "rg32float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "unfilterable-float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 8
-        },
-        "rgba32uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 16,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 16
-        },
-        "rgba32sint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "sint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 16,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 16
-        },
-        "rgba32float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "unfilterable-float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": true,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 16,
-                "alignment": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 16
-        },
-        "rgb10a2uint": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": false,
-                "resolve": false,
-                "byteCost": 8,
-                "alignment": 4
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rgb10a2unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "colorRender": {
-                "blend": true,
-                "resolve": true,
-                "byteCost": 8,
-                "alignment": 4
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "rg11b10ufloat": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 4
-        },
-        "rgb9e5ufloat": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "multisample": false,
-            "bytesPerBlock": 4
-        },
-        "stencil8": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "stencil": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "multisample": true,
-            "bytesPerBlock": 1
-        },
-        "depth16unorm": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "depth": {
-                "type": "depth",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 2
-            },
-            "multisample": true,
-            "bytesPerBlock": 2
-        },
-        "depth32float": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "depth": {
-                "type": "depth",
-                "copySrc": true,
-                "copyDst": false,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "multisample": true,
-            "bytesPerBlock": 4
-        },
-        "depth24plus": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "depth": {
-                "type": "depth",
-                "copySrc": false,
-                "copyDst": false,
-                "storage": false,
-                "readWriteStorage": false
-            },
-            "multisample": true
-        },
-        "depth24plus-stencil8": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "depth": {
-                "type": "depth",
-                "copySrc": false,
-                "copyDst": false,
-                "storage": false,
-                "readWriteStorage": false
-            },
-            "stencil": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "multisample": true
-        },
-        "depth32float-stencil8": {
-            "blockWidth": 1,
-            "blockHeight": 1,
-            "depth": {
-                "type": "depth",
-                "copySrc": true,
-                "copyDst": false,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 4
-            },
-            "stencil": {
-                "type": "uint",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 1
-            },
-            "multisample": true,
-            "feature": "depth32float-stencil8"
-        },
-        "bc1-rgba-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc1-rgba-unorm",
-            "bytesPerBlock": 8
-        },
-        "bc1-rgba-unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc1-rgba-unorm",
-            "bytesPerBlock": 8
-        },
-        "bc2-rgba-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc2-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "bc2-rgba-unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc2-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "bc3-rgba-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc3-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "bc3-rgba-unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc3-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "bc4-r-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 8
-        },
-        "bc4-r-snorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 8
-        },
-        "bc5-rg-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 16
-        },
-        "bc5-rg-snorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 16
-        },
-        "bc6h-rgb-ufloat": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 16
-        },
-        "bc6h-rgb-float": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "bytesPerBlock": 16
-        },
-        "bc7-rgba-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc7-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "bc7-rgba-unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-bc",
-            "baseFormat": "bc7-rgba-unorm",
-            "bytesPerBlock": 16
-        },
-        "etc2-rgb8unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgb8unorm",
-            "bytesPerBlock": 8
-        },
-        "etc2-rgb8unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgb8unorm",
-            "bytesPerBlock": 8
-        },
-        "etc2-rgb8a1unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgb8a1unorm",
-            "bytesPerBlock": 8
-        },
-        "etc2-rgb8a1unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgb8a1unorm",
-            "bytesPerBlock": 8
-        },
-        "etc2-rgba8unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgba8unorm",
-            "bytesPerBlock": 16
-        },
-        "etc2-rgba8unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "baseFormat": "etc2-rgba8unorm",
-            "bytesPerBlock": 16
-        },
-        "eac-r11unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "bytesPerBlock": 8
-        },
-        "eac-r11snorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 8
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "bytesPerBlock": 8
-        },
-        "eac-rg11unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "bytesPerBlock": 16
-        },
-        "eac-rg11snorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-etc2",
-            "bytesPerBlock": 16
-        },
-        "astc-4x4-unorm": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-4x4-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-4x4-unorm-srgb": {
-            "blockWidth": 4,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-4x4-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-5x4-unorm": {
-            "blockWidth": 5,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-5x4-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-5x4-unorm-srgb": {
-            "blockWidth": 5,
-            "blockHeight": 4,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-5x4-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-5x5-unorm": {
-            "blockWidth": 5,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-5x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-5x5-unorm-srgb": {
-            "blockWidth": 5,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-5x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-6x5-unorm": {
-            "blockWidth": 6,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-6x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-6x5-unorm-srgb": {
-            "blockWidth": 6,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-6x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-6x6-unorm": {
-            "blockWidth": 6,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-6x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-6x6-unorm-srgb": {
-            "blockWidth": 6,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-6x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x5-unorm": {
-            "blockWidth": 8,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x5-unorm-srgb": {
-            "blockWidth": 8,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x6-unorm": {
-            "blockWidth": 8,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x6-unorm-srgb": {
-            "blockWidth": 8,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x8-unorm": {
-            "blockWidth": 8,
-            "blockHeight": 8,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x8-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-8x8-unorm-srgb": {
-            "blockWidth": 8,
-            "blockHeight": 8,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-8x8-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x5-unorm": {
-            "blockWidth": 10,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x5-unorm-srgb": {
-            "blockWidth": 10,
-            "blockHeight": 5,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x5-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x6-unorm": {
-            "blockWidth": 10,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x6-unorm-srgb": {
-            "blockWidth": 10,
-            "blockHeight": 6,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x6-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x8-unorm": {
-            "blockWidth": 10,
-            "blockHeight": 8,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x8-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x8-unorm-srgb": {
-            "blockWidth": 10,
-            "blockHeight": 8,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x8-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x10-unorm": {
-            "blockWidth": 10,
-            "blockHeight": 10,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x10-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-10x10-unorm-srgb": {
-            "blockWidth": 10,
-            "blockHeight": 10,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-10x10-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-12x10-unorm": {
-            "blockWidth": 12,
-            "blockHeight": 10,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-12x10-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-12x10-unorm-srgb": {
-            "blockWidth": 12,
-            "blockHeight": 10,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-12x10-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-12x12-unorm": {
-            "blockWidth": 12,
-            "blockHeight": 12,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-12x12-unorm",
-            "bytesPerBlock": 16
-        },
-        "astc-12x12-unorm-srgb": {
-            "blockWidth": 12,
-            "blockHeight": 12,
-            "color": {
-                "type": "float",
-                "copySrc": true,
-                "copyDst": true,
-                "storage": false,
-                "readWriteStorage": false,
-                "bytes": 16
-            },
-            "multisample": false,
-            "feature": "texture-compression-astc",
-            "baseFormat": "astc-12x12-unorm",
-            "bytesPerBlock": 16
-        }
-    };
+    const s_objToDevice = new WeakMap();
 
-    function bitmaskToString(bitNames, mask) {
-        const names = [];
-        for (const [k, v] of Object.entries(bitNames)) {
-            if (mask & v) {
-                names.push(k);
-            }
-        }
-        return names.join('|');
-    }
-    function bufferUsageToString(mask) {
-        return bitmaskToString(GPUBufferUsage, mask);
-    }
-    function textureUsageToString(mask) {
-        return bitmaskToString(GPUTextureUsage, mask);
-    }
-    function unreachable(msg) {
-        throw Error(`unreachable: ${''}`);
-    }
-    function roundUp(v, align) {
-        return Math.ceil(v / align) * align;
-    }
-    function trimNulls(a) {
-        const ndx = a.findLastIndex(v => v !== null);
-        return a.slice(0, ndx + 1);
-    }
-    function reifyGPUOrigin3D(e) {
-        e = e || [];
-        const d = e;
-        if (typeof d.x === 'number' || typeof d.y === 'number' || typeof d.z === 'number') {
-            return [
-                d.x ?? 0,
-                d.y ?? 0,
-                d.z ?? 0,
-            ];
-        }
-        const a = [...e];
-        return [
-            a[0] ?? 0,
-            a[1] ?? 0,
-            a[2] ?? 0,
-        ];
-    }
-    function reifyGPUExtent3D(e) {
-        const d = e;
-        if (typeof d.width === 'number') {
-            return [
-                d.width,
-                d.height ?? 1,
-                d.depthOrArrayLayers ?? 1,
-            ];
-        }
-        const a = [...e];
-        return [
-            a[0],
-            a[1] ?? 1,
-            a[2] ?? 1,
-        ];
-    }
-    function logicalMipLevelSpecificTextureExtent(texture, mipLevel) {
-        switch (texture.dimension) {
-            case '1d':
-                return [
-                    Math.max(1, texture.width >> mipLevel),
-                    1,
-                    1,
-                ];
-            case '2d':
-                return [
-                    Math.max(1, texture.width >> mipLevel),
-                    Math.max(1, texture.height >> mipLevel),
-                    texture.depthOrArrayLayers,
-                ];
-            case '3d':
-                return [
-                    Math.max(1, texture.width >> mipLevel),
-                    Math.max(1, texture.height >> mipLevel),
-                    Math.max(1, texture.depthOrArrayLayers >> mipLevel),
-                ];
-            default:
-                unreachable();
-                return [];
-        }
-    }
-    function physicalMipLevelSpecificTextureExtent(texture, mipLevel) {
-        const { blockWidth, blockHeight, } = kAllTextureFormatInfo[texture.format];
-        const [width, height, depthOrArrayLayers] = logicalMipLevelSpecificTextureExtent(texture, mipLevel);
-        switch (texture.dimension) {
-            case '1d':
-                return [
-                    roundUp(width, blockWidth),
-                    1,
-                    1,
-                ];
-            case '2d':
-            case '3d':
-                return [
-                    roundUp(width, blockWidth),
-                    roundUp(height, blockHeight),
-                    depthOrArrayLayers,
-                ];
-            default:
-                unreachable();
-                return [];
-        }
-    }
-
-    function getProperties(o) {
-        const keyValues = [];
-        for (const k in o) {
-            const v = o[k];
-            if (typeof v !== 'function') {
-                if (o instanceof GPUBuffer && k === 'usage') {
-                    keyValues.push(`${k}: ${v} (${bufferUsageToString(v)})`);
-                }
-                else if (o instanceof GPUTexture && k === 'usage') {
-                    keyValues.push(`${k}: ${v} (${textureUsageToString(v)})`);
+    /* eslint-disable no-inner-declarations */
+    if (typeof GPUDevice !== 'undefined') {
+        const deviceToErrorScopeStack = new WeakMap();
+        const origPushErrorScope = GPUDevice.prototype.pushErrorScope;
+        const origPopErrorScope = GPUDevice.prototype.popErrorScope;
+        function errorWrapper(device, fnName, origFn, ...args) {
+            const stack = new Error();
+            origPushErrorScope.call(device, 'validation');
+            const result = origFn.call(this, ...args);
+            const errorScopeStack = deviceToErrorScopeStack.get(device);
+            const currentErrorScope = errorScopeStack.findLast(scope => scope.filter === 'validation');
+            const promise = origPopErrorScope.call(device)
+                .then(error => {
+                // If there was a currentErrorScope when we added pushed then remove our promise
+                if (currentErrorScope) {
+                    const ndx = currentErrorScope.errors.indexOf(promise);
+                    if (ndx) {
+                        currentErrorScope.errors.splice(ndx, 1);
+                    }
                 }
                 else {
-                    keyValues.push(`${k}: ${JSON.stringify(v)}`);
+                    // there was no currentErrorScope so emit the error
+                    if (error) {
+                        device.dispatchEvent(new GPUUncapturedErrorEvent('uncapturederror', { error }));
+                    }
                 }
-            }
-        }
-        return keyValues.join(', ');
-    }
-    function objToString(o) {
-        return `${o.constructor.name}(${o.label}){${getProperties(o)}}`;
-    }
-    function emitError(msg, objs = []) {
-        throw new Error(`${msg}\n${(objs).map(o => objToString(o)).join('\n')}`);
-    }
-    function assert$1(condition, msg, resources) {
-        if (!condition) {
-            const lines = (resources || []).map(r => `    ${objToString(r)}`).join('\n');
-            const m = msg ? (typeof msg === 'string' ? msg : msg()) : '';
-            emitError(`${m}${lines ? `\n${lines}` : ''}`);
-        }
-    }
-
-    /**
-     * Adds a wrapper function to a class method that gets called before the actual function
-     */
-    function wrapFunctionBefore(API, fnName, fn) {
-        const origFn = API.prototype[fnName];
-        API.prototype[fnName] = function (...args) {
-            fn.call(this, args);
-            return origFn.call(this, ...args);
-        };
-    }
-    /**
-     * Adds a wrapper function to a class method that gets called after the actual function
-     */
-    function wrapFunctionAfter(API, fnName, fn) {
-        const origFn = API.prototype[fnName];
-        API.prototype[fnName] = function (...args) {
-            const result = origFn.call(this, ...args);
-            fn.call(this, result, args);
-            return result;
-        };
-    }
-    /**
-     * Adds a wrapper function to an async class method that gets called after the actual function
-     */
-    function wrapAsyncFunctionAfter(API, fnName, fn) {
-        const origFn = API.prototype[fnName];
-        API.prototype[fnName] = async function (...args) {
-            const result = await origFn.call(this, ...args);
-            fn.call(this, result, args);
-            return result;
-        };
-    }
-
-    const s_objToDevice = new WeakMap();
-    const s_destroyedResource = new WeakSet();
-    function assertNotDestroyed(obj) {
-        assert$1(!s_destroyedResource.has(obj), () => `${objToString(obj)} is destroyed`);
-    }
-    wrapFunctionBefore(GPUBuffer, 'destroy', function () {
-        s_destroyedResource.add(this);
-    });
-    wrapFunctionBefore(GPUTexture, 'destroy', function () {
-        s_destroyedResource.add(this);
-    });
-    wrapFunctionBefore(GPUQuerySet, 'destroy', function () {
-        s_destroyedResource.add(this);
-    });
-    wrapFunctionBefore(GPUDevice, 'destroy', function () {
-        s_destroyedResource.add(this);
-    });
-    const s_bindGroupToInfo = new WeakMap();
-
-    const deviceToErrorScopeStack = new WeakMap();
-    const origPushErrorScope = GPUDevice.prototype.pushErrorScope;
-    const origPopErrorScope = GPUDevice.prototype.popErrorScope;
-    function errorWrapper(device, fnName, origFn, ...args) {
-        const stack = new Error();
-        origPushErrorScope.call(device, 'validation');
-        const result = origFn.call(this, ...args);
-        const errorScopeStack = deviceToErrorScopeStack.get(device);
-        const currentErrorScope = errorScopeStack.findLast(scope => scope.filter === 'validation');
-        const promise = origPopErrorScope.call(device)
-            .then(error => {
-            // If there was a currentErrorScope when we added pushed then remove our promise
-            if (currentErrorScope) {
-                const ndx = currentErrorScope.errors.indexOf(promise);
-                if (ndx) {
-                    currentErrorScope.errors.splice(ndx, 1);
-                }
-            }
-            else {
-                // there was no currentErrorScope so emit the error
+                // show it
                 if (error) {
-                    device.dispatchEvent(new GPUUncapturedErrorEvent('uncapturederror', { error }));
+                    console.error('WebGPU ERROR in:', fnName, args);
+                    console.error(error.message);
+                    console.error(stack.stack);
                 }
+                // return it (as a promise)
+                return error;
+            });
+            if (currentErrorScope) {
+                currentErrorScope.errors.push(promise);
             }
-            // show it
-            if (error) {
-                console.error('WebGPU ERROR in:', fnName, args);
-                console.error(error.message);
-                console.error(stack.stack);
-            }
-            // return it (as a promise)
-            return error;
-        });
-        if (currentErrorScope) {
-            currentErrorScope.errors.push(promise);
+            return result;
         }
-        return result;
+        function addErrorWrapper(api, fnName) {
+            const origFn = api.prototype[fnName];
+            api.prototype[fnName] = function (...args) {
+                return errorWrapper.call(this, this, fnName.toString(), origFn, ...args);
+            };
+        }
+        function addErrorWrapperWithDevice(api, fnName) {
+            const origFn = api.prototype[fnName];
+            api.prototype[fnName] = function (...args) {
+                const device = s_objToDevice.get(this);
+                return errorWrapper.call(this, device, fnName.toString(), origFn, ...args);
+            };
+        }
+        /**
+         * given a class returns all the method names.
+         */
+        function getAPIFunctionNames(api) {
+            return Object.entries(Object.getOwnPropertyDescriptors(api.prototype))
+                .filter(([, info]) => info.enumerable && typeof info.value === 'function')
+                .map(([name]) => name);
+        }
+        const skip = new Set([
+            'pushErrorScope',
+            'popErrorScope',
+            'destroy',
+        ]);
+        getAPIFunctionNames(GPUDevice)
+            .filter(n => !skip.has(n))
+            .forEach(n => addErrorWrapper(GPUDevice, n));
+        getAPIFunctionNames(GPUQueue)
+            .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
+        GPUDevice.prototype.pushErrorScope = (function (origFn) {
+            return function (filter) {
+                origFn.call(this, filter);
+                const errorScopeStack = deviceToErrorScopeStack.get(this);
+                errorScopeStack.push({ filter, errors: [] });
+            };
+        })(GPUDevice.prototype.pushErrorScope);
+        GPUDevice.prototype.popErrorScope = (function (origFn) {
+            return async function () {
+                const errorScopeStack = deviceToErrorScopeStack.get(this);
+                const errorScope = errorScopeStack.pop();
+                if (errorScope === undefined) {
+                    throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
+                }
+                const errPromise = origFn.call(this);
+                return errorScope.errors.pop() ?? errPromise;
+            };
+        })(GPUDevice.prototype.popErrorScope);
+        GPUAdapter.prototype.requestDevice = (function (origFn) {
+            return async function (...args) {
+                const device = await origFn.call(this, ...args);
+                if (device) {
+                    device.addEventListener('uncapturederror', function (e) {
+                        console.error(e.error.message);
+                    });
+                    deviceToErrorScopeStack.set(device, []);
+                    s_objToDevice.set(device.queue, device);
+                }
+                return device;
+            };
+        })(GPUAdapter.prototype.requestDevice);
     }
-    function addErrorWrapper(api, fnName) {
-        const origFn = api.prototype[fnName];
-        api.prototype[fnName] = function (...args) {
-            return errorWrapper.call(this, this, fnName.toString(), origFn, ...args);
-        };
-    }
-    function addErrorWrapperWithDevice(api, fnName) {
-        const origFn = api.prototype[fnName];
-        api.prototype[fnName] = function (...args) {
-            const device = s_objToDevice.get(this);
-            return errorWrapper.call(this, device, fnName.toString(), origFn, ...args);
-        };
-    }
-    /**
-     * given a class returns all the method names.
-     */
-    function getAPIFunctionNames(api) {
-        return Object.entries(Object.getOwnPropertyDescriptors(api.prototype))
-            .filter(([, info]) => info.enumerable && typeof info.value === 'function')
-            .map(([name]) => name);
-    }
-    const skip = new Set([
-        'pushErrorScope',
-        'popErrorScope',
-        'destroy',
-    ]);
-    getAPIFunctionNames(GPUDevice)
-        .filter(n => !skip.has(n))
-        .forEach(n => addErrorWrapper(GPUDevice, n));
-    getAPIFunctionNames(GPUQueue)
-        .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
-    GPUDevice.prototype.pushErrorScope = (function (origFn) {
-        return function (filter) {
-            origFn.call(this, filter);
-            const errorScopeStack = deviceToErrorScopeStack.get(this);
-            errorScopeStack.push({ filter, errors: [] });
-        };
-    })(GPUDevice.prototype.pushErrorScope);
-    GPUDevice.prototype.popErrorScope = (function (origFn) {
-        return function () {
-            const errorScopeStack = deviceToErrorScopeStack.get(this);
-            const errorScope = errorScopeStack.pop();
-            if (errorScope === undefined) {
-                throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
-            }
-            const errPromise = origFn.call(this);
-            return errorScope.errors.pop() ?? errPromise;
-        };
-    })(GPUDevice.prototype.popErrorScope);
-    GPUAdapter.prototype.requestDevice = (function (origFn) {
-        return async function (...args) {
-            const device = await origFn.call(this, ...args);
-            if (device) {
-                device.addEventListener('uncapturederror', function (e) {
-                    console.error(e.error.message);
-                });
-                deviceToErrorScopeStack.set(device, []);
-                s_objToDevice.set(device.queue, device);
-            }
-            return device;
-        };
-    })(GPUAdapter.prototype.requestDevice);
 
     /* webgpu-utils@1.8.2, license MIT */
     function keysOf(obj) {
@@ -6456,7 +4592,7 @@
             entryPoints,
         };
     }
-    function assert(cond, msg = '') {
+    function assert$1(cond, msg = '') {
         if (!cond) {
             throw new Error(msg);
         }
@@ -6524,8 +4660,8 @@
     }
     function addType(reflect, typeInfo, offset) {
         if (typeInfo.isArray) {
-            assert(!typeInfo.isStruct, 'struct array is invalid');
-            assert(!typeInfo.isStruct, 'template array is invalid');
+            assert$1(!typeInfo.isStruct, 'struct array is invalid');
+            assert$1(!typeInfo.isStruct, 'template array is invalid');
             const arrayInfo = typeInfo;
             // ArrayDefinition
             return {
@@ -6535,7 +4671,7 @@
             };
         }
         else if (typeInfo.isStruct) {
-            assert(!typeInfo.isTemplate, 'template struct is invalid');
+            assert$1(!typeInfo.isTemplate, 'template struct is invalid');
             const structInfo = typeInfo;
             return makeStructDefinition(reflect, structInfo, offset);
         }
@@ -6565,8 +4701,1825 @@
     ]);
     new Map([...kTypedArrayToAttribFormat.entries()].map(([Type, { formats: [s1, s2] }]) => [[s1, Type], [s2, Type]]).flat());
 
+    // exported from the WebGPU CTS by adding the following line to src/webgpu/format_info.ts
+    //
+    //    console.log(JSON.stringify(kAllTextureFormatInfo, null, 2));
+    /** `kDepthStencilFormatResolvedAspect[format][aspect]` returns the aspect-specific format for a
+     *  depth-stencil format, or `undefined` if the format doesn't have the aspect.
+     */
+    const kDepthStencilFormatResolvedAspect = {
+        // kUnsizedDepthStencilFormats
+        depth24plus: {
+            all: 'depth24plus',
+            'depth-only': 'depth24plus',
+            'stencil-only': undefined,
+        },
+        'depth24plus-stencil8': {
+            all: 'depth24plus-stencil8',
+            'depth-only': 'depth24plus',
+            'stencil-only': 'stencil8',
+        },
+        // kSizedDepthStencilFormats
+        depth16unorm: {
+            all: 'depth16unorm',
+            'depth-only': 'depth16unorm',
+            'stencil-only': undefined,
+        },
+        depth32float: {
+            all: 'depth32float',
+            'depth-only': 'depth32float',
+            'stencil-only': undefined,
+        },
+        'depth32float-stencil8': {
+            all: 'depth32float-stencil8',
+            'depth-only': 'depth32float',
+            'stencil-only': 'stencil8',
+        },
+        stencil8: {
+            all: 'stencil8',
+            'depth-only': undefined,
+            'stencil-only': 'stencil8',
+        },
+    };
+    function getDepthStencilFormatResolvedAspect(format, aspect) {
+        const info = kDepthStencilFormatResolvedAspect[format];
+        return info ? info[aspect] : undefined;
+    }
+    const kAllTextureFormatInfo = {
+        "r8unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 1,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 1
+        },
+        "r8snorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "multisample": false,
+            "bytesPerBlock": 1
+        },
+        "r8uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 1,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 1
+        },
+        "r8sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 1,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 1
+        },
+        "rg8unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 2,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "rg8snorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "multisample": false,
+            "bytesPerBlock": 2
+        },
+        "rg8uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 2,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "rg8sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 2,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "rgba8unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 1
+            },
+            "multisample": true,
+            "baseFormat": "rgba8unorm",
+            "bytesPerBlock": 4
+        },
+        "rgba8unorm-srgb": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 1
+            },
+            "multisample": true,
+            "baseFormat": "rgba8unorm",
+            "bytesPerBlock": 4
+        },
+        "rgba8snorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 4
+        },
+        "rgba8uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rgba8sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "bgra8unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 1
+            },
+            "multisample": true,
+            "baseFormat": "bgra8unorm",
+            "bytesPerBlock": 4
+        },
+        "bgra8unorm-srgb": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 1
+            },
+            "multisample": true,
+            "baseFormat": "bgra8unorm",
+            "bytesPerBlock": 4
+        },
+        "r16uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 2,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "r16sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 2,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "r16float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 2,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "rg16uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rg16sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rg16float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 4,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rgba16uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 8
+        },
+        "rgba16sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 8
+        },
+        "rgba16float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 8
+        },
+        "r32uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": true,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 4
+        },
+        "r32sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": true,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 4
+        },
+        "r32float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "unfilterable-float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": true,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 4,
+                "alignment": 4
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rg32uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 8
+        },
+        "rg32sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 8
+        },
+        "rg32float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "unfilterable-float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 8
+        },
+        "rgba32uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 16,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 16
+        },
+        "rgba32sint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "sint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 16,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 16
+        },
+        "rgba32float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "unfilterable-float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": true,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 16,
+                "alignment": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 16
+        },
+        "rgb10a2uint": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": false,
+                "resolve": false,
+                "byteCost": 8,
+                "alignment": 4
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rgb10a2unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "colorRender": {
+                "blend": true,
+                "resolve": true,
+                "byteCost": 8,
+                "alignment": 4
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "rg11b10ufloat": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 4
+        },
+        "rgb9e5ufloat": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "multisample": false,
+            "bytesPerBlock": 4
+        },
+        "stencil8": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "stencil": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "multisample": true,
+            "bytesPerBlock": 1
+        },
+        "depth16unorm": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "depth": {
+                "type": "depth",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 2
+            },
+            "multisample": true,
+            "bytesPerBlock": 2
+        },
+        "depth32float": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "depth": {
+                "type": "depth",
+                "copySrc": true,
+                "copyDst": false,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "multisample": true,
+            "bytesPerBlock": 4
+        },
+        "depth24plus": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "depth": {
+                "type": "depth",
+                "copySrc": false,
+                "copyDst": false,
+                "storage": false,
+                "readWriteStorage": false
+            },
+            "multisample": true
+        },
+        "depth24plus-stencil8": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "depth": {
+                "type": "depth",
+                "copySrc": false,
+                "copyDst": false,
+                "storage": false,
+                "readWriteStorage": false
+            },
+            "stencil": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "multisample": true
+        },
+        "depth32float-stencil8": {
+            "blockWidth": 1,
+            "blockHeight": 1,
+            "depth": {
+                "type": "depth",
+                "copySrc": true,
+                "copyDst": false,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 4
+            },
+            "stencil": {
+                "type": "uint",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 1
+            },
+            "multisample": true,
+            "feature": "depth32float-stencil8"
+        },
+        "bc1-rgba-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc1-rgba-unorm",
+            "bytesPerBlock": 8
+        },
+        "bc1-rgba-unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc1-rgba-unorm",
+            "bytesPerBlock": 8
+        },
+        "bc2-rgba-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc2-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "bc2-rgba-unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc2-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "bc3-rgba-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc3-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "bc3-rgba-unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc3-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "bc4-r-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 8
+        },
+        "bc4-r-snorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 8
+        },
+        "bc5-rg-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 16
+        },
+        "bc5-rg-snorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 16
+        },
+        "bc6h-rgb-ufloat": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 16
+        },
+        "bc6h-rgb-float": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "bytesPerBlock": 16
+        },
+        "bc7-rgba-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc7-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "bc7-rgba-unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-bc",
+            "baseFormat": "bc7-rgba-unorm",
+            "bytesPerBlock": 16
+        },
+        "etc2-rgb8unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgb8unorm",
+            "bytesPerBlock": 8
+        },
+        "etc2-rgb8unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgb8unorm",
+            "bytesPerBlock": 8
+        },
+        "etc2-rgb8a1unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgb8a1unorm",
+            "bytesPerBlock": 8
+        },
+        "etc2-rgb8a1unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgb8a1unorm",
+            "bytesPerBlock": 8
+        },
+        "etc2-rgba8unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgba8unorm",
+            "bytesPerBlock": 16
+        },
+        "etc2-rgba8unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "baseFormat": "etc2-rgba8unorm",
+            "bytesPerBlock": 16
+        },
+        "eac-r11unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "bytesPerBlock": 8
+        },
+        "eac-r11snorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 8
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "bytesPerBlock": 8
+        },
+        "eac-rg11unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "bytesPerBlock": 16
+        },
+        "eac-rg11snorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-etc2",
+            "bytesPerBlock": 16
+        },
+        "astc-4x4-unorm": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-4x4-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-4x4-unorm-srgb": {
+            "blockWidth": 4,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-4x4-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-5x4-unorm": {
+            "blockWidth": 5,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-5x4-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-5x4-unorm-srgb": {
+            "blockWidth": 5,
+            "blockHeight": 4,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-5x4-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-5x5-unorm": {
+            "blockWidth": 5,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-5x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-5x5-unorm-srgb": {
+            "blockWidth": 5,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-5x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-6x5-unorm": {
+            "blockWidth": 6,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-6x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-6x5-unorm-srgb": {
+            "blockWidth": 6,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-6x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-6x6-unorm": {
+            "blockWidth": 6,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-6x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-6x6-unorm-srgb": {
+            "blockWidth": 6,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-6x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x5-unorm": {
+            "blockWidth": 8,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x5-unorm-srgb": {
+            "blockWidth": 8,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x6-unorm": {
+            "blockWidth": 8,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x6-unorm-srgb": {
+            "blockWidth": 8,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x8-unorm": {
+            "blockWidth": 8,
+            "blockHeight": 8,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x8-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-8x8-unorm-srgb": {
+            "blockWidth": 8,
+            "blockHeight": 8,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-8x8-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x5-unorm": {
+            "blockWidth": 10,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x5-unorm-srgb": {
+            "blockWidth": 10,
+            "blockHeight": 5,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x5-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x6-unorm": {
+            "blockWidth": 10,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x6-unorm-srgb": {
+            "blockWidth": 10,
+            "blockHeight": 6,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x6-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x8-unorm": {
+            "blockWidth": 10,
+            "blockHeight": 8,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x8-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x8-unorm-srgb": {
+            "blockWidth": 10,
+            "blockHeight": 8,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x8-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x10-unorm": {
+            "blockWidth": 10,
+            "blockHeight": 10,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x10-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-10x10-unorm-srgb": {
+            "blockWidth": 10,
+            "blockHeight": 10,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-10x10-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-12x10-unorm": {
+            "blockWidth": 12,
+            "blockHeight": 10,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-12x10-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-12x10-unorm-srgb": {
+            "blockWidth": 12,
+            "blockHeight": 10,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-12x10-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-12x12-unorm": {
+            "blockWidth": 12,
+            "blockHeight": 12,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-12x12-unorm",
+            "bytesPerBlock": 16
+        },
+        "astc-12x12-unorm-srgb": {
+            "blockWidth": 12,
+            "blockHeight": 12,
+            "color": {
+                "type": "float",
+                "copySrc": true,
+                "copyDst": true,
+                "storage": false,
+                "readWriteStorage": false,
+                "bytes": 16
+            },
+            "multisample": false,
+            "feature": "texture-compression-astc",
+            "baseFormat": "astc-12x12-unorm",
+            "bytesPerBlock": 16
+        }
+    };
+
+    function bitmaskToString(bitNames, mask) {
+        const names = [];
+        for (const [k, v] of Object.entries(bitNames)) {
+            if (mask & v) {
+                names.push(k);
+            }
+        }
+        return names.join('|');
+    }
+    function bufferUsageToString(mask) {
+        return bitmaskToString(GPUBufferUsage, mask);
+    }
+    function textureUsageToString(mask) {
+        return bitmaskToString(GPUTextureUsage, mask);
+    }
+    function unreachable(msg) {
+        throw Error(`unreachable: ${''}`);
+    }
+    function roundUp(v, align) {
+        return Math.ceil(v / align) * align;
+    }
+    function trimNulls(a) {
+        const ndx = a.findLastIndex(v => v !== null);
+        return a.slice(0, ndx + 1);
+    }
+    function reifyGPUOrigin3D(e) {
+        e = e || [];
+        const d = e;
+        if (typeof d.x === 'number' || typeof d.y === 'number' || typeof d.z === 'number') {
+            return [
+                d.x ?? 0,
+                d.y ?? 0,
+                d.z ?? 0,
+            ];
+        }
+        const a = [...e];
+        return [
+            a[0] ?? 0,
+            a[1] ?? 0,
+            a[2] ?? 0,
+        ];
+    }
+    function reifyGPUExtent3D(e) {
+        const d = e;
+        if (typeof d.width === 'number') {
+            return [
+                d.width,
+                d.height ?? 1,
+                d.depthOrArrayLayers ?? 1,
+            ];
+        }
+        const a = [...e];
+        return [
+            a[0],
+            a[1] ?? 1,
+            a[2] ?? 1,
+        ];
+    }
+    function logicalMipLevelSpecificTextureExtent(texture, mipLevel) {
+        switch (texture.dimension) {
+            case '1d':
+                return [
+                    Math.max(1, texture.width >> mipLevel),
+                    1,
+                    1,
+                ];
+            case '2d':
+                return [
+                    Math.max(1, texture.width >> mipLevel),
+                    Math.max(1, texture.height >> mipLevel),
+                    texture.depthOrArrayLayers,
+                ];
+            case '3d':
+                return [
+                    Math.max(1, texture.width >> mipLevel),
+                    Math.max(1, texture.height >> mipLevel),
+                    Math.max(1, texture.depthOrArrayLayers >> mipLevel),
+                ];
+            default:
+                unreachable();
+                return [];
+        }
+    }
+    function physicalMipLevelSpecificTextureExtent(texture, mipLevel) {
+        const { blockWidth, blockHeight, } = kAllTextureFormatInfo[texture.format];
+        const [width, height, depthOrArrayLayers] = logicalMipLevelSpecificTextureExtent(texture, mipLevel);
+        switch (texture.dimension) {
+            case '1d':
+                return [
+                    roundUp(width, blockWidth),
+                    1,
+                    1,
+                ];
+            case '2d':
+            case '3d':
+                return [
+                    roundUp(width, blockWidth),
+                    roundUp(height, blockHeight),
+                    depthOrArrayLayers,
+                ];
+            default:
+                unreachable();
+                return [];
+        }
+    }
+
+    function getProperties(o) {
+        const keyValues = [];
+        for (const k in o) {
+            const v = o[k];
+            if (typeof v !== 'function') {
+                if (o instanceof GPUBuffer && k === 'usage') {
+                    keyValues.push(`${k}: ${v} (${bufferUsageToString(v)})`);
+                }
+                else if (o instanceof GPUTexture && k === 'usage') {
+                    keyValues.push(`${k}: ${v} (${textureUsageToString(v)})`);
+                }
+                else {
+                    keyValues.push(`${k}: ${JSON.stringify(v)}`);
+                }
+            }
+        }
+        return keyValues.join(', ');
+    }
+    function objToString(o) {
+        return `${o.constructor.name}(${o.label}){${getProperties(o)}}`;
+    }
+    function emitError(msg, objs = []) {
+        throw new Error(`${msg}\n${(objs).map(o => objToString(o)).join('\n')}`);
+    }
+    function assert(condition, msg, resources) {
+        if (!condition) {
+            const lines = (resources || []).map(r => `    ${objToString(r)}`).join('\n');
+            const m = msg ? (typeof msg === 'string' ? msg : msg()) : '';
+            emitError(`${m}${lines ? `\n${lines}` : ''}`);
+        }
+    }
+
     function validateEncoderState(encoder, state) {
-        assert$1(state === 'open', () => `encoder state(${state}) is not "open"`, [encoder]);
+        assert(state === 'open', () => `encoder state(${state}) is not "open"`, [encoder]);
     }
     const s_commandEncoderToInfoMap = new WeakMap();
     function createCommandEncoder(commandEncoder) {
@@ -6574,7 +6527,7 @@
     }
     function unlockCommandEncoder(commandEncoder) {
         const info = s_commandEncoderToInfoMap.get(commandEncoder);
-        assert$1(info.state === 'locked');
+        assert(info.state === 'locked');
         info.state = 'open';
     }
     function lockCommandEncoder(commandEncoder) {
@@ -6618,6 +6571,39 @@
     //    }
     //  }
     //}
+
+    /**
+     * Adds a wrapper function to a class method that gets called before the actual function
+     */
+    function wrapFunctionBefore(API, fnName, fn) {
+        const origFn = API.prototype[fnName];
+        API.prototype[fnName] = function (...args) {
+            fn.call(this, args);
+            return origFn.call(this, ...args);
+        };
+    }
+    /**
+     * Adds a wrapper function to a class method that gets called after the actual function
+     */
+    function wrapFunctionAfter(API, fnName, fn) {
+        const origFn = API.prototype[fnName];
+        API.prototype[fnName] = function (...args) {
+            const result = origFn.call(this, ...args);
+            fn.call(this, result, args);
+            return result;
+        };
+    }
+    /**
+     * Adds a wrapper function to an async class method that gets called after the actual function
+     */
+    function wrapAsyncFunctionAfter(API, fnName, fn) {
+        const origFn = API.prototype[fnName];
+        API.prototype[fnName] = async function (...args) {
+            const result = await origFn.call(this, ...args);
+            fn.call(this, result, args);
+            return result;
+        };
+    }
 
     // A normal GPUPipelineDescriptor just has references to GPUBindGroupLayout objects
     // but we need the GPUBindGroupLayoutDescriptor for each. They don't exist for
@@ -6756,6 +6742,24 @@
         s_renderPipelineToRenderPipelineDescriptor.set(pipeline, reifyRenderPipelineDescriptor(desc));
     }
 
+    const s_destroyedResource = new WeakSet();
+    function assertNotDestroyed(obj) {
+        assert(!s_destroyedResource.has(obj), () => `${objToString(obj)} is destroyed`);
+    }
+    wrapFunctionBefore(GPUBuffer, 'destroy', function () {
+        s_destroyedResource.add(this);
+    });
+    wrapFunctionBefore(GPUTexture, 'destroy', function () {
+        s_destroyedResource.add(this);
+    });
+    wrapFunctionBefore(GPUQuerySet, 'destroy', function () {
+        s_destroyedResource.add(this);
+    });
+    wrapFunctionBefore(GPUDevice, 'destroy', function () {
+        s_destroyedResource.add(this);
+    });
+    const s_bindGroupToInfo = new WeakMap();
+
     const s_textureViewToTexture = new WeakMap();
     const s_textureViewToDesc = new WeakMap();
     function resolveTextureAspect(format, aspect) {
@@ -6841,20 +6845,20 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
     //  //
     //}
     function validateEncoderBindGroups(bindGroups, pipeline) {
-        assert$1(!!pipeline, 'no pipeline set');
+        assert(!!pipeline, 'no pipeline set');
         const device = s_objToDevice.get(pipeline);
         const reifiedPipelineDescriptor = s_pipelineToReifiedPipelineLayoutDescriptor.get(pipeline);
         reifiedPipelineDescriptor.bindGroupLayoutDescriptors.forEach((bindGroupLayoutDescriptor, group) => {
             const binding = bindGroups[group];
-            assert$1(!!binding, () => `required bindGroup missing from group(${group})`);
+            assert(!!binding, () => `required bindGroup missing from group(${group})`);
             const bindGroupInfo = s_bindGroupToInfo.get(binding.bindGroup);
-            assert$1(bindGroupInfo.layoutPlus.signature === bindGroupLayoutDescriptor.signature, () => generateErrorMessageForMismatchedBindGroupLayouts(group, bindGroupInfo, bindGroupLayoutDescriptor));
+            assert(bindGroupInfo.layoutPlus.signature === bindGroupLayoutDescriptor.signature, () => generateErrorMessageForMismatchedBindGroupLayouts(group, bindGroupInfo, bindGroupLayoutDescriptor));
             for (const { binding, resource: bindingResource } of bindGroupInfo.entries) {
                 const resource = getResourceFromBindingResource(bindingResource);
                 if (resource instanceof GPUTexture || resource instanceof GPUBuffer) {
                     assertNotDestroyed(resource);
                 }
-                assert$1(s_objToDevice.get(resource) === device, () => `texture at binding(${binding}) group(${group}) is not from same device`, [resource]);
+                assert(s_objToDevice.get(resource) === device, () => `texture at binding(${binding}) group(${group}) is not from same device`, [resource]);
             }
         });
         const bindGroupSpaceUsed = 0;
@@ -6904,27 +6908,27 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
             dynamicOffsetDataStart = dynamicOffsetDataStart ?? 0;
             dynamicOffsetDataLength = dynamicOffsetDataLength ?? dynamicOffsetsArg.length;
             const dynamicOffsets = dynamicOffsetsArg.slice(dynamicOffsetDataStart, dynamicOffsetDataLength);
-            assert$1(dynamicOffsets.length === dynamicOffsetCount, `there must be the same number of dynamicOffsets(${dynamicOffsets.length}) as the layout requires (${dynamicOffsetCount})`);
+            assert(dynamicOffsets.length === dynamicOffsetCount, `there must be the same number of dynamicOffsets(${dynamicOffsets.length}) as the layout requires (${dynamicOffsetCount})`);
             const device = s_objToDevice.get(this);
             const maxIndex = device.limits.maxBindGroups;
-            assert$1(index >= 0, () => `index(${index}) must be >= 0`);
-            assert$1(index < maxIndex, () => `index(${index}) must be < device.limits.maxBindGroups(${maxIndex})`);
+            assert(index >= 0, () => `index(${index}) must be >= 0`);
+            assert(index < maxIndex, () => `index(${index}) must be < device.limits.maxBindGroups(${maxIndex})`);
             if (bindGroup) {
-                assert$1(device === s_objToDevice.get(bindGroup), () => `bindGroup must be from same device as ${parent.constructor.name}`, [bindGroup, parent]);
+                assert(device === s_objToDevice.get(bindGroup), () => `bindGroup must be from same device as ${parent.constructor.name}`, [bindGroup, parent]);
                 // Validate resources are not destroyed
                 const info = s_bindGroupToInfo.get(bindGroup);
                 validateBindGroupResourcesNotDestroyed(info.entries);
                 // Validate Dynamic Offsets
                 for (const { bufferBinding, bufferLayout, dynamicOffsetIndex } of forEachDynamicBinding(info)) {
                     const dynamicOffset = dynamicOffsets[dynamicOffsetIndex];
-                    assert$1((bufferBinding.offset || 0) + dynamicOffset + (bufferLayout.minBindingSize || 0) <= bufferBinding.buffer.size, 'dynamic offset is out of range');
+                    assert((bufferBinding.offset || 0) + dynamicOffset + (bufferLayout.minBindingSize || 0) <= bufferBinding.buffer.size, 'dynamic offset is out of range');
                     switch (bufferLayout.type) {
                         case 'uniform':
-                            assert$1(dynamicOffset % device.limits.minUniformBufferOffsetAlignment === 0, () => `dynamicOffset[${dynamicOffsetIndex}](${dynamicOffset}) used for a uniform buffer is not a multiple of device.limits.minUniformBufferOffsetAlignment(${device.limits.minUniformBufferOffsetAlignment})`);
+                            assert(dynamicOffset % device.limits.minUniformBufferOffsetAlignment === 0, () => `dynamicOffset[${dynamicOffsetIndex}](${dynamicOffset}) used for a uniform buffer is not a multiple of device.limits.minUniformBufferOffsetAlignment(${device.limits.minUniformBufferOffsetAlignment})`);
                             break;
                         case 'storage':
                         case 'read-only-storage':
-                            assert$1(dynamicOffset % device.limits.minStorageBufferOffsetAlignment === 0, () => `dynamicOffset[${dynamicOffsetIndex}](${dynamicOffset}) used for a uniform buffer is not a multiple of device.limits.minStorageBufferOffsetAlignment(${device.limits.minStorageBufferOffsetAlignment})`);
+                            assert(dynamicOffset % device.limits.minStorageBufferOffsetAlignment === 0, () => `dynamicOffset[${dynamicOffsetIndex}](${dynamicOffset}) used for a uniform buffer is not a multiple of device.limits.minStorageBufferOffsetAlignment(${device.limits.minStorageBufferOffsetAlignment})`);
                             break;
                     }
                 }
@@ -6953,7 +6957,7 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
             buffers.forEach((buffer, slot) => {
                 if (buffer) {
                     const vertexBufferBinding = info.vertexBuffers[slot];
-                    assert$1(!!vertexBufferBinding, () => `no vertexBuffer in slot(${slot})`);
+                    assert(!!vertexBufferBinding, () => `no vertexBuffer in slot(${slot})`);
                     assertNotDestroyed(vertexBufferBinding.buffer);
                     fn(slot, buffer, vertexBufferBinding);
                     // don't need to check that vertex buffer is same device as was checked at setVertexBuffer
@@ -6962,19 +6966,19 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
             });
         }
         // TODO: test!
-        assert$1(bindGroupSpaceUsed + vertexBufferSpaceUsed <= device.limits.maxBindGroupsPlusVertexBuffers, () => `bindGroupSpaceUsed(${bindGroupSpaceUsed}) + vertexBufferSpaceUsed(${vertexBufferSpaceUsed}) <= device.limits.maxBindGroupsPlusVertexBuffers(${device.limits.maxBindGroupsPlusVertexBuffers})`);
+        assert(bindGroupSpaceUsed + vertexBufferSpaceUsed <= device.limits.maxBindGroupsPlusVertexBuffers, () => `bindGroupSpaceUsed(${bindGroupSpaceUsed}) + vertexBufferSpaceUsed(${vertexBufferSpaceUsed}) <= device.limits.maxBindGroupsPlusVertexBuffers(${device.limits.maxBindGroupsPlusVertexBuffers})`);
     }
     function validateValidToDrawIndexed(mixin, info, fn) {
-        assert$1(!!info.indexBuffer, 'indexBuffer is not set');
+        assert(!!info.indexBuffer, 'indexBuffer is not set');
         const device = s_objToDevice.get(mixin);
         assertNotDestroyed(info.indexBuffer.buffer);
-        assert$1(device === s_objToDevice.get(info.indexBuffer.buffer), 'indexBuffer is not from same device');
+        assert(device === s_objToDevice.get(info.indexBuffer.buffer), 'indexBuffer is not from same device');
         validateValidToDraw(mixin, info, fn);
         const pipelineDescriptor = s_renderPipelineToRenderPipelineDescriptor.get(info.pipeline);
         switch (pipelineDescriptor.primitive?.topology) {
             case 'line-strip':
             case 'triangle-strip':
-                assert$1(info.indexFormat === pipelineDescriptor.primitive?.stripIndexFormat, () => `indexFormat(${info.indexFormat}) !== pipeline.primitive.stripIndexFormat(${pipelineDescriptor.primitive?.stripIndexFormat})`);
+                assert(info.indexFormat === pipelineDescriptor.primitive?.stripIndexFormat, () => `indexFormat(${info.indexFormat}) !== pipeline.primitive.stripIndexFormat(${pipelineDescriptor.primitive?.stripIndexFormat})`);
         }
     }
     function bufferSizeFromBufferBinding({ buffer, offset, size }) {
@@ -7037,7 +7041,7 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
                     : firstVertex + vertexCount;
                 if (strideCount !== 0) {
                     const bytesNeeded = (strideCount - 1) * stride + lastStride;
-                    assert$1(bytesNeeded <= bufferSize, () => `slot(${slot}) vertex buffer binding size ${bufferSize} is not large enough for bytes needed(${bytesNeeded})`);
+                    assert(bytesNeeded <= bufferSize, () => `slot(${slot}) vertex buffer binding size ${bufferSize} is not large enough for bytes needed(${bytesNeeded})`);
                 }
             });
         });
@@ -7055,13 +7059,13 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
                 const strideCount = firstInstance + instanceCount;
                 if (layout.stepMode === 'instance') {
                     const bytesNeeded = (strideCount - 1) * stride + lastStride;
-                    assert$1(bytesNeeded <= bufferSize, () => `slot(${slot}) vertex buffer binding size ${bufferSize} is not large enough for bytes needed(${bytesNeeded})`);
+                    assert(bytesNeeded <= bufferSize, () => `slot(${slot}) vertex buffer binding size ${bufferSize} is not large enough for bytes needed(${bytesNeeded})`);
                 }
             });
             const bufferSize = bufferSizeFromBufferBinding(info.indexBuffer);
             const indexByteSize = info.indexFormat === 'uint16' ? 2 : 4;
             const bytesNeeded = firstIndex + indexCount * indexByteSize;
-            assert$1(bytesNeeded <= bufferSize, () => `indexBuffer bound size(${bufferSize}) is not large enough for bytesNeeded(${bytesNeeded})`);
+            assert(bytesNeeded <= bufferSize, () => `indexBuffer bound size(${bufferSize}) is not large enough for bytesNeeded(${bytesNeeded})`);
         });
         const kIndirectDrawParametersSize = 16;
         wrapFunctionBefore(API, 'drawIndirect', function ([indirectBuffer, indirectOffset]) {
@@ -7070,10 +7074,10 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
             validateValidToDraw(this, info, () => { });
             assertNotDestroyed(indirectBuffer);
             const device = s_objToDevice.get(this);
-            assert$1(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
-            assert$1(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
-            assert$1(indirectOffset + kIndirectDrawParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDrawParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
-            assert$1(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
+            assert(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
+            assert(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
+            assert(indirectOffset + kIndirectDrawParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDrawParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
+            assert(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
         });
         const kIndirectDrawIndexedParametersSize = 20;
         wrapFunctionBefore(API, 'drawIndexedIndirect', function ([indirectBuffer, indirectOffset]) {
@@ -7082,18 +7086,18 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
             validateValidToDrawIndexed(this, info, () => { });
             assertNotDestroyed(indirectBuffer);
             const device = s_objToDevice.get(this);
-            assert$1(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
-            assert$1(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
-            assert$1(indirectOffset + kIndirectDrawIndexedParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDrawIndexedParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
-            assert$1(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
+            assert(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
+            assert(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
+            assert(indirectOffset + kIndirectDrawIndexedParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDrawIndexedParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
+            assert(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
         });
         wrapFunctionBefore(API, 'setPipeline', function ([pipeline]) {
             const info = s_renderPassToPassInfoMap.get(this);
             validateEncoderState(this, info.state);
-            assert$1(s_objToDevice.get(this) === s_objToDevice.get(pipeline), 'pipeline must be from same device as renderPassEncoder', [pipeline, this]);
+            assert(s_objToDevice.get(this) === s_objToDevice.get(pipeline), 'pipeline must be from same device as renderPassEncoder', [pipeline, this]);
             const pipelineDesc = s_renderPipelineToRenderPipelineDescriptor.get(pipeline);
             const passLayoutInfo = getRenderPassInfo(this);
-            assert$1(pipelineDesc.passLayoutInfo.passLayoutSignature === passLayoutInfo.passLayoutSignature, () => `pipeline is not compatible with ${this.constructor.name}
+            assert(pipelineDesc.passLayoutInfo.passLayoutSignature === passLayoutInfo.passLayoutSignature, () => `pipeline is not compatible with ${this.constructor.name}
 
 ${this.constructor.name} expects ${JSON.stringify(passLayoutInfo.renderPassLayout, null, 2)}
 
@@ -7107,12 +7111,12 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             const device = s_objToDevice.get(this);
             offset = offset ?? 0;
             size = size ?? Math.max(0, buffer.size - offset);
-            assert$1(device === s_objToDevice.get(buffer), 'buffer must be from the same device', [buffer, this]);
+            assert(device === s_objToDevice.get(buffer), 'buffer must be from the same device', [buffer, this]);
             assertNotDestroyed(buffer);
-            assert$1(!!(buffer.usage & GPUBufferUsage.INDEX), () => `buffer(${bufferUsageToString(buffer.usage)}) must have usage INDEX`, [buffer, this]);
+            assert(!!(buffer.usage & GPUBufferUsage.INDEX), () => `buffer(${bufferUsageToString(buffer.usage)}) must have usage INDEX`, [buffer, this]);
             const align = format === 'uint16' ? 2 : 4;
-            assert$1(offset % align === 0, () => `offset(${offset}) must be multiple of index format: ${format}`, [buffer, this]);
-            assert$1(offset + size <= buffer.size, () => `offset(${offset}) + size(${size}) is not <= buffer.size(${buffer.size})`, [buffer, this]);
+            assert(offset % align === 0, () => `offset(${offset}) must be multiple of index format: ${format}`, [buffer, this]);
+            assert(offset + size <= buffer.size, () => `offset(${offset}) + size(${size}) is not <= buffer.size(${buffer.size})`, [buffer, this]);
             info.indexBuffer = {
                 buffer,
                 offset,
@@ -7128,17 +7132,17 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             const bufferSize = buffer?.size || 0;
             offset = offset ?? 0;
             size = size ?? Math.max(0, bufferSize - offset);
-            assert$1(slot >= 0, () => `slot(${slot}) must be >= 0`, [this]);
-            assert$1(slot < maxSlot, () => `slot(${slot}) must be < device.limits.maxVertexBuffers(${maxSlot})`, [this]);
-            assert$1(offset % 4 === 0, () => `offset(${offset}) must be multiple of 4`, [this]);
-            assert$1(offset + size <= bufferSize, () => `offset(${offset}) + size(${size}) is not <= buffer.size(${bufferSize})`, [this, ...(buffer ? [buffer] : [])]);
+            assert(slot >= 0, () => `slot(${slot}) must be >= 0`, [this]);
+            assert(slot < maxSlot, () => `slot(${slot}) must be < device.limits.maxVertexBuffers(${maxSlot})`, [this]);
+            assert(offset % 4 === 0, () => `offset(${offset}) must be multiple of 4`, [this]);
+            assert(offset + size <= bufferSize, () => `offset(${offset}) + size(${size}) is not <= buffer.size(${bufferSize})`, [this, ...(buffer ? [buffer] : [])]);
             if (!buffer) {
                 info.vertexBuffers[slot] = undefined;
             }
             else {
-                assert$1(device === s_objToDevice.get(buffer), 'buffer must be from the same device', [buffer, this]);
+                assert(device === s_objToDevice.get(buffer), 'buffer must be from the same device', [buffer, this]);
                 assertNotDestroyed(buffer);
-                assert$1(!!(buffer.usage & GPUBufferUsage.VERTEX), () => `buffer(${bufferUsageToString(buffer.usage)}) must have usage VERTEX`, [buffer, this]);
+                assert(!!(buffer.usage & GPUBufferUsage.VERTEX), () => `buffer(${bufferUsageToString(buffer.usage)}) must have usage VERTEX`, [buffer, this]);
                 info.vertexBuffers[slot] = {
                     buffer,
                     offset,
@@ -7287,7 +7291,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             if (rb.buffer instanceof GPUBuffer) {
                 const offset = rb.offset || 0;
                 const size = rb.size || rb.buffer.size - offset;
-                assert$1(offset + size <= rb.buffer.size, () => `offset(${offset} + size(${size}) > buffer.size(${rb.buffer.size}))`, [rb.buffer]);
+                assert(offset + size <= rb.buffer.size, () => `offset(${offset} + size(${size}) > buffer.size(${rb.buffer.size}))`, [rb.buffer]);
             }
             entries.push({
                 binding,
@@ -7376,12 +7380,12 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
     function validateTimestampWrites(device, timestampWrites) {
         const { querySet, beginningOfPassWriteIndex, endOfPassWriteIndex } = timestampWrites;
         assertNotDestroyed(querySet);
-        assert$1(s_objToDevice.get(querySet) === device, 'querySet not from same device', [querySet]);
-        assert$1(querySet.type === 'timestamp', () => `querySet.type(${querySet.type}) !== 'timestamp'`);
-        assert$1(beginningOfPassWriteIndex === undefined || beginningOfPassWriteIndex < querySet.count, () => `timestampWrites.beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) is >= querySet.count(${querySet.count})`);
-        assert$1(endOfPassWriteIndex === undefined || endOfPassWriteIndex < querySet.count, () => `timestampWrites.endOfPassWriteIndex(${endOfPassWriteIndex}) is >= querySet.count(${querySet.count})`);
-        assert$1(beginningOfPassWriteIndex !== undefined || endOfPassWriteIndex !== undefined, () => `at least one of beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) or endOfPassWriteIndex(${endOfPassWriteIndex})`);
-        assert$1(beginningOfPassWriteIndex !== endOfPassWriteIndex, () => `beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) and endOfPassWriteIndex(${endOfPassWriteIndex}) may not be the same`);
+        assert(s_objToDevice.get(querySet) === device, 'querySet not from same device', [querySet]);
+        assert(querySet.type === 'timestamp', () => `querySet.type(${querySet.type}) !== 'timestamp'`);
+        assert(beginningOfPassWriteIndex === undefined || beginningOfPassWriteIndex < querySet.count, () => `timestampWrites.beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) is >= querySet.count(${querySet.count})`);
+        assert(endOfPassWriteIndex === undefined || endOfPassWriteIndex < querySet.count, () => `timestampWrites.endOfPassWriteIndex(${endOfPassWriteIndex}) is >= querySet.count(${querySet.count})`);
+        assert(beginningOfPassWriteIndex !== undefined || endOfPassWriteIndex !== undefined, () => `at least one of beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) or endOfPassWriteIndex(${endOfPassWriteIndex})`);
+        assert(beginningOfPassWriteIndex !== endOfPassWriteIndex, () => `beginningOfPassWriteIndex(${beginningOfPassWriteIndex}) and endOfPassWriteIndex(${endOfPassWriteIndex}) may not be the same`);
     }
 
     const s_computePassToPassInfoMap = new WeakMap();
@@ -7401,7 +7405,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
     wrapFunctionBefore(GPUComputePassEncoder, 'setPipeline', function ([pipeline]) {
         const info = s_computePassToPassInfoMap.get(this);
         validateEncoderState(this, info.state);
-        assert$1(s_objToDevice.get(info.commandEncoder) === s_objToDevice.get(pipeline), 'pipeline must be from same device as computePassEncoder', [this, info.commandEncoder]);
+        assert(s_objToDevice.get(info.commandEncoder) === s_objToDevice.get(pipeline), 'pipeline must be from same device as computePassEncoder', [this, info.commandEncoder]);
         info.pipeline = pipeline;
     });
     wrapFunctionBefore(GPUComputePassEncoder, 'end', function () {
@@ -7415,9 +7419,9 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         validateEncoderState(this, info.state);
         validateEncoderBindGroups(info.bindGroups, info.pipeline);
         const device = s_objToDevice.get(this);
-        assert$1(workgroupCountX < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountX(${workgroupCountX} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
-        assert$1(workgroupCountY < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountY(${workgroupCountY} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
-        assert$1(workgroupCountZ < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountZ(${workgroupCountZ} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
+        assert(workgroupCountX < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountX(${workgroupCountX} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
+        assert(workgroupCountY < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountY(${workgroupCountY} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
+        assert(workgroupCountZ < device.limits.maxComputeWorkgroupsPerDimension, () => `workGroupCountZ(${workgroupCountZ} > device.limits.maxComputeWorkgroupsPerDimension(${device.limits.maxComputeWorkgroupsPerDimension})`);
     });
     const kIndirectDispatchWorkgroupsParametersSize = 12;
     wrapFunctionBefore(GPUComputePassEncoder, 'dispatchWorkgroupsIndirect', function ([indirectBuffer, indirectOffset]) {
@@ -7426,10 +7430,10 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         validateEncoderBindGroups(info.bindGroups, info.pipeline);
         assertNotDestroyed(indirectBuffer);
         const device = s_objToDevice.get(this);
-        assert$1(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
-        assert$1(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
-        assert$1(indirectOffset + kIndirectDispatchWorkgroupsParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDispatchWorkgroupsParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
-        assert$1(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
+        assert(device === s_objToDevice.get(indirectBuffer), 'indirectBuffer is not from same device', [indirectBuffer]);
+        assert(!!(indirectBuffer.usage & GPUBufferUsage.INDIRECT), () => `buffer(${bufferUsageToString(indirectBuffer.usage)}) must have usage INDIRECT`, [indirectBuffer, this]);
+        assert(indirectOffset + kIndirectDispatchWorkgroupsParametersSize <= indirectBuffer.size, `indirectOffset(${indirectOffset}) + sizeOfIndirectParameters(${kIndirectDispatchWorkgroupsParametersSize}) > indirectBuffer.size(${indirectBuffer.size})`, [indirectBuffer]);
+        assert(indirectOffset % 4 === 0, () => `indirectOffset(${indirectOffset}) is not multiple of 4`);
     });
 
     const s_renderPassToPassInfoMap = new WeakMap();
@@ -7454,7 +7458,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             inUseDepthOrArrayLayers.set(layer, inUseMipLevels);
             for (let m = 0; m < fullView.mipLevelCount; ++m) {
                 const mipLevel = m + fullView.baseMipLevel;
-                assert$1(!inUseMipLevels.has(mipLevel), () => `mipLevel(${mipLevel}) of layer(${layer}) is already in use`, [texture]);
+                assert(!inUseMipLevels.has(mipLevel), () => `mipLevel(${mipLevel}) of layer(${layer}) is already in use`, [texture]);
                 inUseMipLevels.add(mipLevel);
             }
         }
@@ -7462,21 +7466,21 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
     function validateViewAspectIsAllAspectsOfTexture(texture, aspect) {
         const { depth, stencil } = kAllTextureFormatInfo[texture.format];
         if (depth && stencil) {
-            assert$1(aspect === 'all', 'aspect must be all for depth-stencil textures', [texture]);
+            assert(aspect === 'all', 'aspect must be all for depth-stencil textures', [texture]);
         }
         else if (depth) {
-            assert$1(aspect === 'all' || aspect === 'depth-only', 'aspect must be all or depth-only for depth textures', [texture]);
+            assert(aspect === 'all' || aspect === 'depth-only', 'aspect must be all or depth-only for depth textures', [texture]);
         }
         else if (stencil) {
-            assert$1(aspect === 'all' || aspect === 'stencil-only', 'aspect must be all or stencil-only for stencil textures', [texture]);
+            assert(aspect === 'all' || aspect === 'stencil-only', 'aspect must be all or stencil-only for stencil textures', [texture]);
         }
     }
     function validateRenderableTextureView(texture, viewDesc) {
-        assert$1((texture.usage & GPUTextureUsage.RENDER_ATTACHMENT) !== 0, () => `texture.usage(${textureUsageToString(texture.usage)}) is missing RENDER_ATTACHMENT`, [texture]);
+        assert((texture.usage & GPUTextureUsage.RENDER_ATTACHMENT) !== 0, () => `texture.usage(${textureUsageToString(texture.usage)}) is missing RENDER_ATTACHMENT`, [texture]);
         const { dimension, mipLevelCount, arrayLayerCount, aspect } = viewDesc;
-        assert$1(dimension === '2d' || dimension === '3d', () => `dimension(${dimension}) must be 2d or 3d`);
-        assert$1(mipLevelCount === 1, () => `mipLevelCount(${mipLevelCount}) must be 1`);
-        assert$1(arrayLayerCount === 1, () => `arrayLayerCount(${arrayLayerCount}) must be 1`);
+        assert(dimension === '2d' || dimension === '3d', () => `dimension(${dimension}) must be 2d or 3d`);
+        assert(mipLevelCount === 1, () => `mipLevelCount(${mipLevelCount}) must be 1`);
+        assert(arrayLayerCount === 1, () => `arrayLayerCount(${arrayLayerCount}) must be 1`);
         validateViewAspectIsAllAspectsOfTexture(texture, aspect);
     }
     function validateRenderPassColorAttachment(attachment, slot) {
@@ -7485,28 +7489,28 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         const renderTexture = s_textureViewToTexture.get(view);
         const formatInfo = kAllTextureFormatInfo[renderViewDesc.format];
         validateRenderableTextureView(renderTexture, renderViewDesc);
-        assert$1(!!formatInfo.colorRender, () => `format(${renderViewDesc.format}) is not color renderable`);
+        assert(!!formatInfo.colorRender, () => `format(${renderViewDesc.format}) is not color renderable`);
         if (renderViewDesc.dimension === '3d') {
-            assert$1(!!depthSlice, () => `attachment(${slot})'s dimension is '3d' but depthSlice is missing`);
+            assert(!!depthSlice, () => `attachment(${slot})'s dimension is '3d' but depthSlice is missing`);
             const [, , d] = logicalMipLevelSpecificTextureExtent(renderTexture, renderViewDesc.baseMipLevel);
-            assert$1(depthSlice < d, () => `depthSlice(${depthSlice}) must be < depth(${d}) at mipLevel(${renderViewDesc.mipLevelCount}) of texture`, [renderTexture]);
+            assert(depthSlice < d, () => `depthSlice(${depthSlice}) must be < depth(${d}) at mipLevel(${renderViewDesc.mipLevelCount}) of texture`, [renderTexture]);
         }
         else {
-            assert$1(depthSlice === undefined, `attachment(${slot}) is not 3d so depthSlice must NOT be provided`);
+            assert(depthSlice === undefined, `attachment(${slot}) is not 3d so depthSlice must NOT be provided`);
         }
         if (resolveTarget) {
             const resolveViewDesc = s_textureViewToDesc.get(resolveTarget);
             const resolveTexture = s_textureViewToTexture.get(resolveTarget);
             const [tw, th] = logicalMipLevelSpecificTextureExtent(renderTexture, renderViewDesc.baseMipLevel);
             const [rw, rh] = logicalMipLevelSpecificTextureExtent(resolveTexture, resolveViewDesc.baseMipLevel);
-            assert$1(tw === rw && th === rh, () => `resolveTarget render extent(${rw}, ${rh}) != view render extent (${tw}, ${th})`);
-            assert$1(renderTexture.sampleCount > 1, 'resolveTarget is set so view texture must have sampleCount > 1', [renderTexture]);
-            assert$1(resolveTexture.sampleCount === 1, 'resolveTarget.sampleCount must be 1', [resolveTarget]);
+            assert(tw === rw && th === rh, () => `resolveTarget render extent(${rw}, ${rh}) != view render extent (${tw}, ${th})`);
+            assert(renderTexture.sampleCount > 1, 'resolveTarget is set so view texture must have sampleCount > 1', [renderTexture]);
+            assert(resolveTexture.sampleCount === 1, 'resolveTarget.sampleCount must be 1', [resolveTarget]);
             validateRenderableTextureView(resolveTexture, resolveViewDesc);
-            assert$1(resolveViewDesc.format === renderViewDesc.format, () => `resolveTarget.view.format(${resolveViewDesc.format}) must equal target.view.format(${renderViewDesc.format})`);
-            assert$1(resolveTexture.format === renderTexture.format, () => `resolve texture format(${resolveTexture.format}) must equal target texture format(${renderTexture.format})`);
+            assert(resolveViewDesc.format === renderViewDesc.format, () => `resolveTarget.view.format(${resolveViewDesc.format}) must equal target.view.format(${renderViewDesc.format})`);
+            assert(resolveTexture.format === renderTexture.format, () => `resolve texture format(${resolveTexture.format}) must equal target texture format(${renderTexture.format})`);
             const resolveFormatInfo = kAllTextureFormatInfo[resolveTexture.format];
-            assert$1(!!resolveFormatInfo?.colorRender?.resolve, () => `resolve texture.format(${resolveTexture.format}) does not support resolving`);
+            assert(!!resolveFormatInfo?.colorRender?.resolve, () => `resolve texture.format(${resolveTexture.format}) does not support resolving`);
         }
     }
     wrapRenderCommandsMixin(GPURenderPassEncoder, s_renderPassToPassInfoMap, getRenderPassLayout);
@@ -7542,14 +7546,14 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             const { view } = attachment;
             const texture = s_textureViewToTexture.get(view);
             assertNotDestroyed(texture);
-            assert$1(s_objToDevice.get(texture) === device, 'texture is not from same device as command encoder', [texture, commandEncoder]);
+            assert(s_objToDevice.get(texture) === device, 'texture is not from same device as command encoder', [texture, commandEncoder]);
             const { sampleCount, format } = texture;
             const formatInfo = kAllTextureFormatInfo[format];
             markTextureInUse(inuseTextures, texture, view);
             const { colorRender, depth, stencil } = formatInfo;
             checkRenderExtent(texture, view);
             if (isDepth) {
-                assert$1(!!depth || !!stencil, () => `format(${format}) is not a depth stencil format`);
+                assert(!!depth || !!stencil, () => `format(${format}) is not a depth stencil format`);
                 depthStencilFormat = format;
             }
             else {
@@ -7561,7 +7565,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
                 passSampleCount = sampleCount;
             }
             else {
-                assert$1(sampleCount === passSampleCount, 'all attachments do not have the same sampleCount');
+                assert(sampleCount === passSampleCount, 'all attachments do not have the same sampleCount');
             }
         };
         const { timestampWrites, colorAttachments, depthStencilAttachment, occlusionQuerySet } = desc;
@@ -7569,16 +7573,16 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             addView(colorAttachment);
         }
         addView(depthStencilAttachment, true);
-        assert$1(numAttachments > 0, 'there must be at least 1 colorAttachment or depthStencilAttachment');
-        assert$1(numAttachments <= device.limits.maxColorAttachments, () => `numAttachments(${numAttachments}) > device.limits.maxColorAttachments(${device.limits.maxColorAttachments})`);
-        assert$1(bytesPerSample <= device.limits.maxColorAttachmentBytesPerSample, () => `color attachments bytesPerSample(${bytesPerSample}) > device.limits.maxColorAttachmentBytesPerSample(${device.limits.maxColorAttachmentBytesPerSample})`);
+        assert(numAttachments > 0, 'there must be at least 1 colorAttachment or depthStencilAttachment');
+        assert(numAttachments <= device.limits.maxColorAttachments, () => `numAttachments(${numAttachments}) > device.limits.maxColorAttachments(${device.limits.maxColorAttachments})`);
+        assert(bytesPerSample <= device.limits.maxColorAttachmentBytesPerSample, () => `color attachments bytesPerSample(${bytesPerSample}) > device.limits.maxColorAttachmentBytesPerSample(${device.limits.maxColorAttachmentBytesPerSample})`);
         if (timestampWrites) {
             validateTimestampWrites(device, timestampWrites);
         }
         if (occlusionQuerySet) {
             assertNotDestroyed(occlusionQuerySet);
-            assert$1(device === s_objToDevice.get(occlusionQuerySet), 'occlusionQuerySet is not from same device', [occlusionQuerySet]);
-            assert$1(occlusionQuerySet.type === 'occlusion', () => `occlusionQuerySet.type(${occlusionQuerySet.type}) is not 'occlusion'`, [occlusionQuerySet]);
+            assert(device === s_objToDevice.get(occlusionQuerySet), 'occlusionQuerySet is not from same device', [occlusionQuerySet]);
+            assert(occlusionQuerySet.type === 'occlusion', () => `occlusionQuerySet.type(${occlusionQuerySet.type}) is not 'occlusion'`, [occlusionQuerySet]);
         }
         const renderPassLayout = createRenderPassLayout(trimNulls(colorFormats), passSampleCount, depthStencilFormat);
         s_renderPassToPassInfoMap.set(passEncoder, {
@@ -7604,11 +7608,11 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         const device = s_objToDevice.get(this);
         let bundleCount = 0;
         for (const bundle of bundles) {
-            assert$1(s_objToDevice.get(bundle) === device, () => 'bundle[${count}] is not from same device as render pass encoder', [bundle]);
+            assert(s_objToDevice.get(bundle) === device, () => 'bundle[${count}] is not from same device as render pass encoder', [bundle]);
             const count = bundleCount;
             const bundleDesc = getRenderPassLayoutForRenderBundle(bundle);
             const passLayoutInfo = getRenderPassLayout(this);
-            assert$1(bundleDesc.passLayoutInfo.passLayoutSignature === passLayoutInfo.passLayoutSignature, () => `bundle[${count}] is not compatible with ${this.constructor.name}
+            assert(bundleDesc.passLayoutInfo.passLayoutSignature === passLayoutInfo.passLayoutSignature, () => `bundle[${count}] is not compatible with ${this.constructor.name}
 
 ${this.constructor.name} expects ${JSON.stringify(passLayoutInfo.renderPassLayout, null, 2)}
 
@@ -7626,12 +7630,12 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const info = s_renderPassToPassInfoMap.get(this);
         validateEncoderState(this, info.state);
         const { occlusionIndices, occlusionQueryActive, occlusionQuerySet } = info;
-        assert$1(!!occlusionQuerySet, 'no occlusionQuerySet in pass');
+        assert(!!occlusionQuerySet, 'no occlusionQuerySet in pass');
         assertNotDestroyed(occlusionQuerySet);
-        assert$1(queryIndex < occlusionQuerySet.count, () => `queryIndex(${queryIndex}) >= occlusionQuerySet.count(${occlusionQuerySet.count})`, [occlusionQuerySet]);
+        assert(queryIndex < occlusionQuerySet.count, () => `queryIndex(${queryIndex}) >= occlusionQuerySet.count(${occlusionQuerySet.count})`, [occlusionQuerySet]);
         const queryErr = occlusionIndices.get(queryIndex);
-        assert$1(!queryErr, () => `queryIndex(${queryIndex}) was already used in this pass at ${queryErr.stack}`);
-        assert$1(!occlusionQueryActive, () => `another query is already active from ${occlusionQueryActive.stack}`);
+        assert(!queryErr, () => `queryIndex(${queryIndex}) was already used in this pass at ${queryErr.stack}`);
+        assert(!occlusionQueryActive, () => `another query is already active from ${occlusionQueryActive.stack}`);
         info.occlusionQueryActive = new Error();
         info.occlusionQueryActiveIndex = queryIndex;
     });
@@ -7639,7 +7643,7 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const info = s_renderPassToPassInfoMap.get(this);
         validateEncoderState(this, info.state);
         const { occlusionIndices, occlusionQueryActive, occlusionQueryActiveIndex, occlusionQuerySet } = info;
-        assert$1(!!info.occlusionQueryActive, 'no occlusion query is active');
+        assert(!!info.occlusionQueryActive, 'no occlusion query is active');
         occlusionIndices.set(occlusionQueryActiveIndex, occlusionQueryActive);
         if (occlusionQuerySet) {
             assertNotDestroyed(occlusionQuerySet);
@@ -7652,28 +7656,28 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         validateEncoderState(this, info.state);
         info.state = 'ended';
         unlockCommandEncoder(info.commandEncoder);
-        assert$1(!info.occlusionQueryActive, () => `occlusion queryIndex(${info.occlusionQueryActiveIndex}) is still active`);
+        assert(!info.occlusionQueryActive, () => `occlusion queryIndex(${info.occlusionQueryActiveIndex}) is still active`);
     });
     wrapFunctionBefore(GPURenderPassEncoder, 'setViewport', function ([x, y, width, height, minDepth, maxDepth]) {
         const info = s_renderPassToPassInfoMap.get(this);
         validateEncoderState(this, info.state);
         const { targetWidth, targetHeight, } = info;
-        assert$1(x >= 0, () => `x(${x}) < 0`, [this]);
-        assert$1(y >= 0, () => `y(${y}) < 0`, [this]);
-        assert$1(x + width <= targetWidth, () => `x(${x}) + width(${width}) > texture.width(${targetWidth})`, [this]);
-        assert$1(y + height <= targetHeight, () => `y(${x}) + height(${height}) > texture.height(${targetHeight})`, [this]);
-        assert$1(minDepth >= 0 && minDepth <= 1.0, () => `minDepth(${minDepth}) must be >= 0 and <= 1`);
-        assert$1(maxDepth >= 0 && maxDepth <= 1.0, () => `maxDepth(${maxDepth}) must be >= 0 and <= 1`);
-        assert$1(minDepth < maxDepth, () => `minDepth(${minDepth}) must be < maxDepth(${maxDepth})`);
+        assert(x >= 0, () => `x(${x}) < 0`, [this]);
+        assert(y >= 0, () => `y(${y}) < 0`, [this]);
+        assert(x + width <= targetWidth, () => `x(${x}) + width(${width}) > texture.width(${targetWidth})`, [this]);
+        assert(y + height <= targetHeight, () => `y(${x}) + height(${height}) > texture.height(${targetHeight})`, [this]);
+        assert(minDepth >= 0 && minDepth <= 1.0, () => `minDepth(${minDepth}) must be >= 0 and <= 1`);
+        assert(maxDepth >= 0 && maxDepth <= 1.0, () => `maxDepth(${maxDepth}) must be >= 0 and <= 1`);
+        assert(minDepth < maxDepth, () => `minDepth(${minDepth}) must be < maxDepth(${maxDepth})`);
     });
     wrapFunctionBefore(GPURenderPassEncoder, 'setScissorRect', function ([x, y, width, height]) {
         const info = s_renderPassToPassInfoMap.get(this);
         validateEncoderState(this, info.state);
         const { targetWidth, targetHeight, } = info;
-        assert$1(x >= 0, () => `x(${x}) < 0`, [this]);
-        assert$1(y >= 0, () => `y(${y}) < 0`, [this]);
-        assert$1(x + width <= targetWidth, () => `x(${x}) + width(${width}) > texture.width(${targetWidth})`, [this]);
-        assert$1(y + height <= targetHeight, () => `y(${x}) + height(${height}) > texture.height(${targetHeight})`, [this]);
+        assert(x >= 0, () => `x(${x}) < 0`, [this]);
+        assert(y >= 0, () => `y(${y}) < 0`, [this]);
+        assert(x + width <= targetWidth, () => `x(${x}) + width(${width}) > texture.width(${targetWidth})`, [this]);
+        assert(y + height <= targetHeight, () => `y(${x}) + height(${height}) > texture.height(${targetHeight})`, [this]);
     });
 
     wrapFunctionAfter(GPUCommandEncoder, 'beginComputePass', function (passEncoder, [desc]) {
@@ -7694,21 +7698,21 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         assertNotDestroyed(src);
         assertNotDestroyed(dst);
         const device = s_objToDevice.get(this);
-        assert$1(device === s_objToDevice.get(src), 'src is not from same device as commandEncoder', [src, this]);
-        assert$1(device === s_objToDevice.get(dst), 'dst is not from same device as commandEncoder', [dst, this]);
-        assert$1(src !== dst, 'src must not be same buffer as dst', [src, dst]);
-        assert$1(!!(src.usage & GPUBufferUsage.COPY_SRC), () => `src.usage(${bufferUsageToString(src.usage)} missing COPY_SRC)`, [src]);
-        assert$1(!!(dst.usage & GPUBufferUsage.COPY_DST), () => `dst.usage(${bufferUsageToString(dst.usage)} missing COPY_DST)`, [dst]);
-        assert$1(srcOffset + size <= src.size, () => `srcOffset(${srcOffset}) + size(${size}) > srcBuffer.size(${src.size})`, [src]);
-        assert$1(dstOffset + size <= dst.size, () => `dstOffset(${dstOffset}) + size(${size}) > dstBuffer.size(${dst.size})`, [dst]);
-        assert$1(size % 4 === 0, () => `size(${size}) is not multiple of 4`);
-        assert$1(srcOffset % 4 === 0, () => `srcOffset(${srcOffset}) is not multiple of 4`);
-        assert$1(dstOffset % 4 === 0, () => `dstOffset(${dstOffset}) is not multiple of 4`);
+        assert(device === s_objToDevice.get(src), 'src is not from same device as commandEncoder', [src, this]);
+        assert(device === s_objToDevice.get(dst), 'dst is not from same device as commandEncoder', [dst, this]);
+        assert(src !== dst, 'src must not be same buffer as dst', [src, dst]);
+        assert(!!(src.usage & GPUBufferUsage.COPY_SRC), () => `src.usage(${bufferUsageToString(src.usage)} missing COPY_SRC)`, [src]);
+        assert(!!(dst.usage & GPUBufferUsage.COPY_DST), () => `dst.usage(${bufferUsageToString(dst.usage)} missing COPY_DST)`, [dst]);
+        assert(srcOffset + size <= src.size, () => `srcOffset(${srcOffset}) + size(${size}) > srcBuffer.size(${src.size})`, [src]);
+        assert(dstOffset + size <= dst.size, () => `dstOffset(${dstOffset}) + size(${size}) > dstBuffer.size(${dst.size})`, [dst]);
+        assert(size % 4 === 0, () => `size(${size}) is not multiple of 4`);
+        assert(srcOffset % 4 === 0, () => `srcOffset(${srcOffset}) is not multiple of 4`);
+        assert(dstOffset % 4 === 0, () => `dstOffset(${dstOffset}) is not multiple of 4`);
     });
     function validateImageCopyBuffer(icb) {
         assertNotDestroyed(icb.buffer);
         const bytesPerRow = icb.bytesPerRow || 0;
-        assert$1(bytesPerRow % 256 === 0, () => `src.bytesPerRow(${bytesPerRow}) not multiple of 256`, [icb.buffer]);
+        assert(bytesPerRow % 256 === 0, () => `src.bytesPerRow(${bytesPerRow}) not multiple of 256`, [icb.buffer]);
     }
     function validateImageCopyTexture(ict, copySize) {
         assertNotDestroyed(ict.texture);
@@ -7716,13 +7720,13 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const { blockWidth, blockHeight, } = formatInfo;
         const mipLevel = ict.mipLevel || 0;
         const [origX, origY] = reifyGPUOrigin3D(ict.origin);
-        assert$1(mipLevel < ict.texture.mipLevelCount, () => `mipLevel(${mipLevel}) must be less than texture.mipLevelCount(${ict.texture.mipLevelCount})`, [ict.texture]);
-        assert$1(origX % blockWidth === 0, () => `origin.x(${origX}) not multiple of blockWidth(${blockWidth})`, [ict.texture]);
-        assert$1(origY % blockHeight === 0, () => `origin.y(${origY}) not multiple of blockHeight(${blockHeight})`, [ict.texture]);
+        assert(mipLevel < ict.texture.mipLevelCount, () => `mipLevel(${mipLevel}) must be less than texture.mipLevelCount(${ict.texture.mipLevelCount})`, [ict.texture]);
+        assert(origX % blockWidth === 0, () => `origin.x(${origX}) not multiple of blockWidth(${blockWidth})`, [ict.texture]);
+        assert(origY % blockHeight === 0, () => `origin.y(${origY}) not multiple of blockHeight(${blockHeight})`, [ict.texture]);
         const [copyWidth, copyHeight, copyDepthOrArrayLayers] = reifyGPUExtent3D(copySize);
         if (formatInfo.depth && formatInfo.stencil && ict.texture.sampleCount > 1) {
             const [w, h, d] = physicalMipLevelSpecificTextureExtent(ict.texture, mipLevel);
-            assert$1(copyWidth === w &&
+            assert(copyWidth === w &&
                 copyHeight === h &&
                 copyDepthOrArrayLayers === d, 'copySize must match textureSize for depth-stencil textures', [ict.texture]);
         }
@@ -7735,11 +7739,11 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const [copyWidth, copyHeight, copyDepthOrArrayLayers] = reifyGPUExtent3D(copySize);
         const [w, h, d] = physicalMipLevelSpecificTextureExtent(ict.texture, mipLevel);
         const res = [ict.texture];
-        assert$1(origX + copyWidth <= w, () => `origin.x(${origX}) + copySize.width(${copyWidth}) is > physical width(${w}) of mipLevel(${mipLevel})`, res);
-        assert$1(origY + copyHeight <= h, () => `origin.y(${origY}) + copySize.height(${copyHeight}) is > physical height(${h}) of mipLevel(${mipLevel})`, res);
-        assert$1(origZ + copyDepthOrArrayLayers <= d, () => `origin.z(${origZ}) + copySize.depthOrArrayBuffers(${copyDepthOrArrayLayers}) is > texture.depthOrArrayLayers(${d}) of mipLevel(${mipLevel})`, res);
-        assert$1(copyWidth % blockWidth === 0, () => `copySize.width(${copyWidth}) is not multiple of blockWidth(${blockWidth})`, res);
-        assert$1(copyHeight % blockHeight === 0, () => `copySize.height(${copyHeight}) is not multiple of blockHeight(${blockHeight})`, res);
+        assert(origX + copyWidth <= w, () => `origin.x(${origX}) + copySize.width(${copyWidth}) is > physical width(${w}) of mipLevel(${mipLevel})`, res);
+        assert(origY + copyHeight <= h, () => `origin.y(${origY}) + copySize.height(${copyHeight}) is > physical height(${h}) of mipLevel(${mipLevel})`, res);
+        assert(origZ + copyDepthOrArrayLayers <= d, () => `origin.z(${origZ}) + copySize.depthOrArrayBuffers(${copyDepthOrArrayLayers}) is > texture.depthOrArrayLayers(${d}) of mipLevel(${mipLevel})`, res);
+        assert(copyWidth % blockWidth === 0, () => `copySize.width(${copyWidth}) is not multiple of blockWidth(${blockWidth})`, res);
+        assert(copyHeight % blockHeight === 0, () => `copySize.height(${copyHeight}) is not multiple of blockHeight(${blockHeight})`, res);
     }
     function validateLinearTextureData(idl, byteSize, format, copyExtent) {
         const formatInfo = kAllTextureFormatInfo[format];
@@ -7748,22 +7752,22 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const widthInBlocks = copyWidth / blockWidth;
         const heightInBlocks = copyHeight / blockHeight;
         const bytesInLastRow = widthInBlocks * formatInfo.bytesPerBlock;
-        assert$1(widthInBlocks % 1 === 0, () => `width(${copyWidth}) must be multiple of blockWidth${blockWidth}`);
-        assert$1(heightInBlocks % 1 === 0, () => `height(${copyHeight}) must be multiple of blockHeight${blockHeight}`);
+        assert(widthInBlocks % 1 === 0, () => `width(${copyWidth}) must be multiple of blockWidth${blockWidth}`);
+        assert(heightInBlocks % 1 === 0, () => `height(${copyHeight}) must be multiple of blockHeight${blockHeight}`);
         if (heightInBlocks > 1) {
-            assert$1(idl.bytesPerRow !== undefined, () => `bytesPerRow must be set if heightInBlocks(${heightInBlocks}) > 1`);
+            assert(idl.bytesPerRow !== undefined, () => `bytesPerRow must be set if heightInBlocks(${heightInBlocks}) > 1`);
         }
         if (copyDepthOrArrayLayers > 1) {
-            assert$1(idl.bytesPerRow !== undefined, () => `bytesPerRow must be set if copySize.depthOrArrayLayers(${copyDepthOrArrayLayers}) > 1`);
+            assert(idl.bytesPerRow !== undefined, () => `bytesPerRow must be set if copySize.depthOrArrayLayers(${copyDepthOrArrayLayers}) > 1`);
         }
         if (copyDepthOrArrayLayers > 1) {
-            assert$1(idl.rowsPerImage !== undefined, () => `rowsPerImage must be set if copySize.depthOrArrayLayers(${copyDepthOrArrayLayers}) > 1`);
+            assert(idl.rowsPerImage !== undefined, () => `rowsPerImage must be set if copySize.depthOrArrayLayers(${copyDepthOrArrayLayers}) > 1`);
         }
         if (idl.bytesPerRow !== undefined) {
-            assert$1(idl.bytesPerRow >= bytesInLastRow, () => `bytesPerRow(${idl.bytesPerRow}) must be >= bytes in the last row(${bytesInLastRow})`);
+            assert(idl.bytesPerRow >= bytesInLastRow, () => `bytesPerRow(${idl.bytesPerRow}) must be >= bytes in the last row(${bytesInLastRow})`);
         }
         if (idl.rowsPerImage !== undefined) {
-            assert$1(idl.rowsPerImage >= heightInBlocks, () => `rowsPerImage(${idl.rowsPerImage}) must be >= heightInBlocks(${heightInBlocks})`);
+            assert(idl.rowsPerImage >= heightInBlocks, () => `rowsPerImage(${idl.rowsPerImage}) must be >= heightInBlocks(${heightInBlocks})`);
         }
         const bytesPerRow = idl.bytesPerRow ?? 0;
         const rowsPerImage = idl.rowsPerImage ?? 0;
@@ -7777,34 +7781,34 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
             }
         }
         const offset = idl.offset ?? 0;
-        assert$1(offset + requiredBytesInCopy <= byteSize, () => `offset(${offset}) + requiredBytesInCopy(${requiredBytesInCopy}) must be <= buffer.size(${byteSize})`);
+        assert(offset + requiredBytesInCopy <= byteSize, () => `offset(${offset}) + requiredBytesInCopy(${requiredBytesInCopy}) must be <= buffer.size(${byteSize})`);
     }
     function validateB2TorT2BCopy(encoder, buf, tex, copySize, bufferIsSource) {
         const device = s_objToDevice.get(encoder);
-        assert$1(device === s_objToDevice.get(buf.buffer), 'buffer is not from same device as commandEncoder', [buf.buffer, encoder]);
-        assert$1(device === s_objToDevice.get(tex.texture), 'texture is not from same device as commandEncoder', [tex.texture, encoder]);
+        assert(device === s_objToDevice.get(buf.buffer), 'buffer is not from same device as commandEncoder', [buf.buffer, encoder]);
+        assert(device === s_objToDevice.get(tex.texture), 'texture is not from same device as commandEncoder', [tex.texture, encoder]);
         validateImageCopyBuffer(buf);
         const [bufRequiredUsage, texRequiredUsage] = bufferIsSource
             ? ['COPY_SRC', 'COPY_DST']
             : ['COPY_DST', 'COPY_SRC'];
-        assert$1(!!(buf.buffer.usage & GPUBufferUsage[bufRequiredUsage]), () => `src.usage(${bufferUsageToString(buf.buffer.usage)} missing ${bufRequiredUsage})`, [buf.buffer]);
+        assert(!!(buf.buffer.usage & GPUBufferUsage[bufRequiredUsage]), () => `src.usage(${bufferUsageToString(buf.buffer.usage)} missing ${bufRequiredUsage})`, [buf.buffer]);
         validateImageCopyTexture(tex, copySize);
         const formatInfo = kAllTextureFormatInfo[tex.texture.format];
-        assert$1(!!(tex.texture.usage & GPUTextureUsage[texRequiredUsage]), () => `dst.texture.usage(${textureUsageToString(tex.texture.usage)} missing ${texRequiredUsage})`, [tex.texture]);
-        assert$1(tex.texture.sampleCount === 1, 'sampleCount must be 1', [tex.texture]);
+        assert(!!(tex.texture.usage & GPUTextureUsage[texRequiredUsage]), () => `dst.texture.usage(${textureUsageToString(tex.texture.usage)} missing ${texRequiredUsage})`, [tex.texture]);
+        assert(tex.texture.sampleCount === 1, 'sampleCount must be 1', [tex.texture]);
         let aspectSpecificFormat = tex.texture.format;
         const isDepthOrStencil = formatInfo.depth || formatInfo.stencil;
         if (isDepthOrStencil) {
             if (!formatInfo.stencil) {
-                assert$1(tex.aspect !== 'stencil-only', 'can not use stencil-only aspect on non stencil texture', [tex.texture]);
+                assert(tex.aspect !== 'stencil-only', 'can not use stencil-only aspect on non stencil texture', [tex.texture]);
             }
             if (!formatInfo.depth) {
-                assert$1(tex.aspect !== 'depth-only', 'can not use depth-only aspect on non depth texture', [tex.texture]);
+                assert(tex.aspect !== 'depth-only', 'can not use depth-only aspect on non depth texture', [tex.texture]);
             }
-            assert$1(tex.aspect === 'depth-only' || tex.aspect === 'stencil-only', 'must use one aspect');
+            assert(tex.aspect === 'depth-only' || tex.aspect === 'stencil-only', 'must use one aspect');
             const aspect = tex.aspect === 'depth-only' ? 'depth' : 'stencil';
             const info = formatInfo[aspect];
-            assert$1(!!info?.copyDst, `can not copy to ${tex.aspect} of texture of format(${tex.texture.format})`, [tex.texture]);
+            assert(!!info?.copyDst, `can not copy to ${tex.aspect} of texture of format(${tex.texture.format})`, [tex.texture]);
             if (aspectSpecificFormat === 'depth24plus-stencil8') {
                 aspectSpecificFormat = tex.aspect === 'depth-only'
                     ? 'depth24plus'
@@ -7820,10 +7824,10 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         const srcOffset = buf.offset || 0;
         if (!isDepthOrStencil) {
             const texelCopyBlockFootPrint = formatInfo.bytesPerBlock;
-            assert$1(srcOffset % texelCopyBlockFootPrint === 0, () => `src.offset(${srcOffset}) must multiple of blockSize(${texelCopyBlockFootPrint})`);
+            assert(srcOffset % texelCopyBlockFootPrint === 0, () => `src.offset(${srcOffset}) must multiple of blockSize(${texelCopyBlockFootPrint})`);
         }
         else {
-            assert$1(srcOffset % 4 === 0, () => `src.offset(${srcOffset}) must by multiple of 4 for depth and/or stencil textures`);
+            assert(srcOffset % 4 === 0, () => `src.offset(${srcOffset}) must by multiple of 4 for depth and/or stencil textures`);
         }
         validateLinearTextureData(buf, buf.buffer.size, aspectSpecificFormat, copySize);
     }
@@ -7846,19 +7850,19 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
     wrapFunctionBefore(GPUCommandEncoder, 'copyTextureToTexture', function ([src, dst, copySize]) {
         getCommandBufferInfoAndValidateState(this);
         const device = s_objToDevice.get(this);
-        assert$1(device === s_objToDevice.get(src.texture), 'src.texture is not from same device as commandEncoder', [src, this]);
-        assert$1(device === s_objToDevice.get(dst.texture), 'dst.texture is not from same device as commandEncoder', [dst, this]);
+        assert(device === s_objToDevice.get(src.texture), 'src.texture is not from same device as commandEncoder', [src, this]);
+        assert(device === s_objToDevice.get(dst.texture), 'dst.texture is not from same device as commandEncoder', [dst, this]);
         validateImageCopyTexture(src, copySize);
-        assert$1(!!(src.texture.usage & GPUTextureUsage.COPY_SRC), () => `src.texture.usage(${textureUsageToString(src.texture.usage)} missing COPY_SRC`, [src.texture]);
+        assert(!!(src.texture.usage & GPUTextureUsage.COPY_SRC), () => `src.texture.usage(${textureUsageToString(src.texture.usage)} missing COPY_SRC`, [src.texture]);
         validateImageCopyTexture(dst, copySize);
-        assert$1(!!(dst.texture.usage & GPUTextureUsage.COPY_DST), () => `src.texture.usage(${textureUsageToString(dst.texture.usage)} missing COPY_DST`, [dst.texture]);
-        assert$1(src.texture.sampleCount === dst.texture.sampleCount, () => `src.texture.sampleCount(${src.texture.sampleCount}) must equal dst.texture.sampleCount(${dst.texture.sampleCount})`, [src.texture, dst.texture]);
-        assert$1(isCopyCompatible(src.texture.format, dst.texture.format), () => `src.texture.format(${src.texture.format}) must be copy compatible with dst.texture.format(${dst.texture.format})`, [src.texture, dst.texture]);
+        assert(!!(dst.texture.usage & GPUTextureUsage.COPY_DST), () => `src.texture.usage(${textureUsageToString(dst.texture.usage)} missing COPY_DST`, [dst.texture]);
+        assert(src.texture.sampleCount === dst.texture.sampleCount, () => `src.texture.sampleCount(${src.texture.sampleCount}) must equal dst.texture.sampleCount(${dst.texture.sampleCount})`, [src.texture, dst.texture]);
+        assert(isCopyCompatible(src.texture.format, dst.texture.format), () => `src.texture.format(${src.texture.format}) must be copy compatible with dst.texture.format(${dst.texture.format})`, [src.texture, dst.texture]);
         const formatInfo = kAllTextureFormatInfo[src.texture.format];
         const isDepthStencil = !!formatInfo.depth && !!formatInfo.stencil;
         if (isDepthStencil) {
-            assert$1(src.aspect === 'all', () => `src.aspect must be 'all' when format(${src.texture.format}) is a depth-stencil format`, [src.texture]);
-            assert$1(dst.aspect === 'all', () => `dst.aspect must be 'all' when format(${dst.texture.format}) is a depth-stencil format`, [dst.texture]);
+            assert(src.aspect === 'all', () => `src.aspect must be 'all' when format(${src.texture.format}) is a depth-stencil format`, [src.texture]);
+            assert(dst.aspect === 'all', () => `dst.aspect must be 'all' when format(${dst.texture.format}) is a depth-stencil format`, [dst.texture]);
         }
         validateTextureCopyRange(src, copySize);
         validateTextureCopyRange(dst, copySize);
@@ -7866,7 +7870,7 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
             const srcOrigin = reifyGPUOrigin3D(src.origin);
             const dstOrigin = reifyGPUOrigin3D(dst.origin);
             const size = reifyGPUExtent3D(copySize);
-            assert$1(!isIntersectingAxis(srcOrigin[0], dstOrigin[0], size[0]) &&
+            assert(!isIntersectingAxis(srcOrigin[0], dstOrigin[0], size[0]) &&
                 !isIntersectingAxis(srcOrigin[1], dstOrigin[1], size[1]) &&
                 !isIntersectingAxis(srcOrigin[2], dstOrigin[2], size[2]), () => `when src and dst textures are the same texture, copy boxes must not overlap`, [src.texture, dst.texture]);
         }
@@ -7876,24 +7880,24 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
         assertNotDestroyed(buffer);
         offset = offset ?? 0;
         size = size ?? buffer.size - offset;
-        assert$1(s_objToDevice.get(this) === s_objToDevice.get(buffer), 'buffer not from same device as encoder', [buffer, this]);
-        assert$1(!!(buffer.usage & GPUBufferUsage.COPY_DST), () => `buffer.usage(${bufferUsageToString(buffer.usage)}) must have COPY_DST`, [buffer]);
-        assert$1(size % 4 === 0, () => `size(${size}) must be multiple of 4`);
-        assert$1(offset % 4 === 0, () => `offset(${offset}) must be multiple of 4`);
-        assert$1(offset + size <= buffer.size, () => `offset(${offset}) + size(${size}) must be <= buffer.size(${buffer.size})`);
+        assert(s_objToDevice.get(this) === s_objToDevice.get(buffer), 'buffer not from same device as encoder', [buffer, this]);
+        assert(!!(buffer.usage & GPUBufferUsage.COPY_DST), () => `buffer.usage(${bufferUsageToString(buffer.usage)}) must have COPY_DST`, [buffer]);
+        assert(size % 4 === 0, () => `size(${size}) must be multiple of 4`);
+        assert(offset % 4 === 0, () => `offset(${offset}) must be multiple of 4`);
+        assert(offset + size <= buffer.size, () => `offset(${offset}) + size(${size}) must be <= buffer.size(${buffer.size})`);
     });
     wrapFunctionBefore(GPUCommandEncoder, 'resolveQuerySet', function ([querySet, firstQuery, queryCount, destination, destinationOffset]) {
         getCommandBufferInfoAndValidateState(this);
         assertNotDestroyed(querySet);
         assertNotDestroyed(destination);
         const device = s_objToDevice.get(this);
-        assert$1(s_objToDevice.get(querySet) === device, 'querySet not from same device', [querySet]);
-        assert$1(s_objToDevice.get(destination) === device, 'destination buffer not from same device', [destination]);
-        assert$1((destination.usage & GPUBufferUsage.QUERY_RESOLVE) !== 0, () => `destination.usage(${bufferUsageToString(destination.usage)} does not contain QUERY_RESOLVE)`, [destination]);
-        assert$1(firstQuery < querySet.count, () => `firstQuery(${firstQuery}) out of range for querySet.count(${querySet.count})`);
-        assert$1(firstQuery + queryCount <= querySet.count, () => `firstQuery(${firstQuery}) + queryCount(${queryCount}) > querySet.count(${querySet.count})`);
-        assert$1(destinationOffset % 256 === 0, () => `destinationOffset(${destinationOffset}) is not multiple of 256`);
-        assert$1(destinationOffset + queryCount * 8 <= destination.size, () => `destinationOffset(${destinationOffset}) + queryCount(${queryCount}) * 8 > destination.size(${destination.size})`);
+        assert(s_objToDevice.get(querySet) === device, 'querySet not from same device', [querySet]);
+        assert(s_objToDevice.get(destination) === device, 'destination buffer not from same device', [destination]);
+        assert((destination.usage & GPUBufferUsage.QUERY_RESOLVE) !== 0, () => `destination.usage(${bufferUsageToString(destination.usage)} does not contain QUERY_RESOLVE)`, [destination]);
+        assert(firstQuery < querySet.count, () => `firstQuery(${firstQuery}) out of range for querySet.count(${querySet.count})`);
+        assert(firstQuery + queryCount <= querySet.count, () => `firstQuery(${firstQuery}) + queryCount(${queryCount}) > querySet.count(${querySet.count})`);
+        assert(destinationOffset % 256 === 0, () => `destinationOffset(${destinationOffset}) is not multiple of 256`);
+        assert(destinationOffset + queryCount * 8 <= destination.size, () => `destinationOffset(${destinationOffset}) + queryCount(${queryCount}) * 8 > destination.size(${destination.size})`);
     });
 
     console.log('webgpu-debug-helper running');
