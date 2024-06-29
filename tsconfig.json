@@ -1,0 +1,22 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "outDir": "dist/0.x",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "declaration": false,
+    "typeRoots": [
+      "./node_modules/@webgpu/types",
+      "./node_modules/@types",
+    ],
+  },
+  "include": [
+    "extension/scripts/*.js",
+    "extension/src/*.js",
+  ],
+  "typeAcquisition": {
+    "include": ["@webgpu/types"]
+  }
+}

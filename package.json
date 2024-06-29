@@ -8,6 +8,8 @@
   "keywords": [],
   "author": "Gregg Tavares",
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.6",
+    "@webgpu/types": "^0.1.43",
     "eslint": "^8.11.0",
     "eslint-plugin-html": "^6.2.0",
     "eslint-plugin-optional-comma-spacing": "^0.0.4",

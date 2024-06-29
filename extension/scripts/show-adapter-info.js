@@ -4,11 +4,11 @@ if (navigator.gpu) {
       const adapter = await origFn.call(this, ...args);
       if (adapter) {
         try {
-          const info = await adapter.requestAdapterInfo();
+          const info = adapter.info ?? (await adapter.requestAdapterInfo());
           console.log('adapter:', adapter);
           console.log('adapterInfo:', info);
         } catch (e) {
-          console.log("ERR:", e);
+          console.log('ERR:', e);
         }
       }
       return adapter;
