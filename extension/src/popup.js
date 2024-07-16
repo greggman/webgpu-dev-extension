@@ -71,6 +71,7 @@ async function main() {
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
   gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
   gui.add(settings, 'showErrors').name('Show Errors');
+  gui.add(settings, 'showShaderErrors').name('Show Shader Errors');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');
   gui.add(settings, 'customFormatters').name('DevTools Custom Formatters');

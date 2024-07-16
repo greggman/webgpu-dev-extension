@@ -123,6 +123,10 @@ if (settings.webgpuDebugHelper) {
   injectScript(chrome.runtime.getURL('scripts/show-errors.js'));
 }
 
+if (settings.showShaderErrors) {
+  injectScript(chrome.runtime.getURL('scripts/show-shader-errors.js'));
+}
+
 if (settings.showAdapterInfo) {
   injectScript(chrome.runtime.getURL('scripts/show-adapter-info.js'));
 }

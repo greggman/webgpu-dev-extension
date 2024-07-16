@@ -66,6 +66,13 @@ Unpause execution in the debugger or close the DevTools and the UI should appear
   <img src="https://greggman.github.io/webgpu-dev-extension/screenshots/without-extension.png" width="600">
 
 ---
+### Show Shader Errors
+
+If a shader module gets an error, shows the entire shader in the JS console.
+
+Normally shader errors only show the line the error happened on.
+
+---
 ### Add Descriptors
 
   Adds the descriptors used to create many objects to those objects. For example:
@@ -81,7 +88,7 @@ Unpause execution in the debugger or close the DevTools and the UI should appear
 ---
 ### Force Mode
 
-  Lets you choose one of `'none'`, `'low-power'`, `'high-performance'`, and `'compatibility-mode'`
+  Lets you choose one of `'none'`, `'low-power'`, `'high-performance'`, `'compatibility-mode'` and `'force-fallback-adapter'`
 
 ---
 ### Dump Shaders

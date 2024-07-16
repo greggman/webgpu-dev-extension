@@ -28,6 +28,7 @@
         "scripts/remove-webgpu.js",
         "scripts/show-adapter-info.js",
         "scripts/show-errors.js",
+        "scripts/show-shader-errors.js",
         "scripts/track-pass-state.js",
         "scripts/webgpu-compat-validation.js",
         "scripts/webgpu-debug-helper.js",
