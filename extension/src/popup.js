@@ -79,7 +79,7 @@ async function main() {
   gui.add(settings, 'dumpShaders').name('Dump Shaders');
   gui.add(settings, 'disableWebGPU').name('Disable WebGPU');
   gui.add(settings, 'removeWebGPU').name('Remove WebGPU');
-  gui.add(settings, 'forceMode', ['none', 'low-power', 'high-performance', 'compatibility-mode']).name('Force Mode');
+  gui.add(settings, 'forceMode', ['none', 'low-power', 'high-performance', 'compatibility-mode', 'force-fallback-adapter']).name('Force Mode');
   gui.addText(settings, 'blockFeatures').name('Block Features (* = all)');
   gui.addText(settings, 'breakpoints').name('API Breakpoints (* = all)');
 

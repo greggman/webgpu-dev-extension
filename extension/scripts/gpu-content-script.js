@@ -96,6 +96,9 @@ switch (settings.forceMode) {
   case 'compatibility-mode':
     injectScript(chrome.runtime.getURL('scripts/force-compatibility-mode.js'));
     break;
+  case 'force-fallback-adapter':
+    injectScript(chrome.runtime.getURL('scripts/force-fallback-adapter.js'));
+    break;
 }
 
 if (settings.dumpShaders) {

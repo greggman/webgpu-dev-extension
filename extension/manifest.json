@@ -21,6 +21,7 @@
         "scripts/disable-webgpu.js",
         "scripts/dump-shaders.js",
         "scripts/force-compatibility-mode.js",
+        "scripts/force-fallback-adapter.js",
         "scripts/force-high-performance.js",
         "scripts/force-low-power.js",
         "scripts/gpu-injected.js",
