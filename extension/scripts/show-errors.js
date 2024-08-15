@@ -88,11 +88,8 @@
             return async function () {
                 const errorScopeStack = deviceToErrorScopeStack.get(this);
                 const errorScope = errorScopeStack.pop();
-                if (errorScope === undefined) {
-                    throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
-                }
                 const errPromise = origFn.call(this);
-                return errorScope.errors.pop() ?? errPromise;
+                return errorScope?.errors.pop() ?? errPromise;
             };
         })(GPUDevice.prototype.popErrorScope);
         GPUAdapter.prototype.requestDevice = (function (origFn) {
