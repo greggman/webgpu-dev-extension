@@ -1,5 +1,5 @@
-if (navigator.gpu) {
-  navigator.gpu.requestAdapter = (function(origFn) {
+if (typeof GPU !== 'undefined') {
+  GPU.prototype.requestAdapter = (function(origFn) {
     return async function(...args) {
       const adapter = await origFn.call(this, ...args);
       if (adapter) {
@@ -13,7 +13,7 @@ if (navigator.gpu) {
       }
       return adapter;
     };
-  })(navigator.gpu.requestAdapter);
+  })(GPU.prototype.requestAdapter);
 
   GPUAdapter.prototype.requestDevice = (function(origFn) {
     return async function(...args) {

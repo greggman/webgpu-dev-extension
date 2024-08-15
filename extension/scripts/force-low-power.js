@@ -1,9 +1,19 @@
-if (navigator.gpu) {
-  navigator.gpu.requestAdapter = (function(origFn) {
+if (typeof GPU !== 'undefined') {
+  GPU.prototype.requestAdapter = (function(origFn) {
     return async function(desc = {}) {
-      return await origFn.call(this, {...desc, powerPreference: 'low-power'});
+      const adapter = await origFn.call(this, {...desc, powerPreference: 'low-power'});
+      if (adapter) {
+        try {
+          const info = adapter.info ?? (await adapter.requestAdapterInfo());
+          console.log('adapter:', adapter);
+          console.log('adapterInfo:', info);
+        } catch (e) {
+          console.log("ERR:", e);
+        }
+      }
+      return adapter;
     };
-  })(navigator.gpu.requestAdapter);
+  })(GPU.prototype.requestAdapter);
 }
 
 document.currentScript.remove();

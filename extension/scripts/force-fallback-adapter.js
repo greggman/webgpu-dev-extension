@@ -1,10 +1,10 @@
-if (navigator.gpu) {
-  navigator.gpu.requestAdapter = (function(origFn) {
+if (typeof GPU !== 'undefined') {
+  GPU.prototype.requestAdapter = (function(origFn) {
     return async function(desc = {}) {
       const adapter = await origFn.call(this, {...desc, forceFallbackAdapter: true});
       if (adapter) {
         try {
-          const info = await adapter.requestAdapterInfo();
+          const info = adapter.info ?? (await adapter.requestAdapterInfo());
           console.log('adapter:', adapter);
           console.log('adapterInfo:', info);
         } catch (e) {
@@ -13,7 +13,7 @@ if (navigator.gpu) {
       }
       return adapter;
     };
-  })(navigator.gpu.requestAdapter);
+  })(GPU.prototype.requestAdapter);
 }
 
 document.currentScript.remove();
