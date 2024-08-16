@@ -1,6 +1,6 @@
 {
   "name": "WebGPU Dev Extension",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "manifest_version": 3,
   "description": "Provide some features helpful for WebGPU Development",
   "default_locale": "en",
