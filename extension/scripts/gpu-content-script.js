@@ -33,7 +33,18 @@ if (!settings) {
   settings = {};
 }
 
-const show = Object.values(settings).reduce((show, v) => show || (v !== '' && v !== false && v !== 'none'), false);
+const isPropNotSet = (k, v) => {
+  if (v === '') return true;
+  if (v === false) return true;
+  if (v === 'none') return true;
+  if (k === 'timeMult') {
+    return (v === 1);
+  } else {
+    return (v === 0);
+  }
+}
+
+const show = Object.entries(settings).reduce((show, [k, v]) => show || !isPropNotSet(k, v), false);
 if (show) {
   console.log('webgpu-dev-extension settings:', Object.fromEntries(Object.entries(settings).filter(([, v]) => !!v && v !== 'none')));
 }
@@ -137,6 +148,10 @@ if (settings.breakpoints) {
 
 if (settings.disableWebGPU) {
   injectScript(chrome.runtime.getURL('scripts/disable-webgpu.js'));
+}
+
+if (settings.rafSkipFrames || settings.timeMult !== 1) {
+  injectScript(chrome.runtime.getURL('scripts/raf-skip-frames.js'));
 }
 
 })();

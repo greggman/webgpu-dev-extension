@@ -135,7 +135,6 @@ class Text extends Control {
 
     this.inputElem = el('input', {
       type: 'text',
-      className: 'full-width',
       value: obj[prop],
       onInput: () => {
         obj[prop] = this.inputElem.value;
@@ -150,6 +149,35 @@ class Text extends Control {
   }
   name(v) {
     this.elem.querySelector('legend').textContent = v;
+    return this;
+  }
+  set(v) {
+    super.set(v);
+    this.inputElem.value = this.get();
+  }
+}
+
+class TextNumber extends Control {
+  constructor(obj, prop, options) {
+    super(obj, prop);
+
+    const id = getId();
+    this.inputElem = el('input', {
+      id,
+      type: 'number',
+      value: obj[prop],
+      ...options,
+      onInput: () => {
+        obj[prop] = parseFloat(this.inputElem.value);
+        this.changed();
+      },
+    });
+    this.labelElem = el('label', {for: id, textContent: prop}),
+    this.elem.appendChild(this.inputElem);
+    this.elem.appendChild(this.labelElem);
+  }
+  name(v) {
+    this.labelElem.textContent = v;
     return this;
   }
   set(v) {
@@ -234,8 +262,8 @@ class Select extends Control {
 
     this.labelElem = el('label', {/*for: id,*/ textContent: prop});
     this.elem.classList.add('select');
-    this.elem.appendChild(this.labelElem);
     this.elem.appendChild(this.selectElem);
+    this.elem.appendChild(this.labelElem);
   }
   set(v) {
     super.set(v);
@@ -300,6 +328,9 @@ export class GUI {
   }
   addText(obj, prop, ...args) {
     return this.addControl(new TextArea(obj, prop, ...args));
+  }
+  addNumber(obj, prop, ...args) {
+    return this.addControl(new TextNumber(obj, prop, ...args));
   }
   addControl(control) {
     control.addEventListener('change', () => this.changed());

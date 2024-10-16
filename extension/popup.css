@@ -28,6 +28,20 @@ body {
   user-select: none;
 }
 
+.control {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.control label {
+  display: block;
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+.control input[type="number"] {
+  width: 5em;
+}
+
 #head {
   background: var(--head-bg);
   display: flex;
@@ -70,6 +84,7 @@ button.current {
 }
 fieldset {
   border: 1px solid gray;
+  flex: 1 1 auto;
 }
 .radio {
   display: flex;

@@ -81,6 +81,8 @@ async function main() {
   gui.add(settings, 'disableWebGPU').name('Disable WebGPU');
   gui.add(settings, 'removeWebGPU').name('Remove WebGPU');
   gui.add(settings, 'forceMode', ['none', 'low-power', 'high-performance', 'compatibility-mode', 'force-fallback-adapter']).name('Force Mode');
+  gui.addNumber(settings, 'rafSkipFrames', { min: 0, max: 10 }).name('rAF Skip Frames');
+  gui.addNumber(settings, 'timeMult', { min: 0, max: 4, step: 0.1 }).name('Time Mult');
   gui.addText(settings, 'blockFeatures').name('Block Features (* = all)');
   gui.addText(settings, 'breakpoints').name('API Breakpoints (* = all)');
 

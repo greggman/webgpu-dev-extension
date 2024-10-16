@@ -182,6 +182,26 @@ note: You must turn on custom formatters in the DevTools (Settings->Preferences-
   Removes `navigator.gpu` and other `GPU` classes
 
 ---
+### rAF Skip Frames
+
+Skips `requestAnimationFrames`. For example, if you're on a 120fps device like an M1 Mac
+and you enter 3 then 3 out of 4 frames will be skipped, effectively making your app run
+at 30fps. Default = 0
+
+Remember this is not instant. You must refresh the page for it to take affect.
+
+---
+### Time Mult
+
+Multiplies the time passed to the `requestAnimationFrame` callback, as well as `performance.now()`,
+`Date.now()` and `setTimeout(callback,time)` and `setInterval(callback, time)` by this number.
+
+For some apps, if you set this to 0.1 your app will run at 10% speed. If you set it 10 your app
+will run at 10x speed. Default = 1
+
+Remember this is not instant. You must refresh the page for it to take affect.
+
+---
 ### Emulate Compat
 
   Experiment to show what places would fail in compatibility mode

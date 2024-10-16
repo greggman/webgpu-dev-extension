@@ -16,6 +16,8 @@ const defaultSettings = {
   webgpuDebugHelper: false,
   trackPassState: false,
   breakpoints: '',
+  rafSkipFrames: 0,
+  timeMult: 1,
 };
 
 export const settings = {...defaultSettings};
