@@ -150,7 +150,7 @@ if (settings.disableWebGPU) {
   injectScript(chrome.runtime.getURL('scripts/disable-webgpu.js'));
 }
 
-if (settings.rafSkipFrames || settings.timeMult !== 1) {
+if (settings.rafSkipFrames || (settings.timeMult !== undefined && settings.timeMult !== 1)) {
   injectScript(chrome.runtime.getURL('scripts/raf-skip-frames.js'));
 }
 
