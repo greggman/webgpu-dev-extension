@@ -13,6 +13,7 @@ const defaultSettings = {
   showAdapterInfo: false,
   showErrors: false,
   showShaderErrors: false,
+  enforceDefaultLimits: false,
   webgpuDebugHelper: false,
   trackPassState: false,
   breakpoints: '',

@@ -72,6 +72,10 @@ window.browser.runtime.onMessage.addListener((m, sender, sendResponse) => {
   }
 });
 
+if (settings.enforceDefaultLimits) {
+  injectScript(chrome.runtime.getURL('scripts/enforce-default-limits.js'));
+}
+
 if (settings.removeWebGPU) {
   injectScript(chrome.runtime.getURL('scripts/remove-webgpu.js'));
 }
