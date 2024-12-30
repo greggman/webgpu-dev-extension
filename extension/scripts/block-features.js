@@ -50,4 +50,4 @@ if (typeof GPUAdapter !== 'undefined') {
   })(GPUAdapter.prototype.requestDevice);
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

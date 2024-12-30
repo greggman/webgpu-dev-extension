@@ -451,4 +451,4 @@
 
 })();
 
-document.currentScript.remove();
+document.currentScript?.remove();

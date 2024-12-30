@@ -26,4 +26,4 @@ if (typeof GPU !== 'undefined') {
   })(GPUAdapter.prototype.requestDevice);
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

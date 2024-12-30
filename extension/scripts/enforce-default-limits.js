@@ -8,7 +8,7 @@ if (typeof GPU !== 'undefined') {
     return objLike;
   }
 
-  s_adapterToLimits = new WeakMap();
+  const s_adapterToLimits = new WeakMap();
   const gpuAdapterPrototypeDescriptors = Object.getOwnPropertyDescriptors(GPUAdapter.prototype);
 
   // We can't just set `limits` on the adapter because it's actually a getter.
@@ -57,4 +57,4 @@ if (typeof GPU !== 'undefined') {
   };
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

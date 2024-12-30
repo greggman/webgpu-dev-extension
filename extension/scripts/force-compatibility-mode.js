@@ -17,4 +17,4 @@ if (typeof GPU !== 'undefined') {
   })(GPU.prototype.requestAdapter);
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

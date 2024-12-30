@@ -214,4 +214,4 @@ if (navigator.gpu) {
   });
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

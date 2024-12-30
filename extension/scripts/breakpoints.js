@@ -57,4 +57,4 @@ if (typeof GPUDevice !== 'undefined') {
 
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

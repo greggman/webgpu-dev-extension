@@ -45,4 +45,4 @@ if (typeof GPUDevice !== 'undefined') {
   })(GPUTexture.prototype.createView);
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();

@@ -92,4 +92,4 @@
   })(window.cancelAnimationFrame);
 }
 
-document.currentScript.remove();
+document.currentScript?.remove();
