@@ -5,7 +5,7 @@ if (typeof GPU !== 'undefined') {
     for (const key in objLike) {
       obj[key] = objLike[key];
     }
-    return objLike;
+    return obj;
   }
 
   const s_adapterToLimits = new WeakMap();
