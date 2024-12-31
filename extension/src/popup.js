@@ -62,6 +62,9 @@ async function main() {
     }
   }
 
+  const versionElem = document.querySelector('#version');
+  versionElem.textContent = chrome.runtime.getManifest().version;
+
   const save = () => callAsyncFnWithErrorCheck(saveSettings);
 
   const gui = new GUI().onChange(save);
