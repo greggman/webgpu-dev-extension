@@ -62,8 +62,9 @@ async function main() {
     }
   }
 
+  const manifest = chrome.runtime.getManifest();
   const versionElem = document.querySelector('#version');
-  versionElem.textContent = chrome.runtime.getManifest().version;
+  versionElem.textContent = `${manifest.version}${'update_url' in manifest ? '' : '-dev'}`;
 
   const save = () => callAsyncFnWithErrorCheck(saveSettings);
 
