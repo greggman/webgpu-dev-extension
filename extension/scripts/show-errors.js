@@ -1,4 +1,4 @@
-/* show-errors@0.1.3, license MIT */
+/* show-errors@0.1.4, license MIT */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
     factory();
@@ -88,8 +88,11 @@
             return async function () {
                 const errorScopeStack = deviceToErrorScopeStack.get(this);
                 const errorScope = errorScopeStack.pop();
+                if (errorScope === undefined) {
+                    throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
+                }
                 const errPromise = origFn.call(this);
-                return errorScope?.errors.pop() ?? errPromise;
+                return errorScope.errors.pop() ?? errPromise;
             };
         })(GPUDevice.prototype.popErrorScope);
         GPUAdapter.prototype.requestDevice = (function (origFn) {
