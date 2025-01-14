@@ -1,4 +1,4 @@
-/* webgpu-debug-helper@0.1.3, license MIT */
+/* webgpu-debug-helper@0.1.5, license MIT */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
     factory();
@@ -19,11 +19,13 @@
             const currentErrorScope = errorScopeStack.findLast(scope => scope.filter === 'validation');
             const promise = origPopErrorScope.call(device)
                 .then(error => {
-                // If there was a currentErrorScope when we added pushed then remove our promise
+                // If there was a currentErrorScope and there was no error the remove our promise.
                 if (currentErrorScope) {
-                    const ndx = currentErrorScope.errors.indexOf(promise);
-                    if (ndx) {
-                        currentErrorScope.errors.splice(ndx, 1);
+                    if (!error) {
+                        const ndx = currentErrorScope.errors.indexOf(promise);
+                        if (ndx) {
+                            currentErrorScope.errors.splice(ndx, 1);
+                        }
                     }
                 }
                 else {
@@ -92,7 +94,10 @@
                     throw new DOMException('popErrorScope called on empty error scope stack', 'OperationError');
                 }
                 const errPromise = origFn.call(this);
-                return errorScope.errors.pop() ?? errPromise;
+                errorScope.errors.push(errPromise);
+                const errors = await Promise.all(errorScope.errors);
+                const error = errors.find(v => !!v);
+                return error ?? null;
             };
         })(GPUDevice.prototype.popErrorScope);
         GPUAdapter.prototype.requestDevice = (function (origFn) {
