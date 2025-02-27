@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <script type="module">
+    const adapter = await navigator.gpu.requestAdapter();
+    const device = await adapter.requestDevice();
+
+    const buffer = device.createBuffer({
+      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      size: 16,
+    });
+
+    const texture = device.createTexture({
+      usage: GPUBufferUsage.TEXTURE_BINDING | GPUBufferUsage.COPY_DST | GPUBufferUsage.RENDER_ATTACHMENT,
+      size: [32, 16],
+      format: 'rgba8unorm',
+    });
+
+    console.log(adapter);
+    console.log(device);
+    console.log(buffer);
+    console.log(texture);
+
+    console.log('inspect in devtools');
+
+  </script>
+</html>
