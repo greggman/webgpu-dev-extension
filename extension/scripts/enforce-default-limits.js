@@ -20,6 +20,26 @@ if (typeof GPU !== 'undefined') {
     },
   });
 
+  function enforceDefaultLimits(adapter/*: GPUAdapter*/, desc/*: GPUDeviceDescriptor | undefined*/) {
+    if (desc?.requiredLimits) {
+      const limits = s_adapterToLimits.get(adapter);
+      for (const [key, value] of Object.entries(desc.requiredLimits)) {
+        const limit = limits[key];
+        if (limit !== undefined && value !== undefined) {
+          const [beyondLimit, condition] = key.startsWith('max')
+            ? [value > limit, 'greater']
+            : [value < limit, 'less'];
+          if (beyondLimit) {
+            throw new DOMException(
+              `requestedLimit ${value} for ${key} is ${condition} than adapter limit ${limit}`,
+              'OperationError'
+            );
+          }
+        }
+      }
+    }
+  };
+
   const origRequestAdapter = GPU.prototype.requestAdapter;
   const origRequestDevice = GPUAdapter.prototype.requestDevice;
 
@@ -46,14 +66,8 @@ if (typeof GPU !== 'undefined') {
   }
 
   GPUAdapter.prototype.requestDevice = async function(desc = {}) {
-    const newDesc = {
-      ...desc,
-      requiredLimits: {
-        ...desc?.requiredLimits,
-        ...objLikeToObj(this.limits),
-      },
-    };
-    return await origRequestDevice.call(this, newDesc);
+    enforceDefaultLimits(this, desc);
+    return await origRequestDevice.call(this, desc);
   };
 }
 
