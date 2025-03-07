@@ -1,4 +1,4 @@
-/* show-errors@0.1.5, license MIT */
+/* show-errors@0.2.1, license MIT */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
     factory();
@@ -48,6 +48,12 @@
             }
             return result;
         }
+        function debugGroupWrapper(device, fnName, origFn, ...args) {
+            this.pushDebugGroup(`${fnName}:\n${new Error().stack}`);
+            const result = origFn.call(this, ...args);
+            this.popDebugGroup();
+            return result;
+        }
         function addErrorWrapper(api, fnName) {
             const origFn = api.prototype[fnName];
             api.prototype[fnName] = function (...args) {
@@ -61,6 +67,12 @@
                 return errorWrapper.call(this, device, fnName.toString(), origFn, ...args);
             };
         }
+        function addDebugGroupWrapper(api, fnName) {
+            const origFn = api.prototype[fnName];
+            api.prototype[fnName] = function (...args) {
+                return debugGroupWrapper.call(this, this, fnName.toString(), origFn, ...args);
+            };
+        }
         /**
          * given a class returns all the method names.
          */
@@ -69,16 +81,33 @@
                 .filter(([, info]) => info.enumerable && typeof info.value === 'function')
                 .map(([name]) => name);
         }
-        const skip = new Set([
-            'pushErrorScope',
-            'popErrorScope',
-            'destroy',
-        ]);
-        getAPIFunctionNames(GPUDevice)
-            .filter(n => !skip.has(n))
-            .forEach(n => addErrorWrapper(GPUDevice, n));
-        getAPIFunctionNames(GPUQueue)
-            .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
+        {
+            const skip = new Set([
+                'pushErrorScope',
+                'popErrorScope',
+                'destroy',
+            ]);
+            getAPIFunctionNames(GPUDevice)
+                .filter(n => !skip.has(n))
+                .forEach(n => addErrorWrapper(GPUDevice, n));
+            getAPIFunctionNames(GPUQueue)
+                .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
+        }
+        {
+            const skip = new Set(['pushDebugGroup', 'popDebugGroup']);
+            getAPIFunctionNames(GPUCommandEncoder)
+                .filter(n => !skip.has(n))
+                .forEach(n => addDebugGroupWrapper(GPUCommandEncoder, n));
+            getAPIFunctionNames(GPUComputePassEncoder)
+                .filter(n => !skip.has(n))
+                .forEach(n => addDebugGroupWrapper(GPUComputePassEncoder, n));
+            getAPIFunctionNames(GPURenderPassEncoder)
+                .filter(n => !skip.has(n))
+                .forEach(n => addDebugGroupWrapper(GPURenderPassEncoder, n));
+            getAPIFunctionNames(GPURenderBundleEncoder)
+                .filter(n => !skip.has(n))
+                .forEach(n => addDebugGroupWrapper(GPURenderBundleEncoder, n));
+        }
         GPUDevice.prototype.pushErrorScope = (function (origFn) {
             return function (filter) {
                 origFn.call(this, filter);
