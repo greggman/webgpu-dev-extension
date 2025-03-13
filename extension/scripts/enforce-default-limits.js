@@ -57,7 +57,7 @@ if (typeof GPU !== 'undefined') {
   }
 
   GPU.prototype.requestAdapter = async function(desc = {}) {
-    const limits = await getDefaultLimits();
+    const limits = await getDefaultLimits(desc);
     const adapter = await origRequestAdapter.call(this, desc);
     if (adapter && limits) {
       s_adapterToLimits.set(adapter, limits);
