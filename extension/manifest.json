@@ -7,7 +7,8 @@
   "minimum_chrome_version": "113",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "web_accessible_resources": [
     {
@@ -39,14 +40,9 @@
       "matches": ["*://*/*"]
     }
   ],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["scripts/gpu-content-script.js"],
-      "run_at": "document_start",
-      "all_frames": true
-    }
-  ],
+  "background": {
+    "service_worker": "scripts/service-worker.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

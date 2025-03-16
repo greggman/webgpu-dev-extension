@@ -222,6 +222,6 @@ I don't know all the procedures for other browser but in Chrome, load the extens
 4. Select the "extension" folder from this repo
 
 From there, most of JavaScript files that augment the WebGPU API are live. If you edit them, just re-loading the page using the extension
-will pick the changes. For UI files, and for `gpu-content-script.js`, the script that injects the other scripts into your page, it
+will pick the changes. For UI files, and for `service-worker.js`, the script that injects the other scripts into your page, it
 will only update when you pick the refresh button in `about://extensions`. The refresh button looks like a circular arrow ↺ inside
 each individual extension's info.

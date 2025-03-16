@@ -1,5 +1,5 @@
 if (navigator.gpu) {
-  console.log('disable WebGPU');
+  console.log('webgpu-dev-extension: disable WebGPU');
   navigator.gpu.requestAdapter = (function() {
     return async function() {
       return null;

@@ -1,5 +1,5 @@
 if (navigator.gpu) {
-  console.log('remove WebGPU');
+  console.log('webgpu-dev-extension: remove WebGPU');
 
   delete Navigator.prototype.gpu;
 

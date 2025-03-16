@@ -1,4 +1,5 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: dump-shaders');
   GPUDevice.prototype.createShaderModule = (function(origFn) {
     return function(desc = {}) {
       console.log(desc.code);

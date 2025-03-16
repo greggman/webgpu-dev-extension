@@ -8,6 +8,10 @@ import {
 } from './utils.js';
 import {GUI} from './gui.js';
 
+function log(...args) {
+  // console.log(...args);
+}
+
 window.browser = (function() {
     return window.msBrowser ||
         window.browser ||
@@ -31,6 +35,7 @@ const callAsyncFnWithErrorCheck = (() => {
       setError();
       await fn();
     } catch (e) {
+      log('error:', e.toString(), ' calling:', fn.toString());
       const err = e.toString();
       sameErrorCount = err === lastErrorMsg ? sameErrorCount + 1 : 1;
       lastErrorMsg = err;
@@ -49,24 +54,30 @@ async function main() {
   if (isChromeTab) {
     setError('this extension does not work on settings pages nor a new tab page');
     mainElem.style.display = 'none';
-  } else {
-    try {
-      await chrome.scripting.executeScript({
-        target : {tabId : activeTab.id, allFrames : true},
-        files : [ 'scripts/gpu-content-script.js' ],
-      });
-      await callAsyncFnWithErrorCheck(loadSettings);
-    } catch (e) {
-      setError(e.toString());
-      mainElem.style.display = 'none';
-    }
+    return;
   }
+
+  const applySettings = () => {
+    try {
+      chrome.runtime.sendMessage({ cmd: 'registerScripts', data: { tabId: activeTab.id, settings }}, (response) => {
+        log('Response from service worker:', response);
+      });
+    } catch (e) {
+      log('error from chrome.runtime.sendMessage:', e);
+    }
+  };
+
+  await loadSettings();
+  applySettings();
 
   const manifest = chrome.runtime.getManifest();
   const versionElem = document.querySelector('#version');
   versionElem.textContent = `${manifest.version}${'update_url' in manifest ? '' : '-dev'}`;
 
-  const save = () => callAsyncFnWithErrorCheck(saveSettings);
+  const save = () => {
+    applySettings();
+    callAsyncFnWithErrorCheck(saveSettings);
+  };
 
   const gui = new GUI().onChange(save);
   const controlsElem = document.querySelector('#controls');

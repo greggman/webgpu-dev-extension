@@ -1,5 +1,6 @@
 
 if (typeof GPU !== 'undefined') {
+  console.log('webgpu-dev-extension: enforce-default-limits');
   function objLikeToObj(objLike) {
     const obj = {};
     for (const key in objLike) {

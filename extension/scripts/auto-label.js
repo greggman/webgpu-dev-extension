@@ -1,4 +1,6 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: auto-label');
+
   function addLabelWrapper(API, fnName) {
     const prefix = fnName.replace(/^[a-z]+/, '').replace(/(.)/, (_, m) => m.toLowerCase());
     let count = 0;

@@ -1,96 +1,144 @@
-console.log('hello from service-worker.js');
+function log(...args) {
+  // console.log(...args);
+}
+
+log('hello from service-worker.js');
+
+function getContentScripts(settings) {
+  settings = settings ?? {};
+  const scripts = [];
+
+  const injectScript = (url) => {
+    scripts.push(url);
+  }
+
+  if (settings.enforceDefaultLimits) {
+    injectScript('scripts/enforce-default-limits.js');
+  }
+
+  if (settings.removeWebGPU) {
+    injectScript('scripts/remove-webgpu.js');
+  }
+
+  if (settings.countActiveDevices) {
+    injectScript('scripts/count-devices.js');
+  }
+
+  if (settings.blockFeatures) {
+    injectScript('scripts/block-features.js');
+  }
+
+  if (settings.capture) {
+    injectScript('scripts/webgpu_recorder.js');
+    injectScript('scripts/gpu-injected.js');
+  }
+
+  if (settings.compat) {
+    injectScript('scripts/webgpu-compat-validation.js');
+  }
+
+  if (settings.customFormatters) {
+    injectScript('scripts/custom-formatters.js');
+  }
+
+  switch (settings.forceMode) {
+    case 'low-power':
+      injectScript('scripts/force-low-power.js');
+      break;
+    case 'high-performance':
+      injectScript('scripts/force-high-performance.js');
+      break;
+    case 'compatibility-mode':
+      injectScript('scripts/force-compatibility-mode.js');
+      break;
+    case 'force-fallback-adapter':
+      injectScript('scripts/force-fallback-adapter.js');
+      break;
+  }
+
+  if (settings.dumpShaders) {
+    injectScript('scripts/dump-shaders.js');
+  }
+
+  if (settings.autoLabel) {
+    injectScript('scripts/auto-label.js');
+  }
+
+  if (settings.addDescriptors) {
+    injectScript('scripts/add-descriptors.js');
+  }
+
+  if (settings.trackPassState) {
+    injectScript('scripts/track-pass-state.js');
+  }
+
+  if (settings.webgpuDebugHelper) {
+    injectScript('scripts/webgpu-debug-helper.js');
+  } else if (settings.showErrors) {
+    injectScript('scripts/show-errors.js');
+  }
+
+  if (settings.showShaderErrors) {
+    injectScript('scripts/show-shader-errors.js');
+  }
+
+  if (settings.showAdapterInfo) {
+    injectScript('scripts/show-adapter-info.js');
+  }
+
+  if (settings.breakpoints) {
+    injectScript('scripts/breakpoints.js');
+  }
+
+  if (settings.disableWebGPU) {
+    injectScript('scripts/disable-webgpu.js');
+  }
+
+  if (settings.rafSkipFrames || (settings.timeMult !== undefined && settings.timeMult !== 1)) {
+    injectScript('scripts/raf-skip-frames.js');
+  }
+
+  return scripts;
+}
 
 const commands = {
-  async init({tabId}) {
-    try {
-      await chrome.debugger.attach({ tabId }, "1.3");
-    } catch (e) {
-      console.error('error calling chrome.debugger.attach:', e);
-    }
-    try {
-      console.log('Send Target.setAutoAttach');
-      await chrome.debugger.sendCommand(
-        { tabId: tabId },
-        "Target.setAutoAttach",
-        { autoAttach: true, waitForDebuggerOnStart: true, flatten: true }
-      );
-      console.log('after Send Target.setAutoAttach');
-    } catch (e) {
-      console.error('error trying to use chrome.debugger.sendCommand:', e);
+  async registerScripts({tabId, settings}) {
+    log('tabId:', tabId);
+    await chrome.scripting.unregisterContentScripts();
+
+    log('registering scripts');
+    const scripts = getContentScripts(settings);
+    if (scripts.length) {
+      log(scripts.map(s => `  ${s}`).join('\n'));
+      chrome.scripting.registerContentScripts([{
+        id: 'my-content-script',                    // Unique identifier
+        matches: ['<all_urls>'],                    // URL patterns to match
+        js: scripts,                                // Script file(s) to inject
+        runAt: 'document_start',                    // When to inject the script
+        allFrames: true,                            // Inject only into the top frame
+        world: "MAIN",
+      }], () => {
+        if (chrome.runtime.lastError) {
+          console.error('Error registering content script:', chrome.runtime.lastError);
+        } else {
+          log('Content script registered successfully!');
+        }
+      });
+    } else {
+      log('no scripts');
     }
   },
 };
 
-/*
-chrome.action.onClicked.addListener(function (tab) {
-  if (tab.url.startsWith('http')) {
-    chrome.debugger.attach({ tabId: tab.id }, '1.2', function () {
-      chrome.debugger.sendCommand(
-        { tabId: tab.id },
-        'Network.enable',
-        {},
-        function () {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError);
-          }
-        }
-      );
-    });
-  } else {
-    console.log('Debugger can only be attached to HTTP/HTTPS pages.');
+log('addListener in service-worker.js');
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  log('got message from popup', msg);
+  const {cmd, data} = msg;
+  const fn = commands[cmd];
+  if (!fn) {
+    console.error('unknown command from devTools:', cmd, msg);
+    return;
   }
-});
-
-  await dp.Target.setAutoAttach({
-      autoAttach: true, waitForDebuggerOnStart: true, flatten: true});
-
-  session.evaluate(`
-    window._worker = new Worker(
-      'data:text/javascript,' +
-          'console.log("Hello from worker!");'
-    );
-  `);
-
-  const attached = (await dp.Target.onceAttachedToTarget()).params;
-
-  testRunner.log(`Attached to ${attached.targetInfo.url}`);
-  const wp = session.createChild(attached.sessionId).protocol;
-
-  wp.Runtime.enable();
-  let messageCount = 0;
-  wp.Runtime.onConsoleAPICalled(event => {
-    const message = event.params.args[0].value;
-    testRunner.log(`[worker] ${message}`);
-    if (++messageCount == 2)
-      testRunner.completeTest();
-  });
-  wp.Runtime.evaluate({expression: `console.log("First post!")`});
-  wp.Runtime.runIfWaitingForDebugger();    
-  }
-};
-*/
-
-console.log('addListener in service-worker.js');
-chrome.runtime.onConnect.addListener(function(devToolsConnection) {
-
-  console.log('devToolsConnected?:', devToolsConnection);
-
-  // assign the listener function to a variable so we can remove it later
-  const devToolsListener = function(msg, sender, sendResponse) {
-    console.log('got message from devTools', msg);
-    const {cmd, data} = msg;
-    const fn = commands[cmd];
-    if (!fn) {
-      console.error('unknown command from devTools:', cmd, message);
-      return;
-    }
-    fn(data, sender, sendResponse);
-  };
-
-  // add the listener
-  devToolsConnection.onMessage.addListener(devToolsListener);
-
-  devToolsConnection.onDisconnect.addListener(function() {
-    devToolsConnection.onMessage.removeListener(devToolsListener);
-  });
+  fn(data, sender, sendResponse);
 });

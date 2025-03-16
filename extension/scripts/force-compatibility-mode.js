@@ -1,17 +1,9 @@
 
 if (typeof GPU !== 'undefined') {
+  console.log('webgpu-dev-extension: force-compatibility-mode');
   GPU.prototype.requestAdapter = (function(origFn) {
     return async function(desc = {}) {
-      const adapter = await origFn.call(this, {...desc, compatibilityMode: true});
-      if (adapter) {
-        try {
-          const info = adapter.info ?? (await adapter.requestAdapterInfo());
-          console.log('adapter:', adapter);
-          console.log('adapterInfo:', info);
-        } catch (e) {
-          console.log("ERR:", e);
-        }
-      }
+      const adapter = await origFn.call(this, {...desc, featureLevel: 'compatibility'});
       return adapter;
     };
   })(GPU.prototype.requestAdapter);

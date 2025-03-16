@@ -1,4 +1,5 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: add-descriptors');
   function addDescriptorWrapper(API, fnName) {
     const origFn = API.prototype[fnName];
     API.prototype[fnName] = function (desc) {
