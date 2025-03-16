@@ -192,6 +192,7 @@ class TextArea extends Control {
 
     this.textarea = el('textarea', {
       className: 'full-width',
+      placeholder: ' ',
       value: obj[prop],
       onInput: () => {
         obj[prop] = this.textarea.value;
@@ -255,9 +256,9 @@ class Select extends Control {
         obj[prop] = Array.isArray(v) ? v[0] : v;
         this.changed();
       },
-    }, options.map(v => {
+    }, options.map((v, i) => {
       const [value, label] = Array.isArray(v) ? v : [v, v];
-      return el('option', {selected: value === obj[prop], textContent: label});
+      return el('option', {selected: value === obj[prop], value: i, textContent: label});
     })),
 
     this.labelElem = el('label', {/*for: id,*/ textContent: prop});

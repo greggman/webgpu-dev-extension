@@ -3,6 +3,7 @@
   --head-bg: orange;
   --fg-color: black;
   --fg-error: red;
+  --on-bg: #4CF;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -10,6 +11,7 @@
     --head-bg: darkblue;
     --fg-color: white;
     --fg-error: #F44;
+    --on-bg: #06C;
   }
 }
 
@@ -72,6 +74,11 @@ button {
   margin: 10px;
   border: none;
   border-radius: 2px;
+}
+
+textarea:not(:placeholder-shown),
+select:not(:has(option[value="0"]:checked)) {
+  background-color: var(--on-bg);
 }
 
 button.current {
