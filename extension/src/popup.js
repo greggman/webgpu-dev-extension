@@ -46,6 +46,38 @@ Try reloading the page: Otherwise, this could mean the extension is blocked by y
   };
 })();
 
+const isPropNotSet = (k, v) => {
+  if (v === '') return true;
+  if (v === false) return true;
+  if (v === 'none') return true;
+  if (k === 'timeMult') {
+    return (v === 1);
+  } else {
+    return (v === 0);
+  }
+}
+
+
+function updateIcon() {
+  const settingsOn = Object.entries(settings).reduce((show, [k, v]) => show || !isPropNotSet(k, v), false);
+  const icons = settingsOn ? {
+    "16":  "/images/active/icon-16.png",
+    "32":  "/images/active/icon-32.png",
+    "48":  "/images/active/icon-48.png",
+    "128": "/images/active/icon-128.png",
+    "512": "/images/active/icon-512.png"
+  } : {
+    "16":  "/images/icon-16.png",
+    "32":  "/images/icon-32.png",
+    "48":  "/images/icon-48.png",
+    "128": "/images/icon-128.png",
+    "512": "/images/icon-512.png"
+  };
+  chrome.action.setIcon({
+    path: icons,
+  });
+}
+
 async function main() {
   const mainElem = document.querySelector('#main');
   const [activeTab] = await window.browser.tabs.query({ active: true, currentWindow: true });
@@ -65,6 +97,7 @@ async function main() {
     } catch (e) {
       log('error from chrome.runtime.sendMessage:', e);
     }
+    updateIcon();
   };
 
   await loadSettings();
