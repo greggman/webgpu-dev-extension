@@ -27,3 +27,23 @@ export async function loadSettings() {
 export async function saveSettings() {
   return await setExtensionLocalStorage({'webgpu-dev-extension-settings': settings});
 }
+
+export function setIcons({active, tabId}) {
+  const icons = active ? {
+    "16":  "/images/active/icon-16.png",
+    "32":  "/images/active/icon-32.png",
+    "48":  "/images/active/icon-48.png",
+    "128": "/images/active/icon-128.png",
+    "512": "/images/active/icon-512.png"
+  } : {
+    "16":  "/images/icon-16.png",
+    "32":  "/images/icon-32.png",
+    "48":  "/images/icon-48.png",
+    "128": "/images/icon-128.png",
+    "512": "/images/icon-512.png"
+  };
+  chrome.action.setIcon({
+    path: icons,
+    tabId,
+  });
+}

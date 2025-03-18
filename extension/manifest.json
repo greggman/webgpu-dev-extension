@@ -41,7 +41,8 @@
     }
   ],
   "background": {
-    "service_worker": "scripts/service-worker.js"
+    "service_worker": "scripts/service-worker.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",

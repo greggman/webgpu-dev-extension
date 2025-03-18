@@ -5,6 +5,7 @@ import {
 import {
   loadSettings,
   saveSettings,
+  setIcons,
 } from './utils.js';
 import {GUI} from './gui.js';
 
@@ -58,24 +59,9 @@ const isPropNotSet = (k, v) => {
 }
 
 
-function updateIcon() {
-  const settingsOn = Object.entries(settings).reduce((show, [k, v]) => show || !isPropNotSet(k, v), false);
-  const icons = settingsOn ? {
-    "16":  "/images/active/icon-16.png",
-    "32":  "/images/active/icon-32.png",
-    "48":  "/images/active/icon-48.png",
-    "128": "/images/active/icon-128.png",
-    "512": "/images/active/icon-512.png"
-  } : {
-    "16":  "/images/icon-16.png",
-    "32":  "/images/icon-32.png",
-    "48":  "/images/icon-48.png",
-    "128": "/images/icon-128.png",
-    "512": "/images/icon-512.png"
-  };
-  chrome.action.setIcon({
-    path: icons,
-  });
+function updateIcon(tabId) {
+  const active = Object.entries(settings).reduce((show, [k, v]) => show || !isPropNotSet(k, v), false);
+  setIcons({active, tabId});
 }
 
 async function main() {
@@ -97,7 +83,7 @@ async function main() {
     } catch (e) {
       log('error from chrome.runtime.sendMessage:', e);
     }
-    updateIcon();
+    updateIcon(activeTab.id);
   };
 
   await loadSettings();

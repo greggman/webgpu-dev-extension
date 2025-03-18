@@ -1,8 +1,26 @@
+import {
+  setIcons
+} from '../src/utils.js';
+
 function log(...args) {
   // console.log(...args);
 }
 
 log('hello from service-worker.js');
+
+async function getRegisteredContentScriptIdsForTab(tabId) {
+  const scripts = (await chrome.scripting.getRegisteredContentScripts()) ?? [];
+  const ids = scripts
+    .filter(s => s.id.endsWith(`:${tabId}`))
+    .map(s => s.id);
+  return ids;
+}
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const ids = getRegisteredContentScriptIdsForTab(tabId);
+  const active = ids.length > 0;
+  setIcons({active, tabId});
+});
 
 function getContentScripts(settings) {
   settings = settings ?? {};
@@ -104,18 +122,23 @@ function getContentScripts(settings) {
 const commands = {
   async registerScripts({tabId, settings}) {
     log('tabId:', tabId);
-    await chrome.scripting.unregisterContentScripts();
+    {
+      const ids = getRegisteredContentScriptIdsForTab(tabId);
+      if (ids.length) {
+        await chrome.scripting.unregisterContentScripts({ ids });
+      }
+    }
 
     log('registering scripts');
     const scripts = getContentScripts(settings);
     if (scripts.length) {
       log(scripts.map(s => `  ${s}`).join('\n'));
       chrome.scripting.registerContentScripts([{
-        id: 'my-content-script',                    // Unique identifier
-        matches: ['<all_urls>'],                    // URL patterns to match
-        js: scripts,                                // Script file(s) to inject
-        runAt: 'document_start',                    // When to inject the script
-        allFrames: true,                            // Inject only into the top frame
+        id: `webgpu-dev-extension:${tabId}`, // Unique identifier
+        matches: ['<all_urls>'],             // URL patterns to match
+        js: scripts,                         // Script file(s) to inject
+        runAt: 'document_start',             // When to inject the script
+        allFrames: true,                     // Inject only into the top frame
         world: "MAIN",
       }], () => {
         if (chrome.runtime.lastError) {
