@@ -22,6 +22,7 @@
         "scripts/disable-webgpu.js",
         "scripts/dump-shaders.js",
         "scripts/enforce-default-limits.js",
+        "scripts/extension-helper.js",
         "scripts/force-compatibility-mode.js",
         "scripts/force-fallback-adapter.js",
         "scripts/force-high-performance.js",
@@ -33,6 +34,7 @@
         "scripts/show-errors.js",
         "scripts/show-shader-errors.js",
         "scripts/track-pass-state.js",
+        "scripts/utils.js",
         "scripts/webgpu-compat-validation.js",
         "scripts/webgpu-debug-helper.js",
         "scripts/webgpu_recorder.js"

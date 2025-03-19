@@ -110,14 +110,23 @@ const commands = {
     const scripts = getContentScripts(settings);
     if (scripts.length) {
       log(scripts.map(s => `  ${s}`).join('\n'));
-      chrome.scripting.registerContentScripts([{
-        id: 'my-content-script',                    // Unique identifier
-        matches: ['<all_urls>'],                    // URL patterns to match
-        js: scripts,                                // Script file(s) to inject
-        runAt: 'document_start',                    // When to inject the script
-        allFrames: true,                            // Inject only into the top frame
-        world: "MAIN",
-      }], () => {
+      chrome.scripting.registerContentScripts([
+        {
+          id: 'webgpu-dev-extension-content-helper',  // Unique identifier
+          matches: ['<all_urls>'],                    // URL patterns to match
+          js: ['scripts/extension-helper.js'],        // Script file(s) to inject
+          runAt: 'document_start',                    // When to inject the script
+          allFrames: true,                            // Inject only into the top frame
+        },
+        {
+          id: 'webgpu-dev-extension-content-scripts', // Unique identifier
+          matches: ['<all_urls>'],                    // URL patterns to match
+          js: scripts,                                // Script file(s) to inject
+          runAt: 'document_start',                    // When to inject the script
+          allFrames: true,                            // Inject only into the top frame
+          world: "MAIN",
+        },
+      ], () => {
         if (chrome.runtime.lastError) {
           console.error('Error registering content script:', chrome.runtime.lastError);
         } else {
@@ -127,6 +136,13 @@ const commands = {
     } else {
       log('no scripts');
     }
+  },
+  async getSettings(data, sender, sendResponse) {
+    const keys = await chrome.storage.session.get(['webgpu-dev-extension-settings']);
+    log(keys);
+    const settings = (keys && keys['webgpu-dev-extension-settings']) ?? {};
+    log(settings);
+    sendResponse(settings);
   },
 };
 
@@ -141,4 +157,5 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return;
   }
   fn(data, sender, sendResponse);
+  return true;
 });

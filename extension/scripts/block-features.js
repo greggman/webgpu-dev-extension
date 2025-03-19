@@ -1,34 +1,57 @@
 if (typeof GPUAdapter !== 'undefined') {
-  const settings = {};
-  try {
-    Object.assign(settings, JSON.parse(sessionStorage.getItem('webgpu-dev-extension-settings')));
-  } catch {
-  }
+  const log = (...args) => {
+    // console.log(...args);
+  };
 
-  const blockFeatureStrings = (settings.blockFeatures || '').split(/[,\s]+/).map(v => v.trim());
-  const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replaceAll('*', '.*')}$`));
-  if (blockFeatureStrings.length > 0) {
-    console.log('blocking WebGPU Features:', blockFeatureStrings.join(', '));
-  }
+  const settingsPromise = new Promise((resolve, reject) => {
+    document.addEventListener('webgpu-dev-extension-settings', (event) => {
+      // Handle data from event.detail
+      log('got special event:', event);
+      resolve(event.detail);
+    }, { once: true });
+    log('sent message');
+    document.dispatchEvent(new CustomEvent('webgpu-dev-extension-event', {
+      detail: {
+        cmd: 'getSettings',
+      },
+    }));
+  });
 
-  function isBlocked(feature) {
-    for (const re of blockFeatureREs) {
-      if (re.test(feature)) {
-        return true;
-      }
+  async function getIsBlocked() {
+    const settings = await settingsPromise;
+    log('got settings:', settings);
+    const blockFeatureStrings = (settings.blockFeatures || '').split(/[,\s]+/).map(v => v.trim());
+    const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replaceAll('*', '.*')}$`));
+    if (blockFeatureStrings.length > 0) {
+      console.log('blocking WebGPU Features:', blockFeatureStrings.join(', '));
     }
-    return false;
+
+    const isBlocked = (feature) => {
+      for (const re of blockFeatureREs) {
+        if (re.test(feature)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    return isBlocked;
   }
 
   GPU.prototype.requestAdapter = (function (origFn) {
     return async function (desc) {
+      log('wait for get is blocked');
+      const isBlocked = await getIsBlocked();
+      log('got is blocked');
       const adapter = await origFn.call(this, desc);
+      log('requested adapter');
       if (adapter) {
         Object.defineProperty(adapter, 'features', {
           value: new Set([...adapter.features].filter(feature => {
-            const blocked = !isBlocked(feature);
-            console.log('blocked WebGPU feature:', feature);
-            return blocked;
+            const blocked = isBlocked(feature);
+            if (blocked) {
+              console.log('blocked WebGPU feature:', feature);
+            }
+            return !blocked;
           })),
         });
       }
@@ -38,6 +61,7 @@ if (typeof GPUAdapter !== 'undefined') {
 
   GPUAdapter.prototype.requestDevice = (function (origFn) {
     return async function (desc) {
+      const isBlocked = await getIsBlocked();
       if (desc && desc.requiredFeatures) {
         for (const feature of desc.requiredFeatures) {
           if (isBlocked(feature)) {
