@@ -31,6 +31,7 @@
         "scripts/raf-skip-frames.js",
         "scripts/remove-webgpu.js",
         "scripts/show-adapter-info.js",
+        "scripts/show-calls.js",
         "scripts/show-errors.js",
         "scripts/show-shader-errors.js",
         "scripts/track-pass-state.js",

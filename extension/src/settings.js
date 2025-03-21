@@ -12,6 +12,7 @@ const defaultSettings = {
   removeWebGPU: false,
   showAdapterInfo: false,
   showErrors: false,
+  showCalls: false,
   showShaderErrors: false,
   enforceDefaultLimits: false,
   webgpuDebugHelper: false,

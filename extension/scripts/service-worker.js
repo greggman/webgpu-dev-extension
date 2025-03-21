@@ -86,6 +86,10 @@ function getContentScripts(settings) {
     injectScript('scripts/show-adapter-info.js');
   }
 
+  if (settings.showCalls) {
+    injectScript('scripts/show-calls.js');
+  }
+
   if (settings.breakpoints) {
     injectScript('scripts/breakpoints.js');
   }

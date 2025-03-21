@@ -84,6 +84,7 @@ async function main() {
   controlsElem.appendChild(gui.elem);
 
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
+  gui.add(settings, 'showCalls').name('Show Calls');
   gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
   gui.add(settings, 'showErrors').name('Show Errors');
   gui.add(settings, 'showShaderErrors').name('Show Shader Errors');
