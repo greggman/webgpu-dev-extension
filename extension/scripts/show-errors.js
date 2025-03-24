@@ -1,4 +1,4 @@
-/* show-errors@0.2.1, license MIT */
+/* show-errors@0.2.2, license MIT */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
     factory();
@@ -94,7 +94,7 @@
                 .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
         }
         {
-            const skip = new Set(['pushDebugGroup', 'popDebugGroup']);
+            const skip = new Set(['pushDebugGroup', 'popDebugGroup', 'finish', 'end']);
             getAPIFunctionNames(GPUCommandEncoder)
                 .filter(n => !skip.has(n))
                 .forEach(n => addDebugGroupWrapper(GPUCommandEncoder, n));
