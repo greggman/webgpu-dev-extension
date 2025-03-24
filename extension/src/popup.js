@@ -84,16 +84,16 @@ async function main() {
   controlsElem.appendChild(gui.elem);
 
   gui.add(settings, 'showAdapterInfo').name('Show Adapter Info');
-  gui.add(settings, 'showCalls').name('Show Calls');
-  gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
-  gui.add(settings, 'showErrors').name('Show Errors');
+  gui.add(settings, 'showErrors').name('Show Errors (with stack)');
   gui.add(settings, 'showShaderErrors').name('Show Shader Errors');
+  gui.add(settings, 'dumpShaders').name('Dump Shaders');
+  gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
+  gui.add(settings, 'showCalls').name('Show Calls');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');
   gui.add(settings, 'customFormatters').name('DevTools Custom Formatters');
   gui.add(settings, 'trackPassState').name('Track Pass State');
   gui.add(settings, 'countActiveDevices').name('Count Active Devices');
-  gui.add(settings, 'dumpShaders').name('Dump Shaders');
   gui.add(settings, 'disableWebGPU').name('Disable WebGPU');
   gui.add(settings, 'removeWebGPU').name('Remove WebGPU');
   gui.add(settings, 'enforceDefaultLimits').name('Enforce Default Limits');
