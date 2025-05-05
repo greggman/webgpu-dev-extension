@@ -1,7 +1,7 @@
 if (typeof GPUAdapter !== undefined) {
   console.log('webgpu-dev-extension: show-memory');
 
-/* webgpu-memory@1.5.0, license MIT */
+/* webgpu-memory@1.5.1, license MIT */
 /* eslint-disable no-sparse-arrays */
 
 function keysOf(o) {
@@ -1544,13 +1544,19 @@ function addDeviceObject(device, webgpuObject, category, size) {
     webgpuObject[webgpuMemoryIdSymbol] = id;
   }
   const deviceId = device[webgpuMemoryIdSymbol];
-  allWebGPUObjectsById.set(id, {
+  const info = {
     ref: new WeakRef(webgpuObject),
     id,
     deviceId,
     category,
     size,
-  });
+    // will contain "oldSize" if canvas
+  };
+  allWebGPUObjectsById.set(id, info);
+  if (typeof size === 'function') {
+    size = size(webgpuObject);
+    info.oldSize = size;
+  }
   if (!isNaN(size)) {
     updateDeviceRunningTotal(device, size);
   }
@@ -1560,7 +1566,7 @@ function updateDeviceRunningTotal(device, size) {
   const deviceId = device[webgpuMemoryIdSymbol];
   const deviceInfo = allWebGPUObjectsById.get(deviceId);
   deviceInfo.runningTotal = (deviceInfo.runningTotal ?? 0) + size;
-  deviceInfo.maxTotal = Math.max(device.maxTotal ?? 0, deviceInfo.runningTotal);
+  deviceInfo.maxTotal = Math.max(deviceInfo.maxTotal ?? 0, deviceInfo.runningTotal);
 }
 
 /**
@@ -1587,9 +1593,12 @@ function deviceExists(deviceId) {
  * Free an object's memory
  * @param {number} id
  */
-function freeObjectById(id) {
+function freeObjectById(id, webgpuObject) {
   const obj = allWebGPUObjectsById.get(id);
-  const size = obj?.size;
+  let size = obj?.size;
+  if (webgpuObject && typeof size === 'function') {
+    size = size(webgpuObject);
+  }
   if (!isNaN(size)) {
     const deviceInfo = allWebGPUObjectsById.get(obj.deviceId);
     if (deviceInfo) {
@@ -1604,9 +1613,9 @@ function freeObjectById(id) {
  * @param {GPUTexture | GPUBuffer} webgpuObject
  * @param {string} category
  */
-function freeObject(webgpuObject, category) {
+function freeObject(webgpuObject) {
   const id = webgpuObject[webgpuMemoryIdSymbol];
-  freeObjectById(id);
+  freeObjectById(id, webgpuObject);
 }
 
 /**
@@ -1659,7 +1668,7 @@ function getWebGPUMemoryUsage(device) {
     }
   }
 
-  idsToDelete.forEach(freeObjectById);
+  idsToDelete.forEach(id => freeObjectById(id));
 
   return info;
 }
@@ -1825,6 +1834,17 @@ function removeContext(context) {
   freeObject(context);
 }
 
+function resizeContext(context) {
+  const id = context[webgpuMemoryIdSymbol];
+  const info = allWebGPUObjectsById.get(id);
+  const deviceInfo = allWebGPUObjectsById.get(info.deviceId);
+  deviceInfo.runningTotal -= info.oldSize;
+  const size = info.size(context);
+  deviceInfo.runningTotal += size;
+  info.oldSize = size;
+  deviceInfo.maxTotal = Math.max(deviceInfo.maxTotal, deviceInfo.runningTotal);
+}
+
 function wrapCreationDestroy(factoryClass, objectClass, fnName, category) {
   wrapFunction(factoryClass, fnName, function(device, object) {
     addDeviceObject(device, object, category);
@@ -1859,6 +1879,7 @@ if (typeof GPUAdapter !== 'undefined') {
 
   wrapFunction(GPUCanvasContext, 'configure', addContext);
   wrapFunction(GPUCanvasContext, 'unconfigure', removeContext);
+  wrapFunction(GPUCanvasContext, 'getCurrentTexture', resizeContext);
 
   wrapFunction(GPUDevice, 'createBuffer', addBuffer);
   wrapFunction(GPUBuffer, 'destroy', removeBuffer);
@@ -1896,16 +1917,23 @@ if (typeof GPUAdapter !== 'undefined') {
     };
   })();
 
+  let baseElem;
+  let summaryContentElem;
+  let infoElem;
   const deviceRefs = [];
   let intervalId;
 
-  let oldTotal = 0;
   function checkMemory() {
-    const usage = getWebGPUMemoryUsage();
-    if (usage.memory.maxTotal > oldTotal) {
-      oldTotal = usage.memory.maxTotal;
-      console.log('memory usage:', shortSize(oldTotal));
-    }
+    const {memory, resources} = getWebGPUMemoryUsage();
+    const size = shortSize(memory.total);
+    const maxSize = shortSize(memory.maxTotal);
+    summaryContentElem.textContent = `mem: ${size} max: ${maxSize}`;
+    infoElem.textContent = `\
+memory:
+${Object.entries(memory).map(([k, v]) => `  ${k}: ${shortSize(v)}`).join('\n')}
+resources:
+${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
+`
     checkDeviceRefs();
   };
 
@@ -1919,6 +1947,49 @@ if (typeof GPUAdapter !== 'undefined') {
       if (deviceRefs.length > 0) {
         intervalId = setInterval(checkMemory, 1000);
         // console.log('show-memory: started');
+        if (!baseElem) {
+          baseElem = document.createElement('details');
+          const summaryElem = document.createElement('summary');
+          infoElem = document.createElement('pre');
+
+          summaryContentElem = document.createElement('span');
+          Object.assign(summaryContentElem.style, {
+            cursor: 'pointer',
+          });
+
+          const resetElem = document.createElement('span')
+          Object.assign(resetElem.style, {
+            marginLeft: '0.5em',
+            cursor: 'pointer',
+            title: 'reset max memory',
+          });
+          resetElem.textContent = '🔄';
+          resetElem.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+            resetMaxTotal();
+            return false;
+          }, { passive: false });
+
+          baseElem.append(summaryElem);
+          baseElem.append(infoElem);
+          summaryElem.append(summaryContentElem);
+          summaryElem.append(resetElem);
+
+          Object.assign(baseElem.style, {
+            margin: '0',
+            padding: '0.25em',
+            fontSize: '8px',
+            fontFamily: 'monospace',
+            color: '#fff',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            position: 'fixed',
+            left: '0',
+            bottom: '0',
+            zIndex: 1000000,
+          });
+          document.documentElement.append(baseElem);
+        }
       }
     }
   }
