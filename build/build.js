@@ -4,30 +4,12 @@
 
 import fs from 'node:fs';
 
-const js = fs.readFileSync('../webgpu-memory/dist/1.x/webgpu-memory.module.js', {encoding: 'utf-8'});
-fs.writeFileSync('extension/scripts/show-memory.js', `
-{
-  console.log('webgpu-dev-extension: show-memory');
-${js.replaceAll(/export \{.*?\};/g, '').replace('# sourceMappingURL=', '')}
+const webgpuMemory = fs.readFileSync('../webgpu-memory/dist/1.x/webgpu-memory.module.js', {encoding: 'utf-8'})
+  .replaceAll(/export \{.*?\};/g, '')
+  .replace('# sourceMappingURL=', '');
 
-const shortSize = (function() {
-  const suffixes = ['b', 'k', 'mb', 'gb', 'tb', 'pb'];
-  return function(size) {
-    const suffixNdx = Math.log2(Math.abs(size)) / 10 | 0;
-    const suffix = suffixes[Math.min(suffixNdx, suffixes.length - 1)];
-    const base = 2 ** (suffixNdx * 10);
-    return \`\${(size / base).toFixed(0)}\${suffix}\`;
-  };
-})();
+const showMemoryTemplate = fs.readFileSync('build/show-memory-template.js', {encoding: 'utf-8'})
+  .replace('//insert-webgpu-memory-here', webgpuMemory);
 
-  let oldTotal = 0;
-  setInterval(() => {
-    const usage = getWebGPUMemoryUsage();
-    if (usage.memory.maxTotal > oldTotal) {
-      oldTotal = usage.memory.maxTotal;
-      console.log('memory usage:', shortSize(oldTotal));
-    }
-  }, 1000);
-};
-`);
+fs.writeFileSync('extension/scripts/show-memory.js', showMemoryTemplate);
 
