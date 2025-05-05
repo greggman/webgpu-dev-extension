@@ -4,6 +4,7 @@
   --fg-color: black;
   --fg-error: red;
   --on-bg: #4CF;
+  --hover-bg: rgba(255 182 0 / 73%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -12,6 +13,7 @@
     --fg-color: white;
     --fg-error: #F44;
     --on-bg: #06C;
+    --hover-bg: rgba(100,100,255,0.75);
   }
 }
 
@@ -34,6 +36,9 @@ body {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+}
+.control:hover {
+  background-color: var(--hover-bg);
 }
 .control label {
   display: block;
