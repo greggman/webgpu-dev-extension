@@ -1,6 +1,6 @@
 {
   "name": "WebGPU Dev Extension",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "manifest_version": 3,
   "description": "Provide some features helpful for WebGPU Development",
   "default_locale": "en",
@@ -38,6 +38,7 @@
         "scripts/utils.js",
         "scripts/webgpu-compat-validation.js",
         "scripts/webgpu-debug-helper.js",
+        "scripts/webgpu-memory.js",
         "scripts/webgpu_recorder.js"
        ],
       "matches": ["*://*/*"]

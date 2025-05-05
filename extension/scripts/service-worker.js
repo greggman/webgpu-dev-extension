@@ -98,6 +98,10 @@ function getContentScripts(settings) {
     injectScript('scripts/disable-webgpu.js');
   }
 
+  if (settings.showMemory) {
+    injectScript('scripts/show-memory.js');
+  }
+
   if (settings.rafSkipFrames || (settings.timeMult !== undefined && settings.timeMult !== 1)) {
     injectScript('scripts/raf-skip-frames.js');
   }

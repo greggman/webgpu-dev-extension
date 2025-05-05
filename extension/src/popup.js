@@ -88,6 +88,7 @@ async function main() {
   gui.add(settings, 'showShaderErrors').name('Show Shader Errors');
   gui.add(settings, 'dumpShaders').name('Dump Shaders');
   gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
+  gui.add(settings, 'showMemory').name('Show Memory');
   gui.add(settings, 'showCalls').name('Show Calls');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');

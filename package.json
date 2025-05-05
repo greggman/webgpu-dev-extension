@@ -2,7 +2,9 @@
   "name": "webgpu-dev-extension",
   "version": "0.0.27",
   "description": "",
+  "type": "module",
   "scripts": {
+    "build": "node build/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
