@@ -73,6 +73,16 @@ If a shader module gets an error, shows the entire shader in the JS console.
 Normally shader errors only show the line the error happened on.
 
 ---
+### Show Memory
+
+Uses the [webgpu-memory](https://github.com/greggman/webgpu-memory) library to show
+how much WebGPU memory is in use
+
+<img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-memory.png" width="521">
+
+The "max" is maximum amount of memory that was used since the last click on 🔄. 
+
+---
 ### Add Descriptors
 
   Adds the descriptors used to create many objects to those objects. For example:
