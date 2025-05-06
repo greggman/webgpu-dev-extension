@@ -92,7 +92,7 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
 
   GPUAdapter.prototype.requestDevice = (function(origFn) {
     return async function(...args) {
-      const device = await origFn.call(this, args);
+      const device = await origFn.call(this, ...args);
       if (device) {
         deviceRefs.push(new WeakRef(device));
         checkDeviceRefs();

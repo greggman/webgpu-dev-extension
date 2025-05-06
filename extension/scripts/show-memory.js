@@ -1,7 +1,7 @@
 if (typeof GPUAdapter !== undefined) {
   console.log('webgpu-dev-extension: show-memory');
 
-/* webgpu-memory@1.5.1, license MIT */
+/* webgpu-memory@1.5.0, license MIT */
 /* eslint-disable no-sparse-arrays */
 
 function keysOf(o) {
@@ -1544,19 +1544,13 @@ function addDeviceObject(device, webgpuObject, category, size) {
     webgpuObject[webgpuMemoryIdSymbol] = id;
   }
   const deviceId = device[webgpuMemoryIdSymbol];
-  const info = {
+  allWebGPUObjectsById.set(id, {
     ref: new WeakRef(webgpuObject),
     id,
     deviceId,
     category,
     size,
-    // will contain "oldSize" if canvas
-  };
-  allWebGPUObjectsById.set(id, info);
-  if (typeof size === 'function') {
-    size = size(webgpuObject);
-    info.oldSize = size;
-  }
+  });
   if (!isNaN(size)) {
     updateDeviceRunningTotal(device, size);
   }
@@ -1566,7 +1560,7 @@ function updateDeviceRunningTotal(device, size) {
   const deviceId = device[webgpuMemoryIdSymbol];
   const deviceInfo = allWebGPUObjectsById.get(deviceId);
   deviceInfo.runningTotal = (deviceInfo.runningTotal ?? 0) + size;
-  deviceInfo.maxTotal = Math.max(deviceInfo.maxTotal ?? 0, deviceInfo.runningTotal);
+  deviceInfo.maxTotal = Math.max(device.maxTotal ?? 0, deviceInfo.runningTotal);
 }
 
 /**
@@ -1593,12 +1587,9 @@ function deviceExists(deviceId) {
  * Free an object's memory
  * @param {number} id
  */
-function freeObjectById(id, webgpuObject) {
+function freeObjectById(id) {
   const obj = allWebGPUObjectsById.get(id);
-  let size = obj?.size;
-  if (webgpuObject && typeof size === 'function') {
-    size = size(webgpuObject);
-  }
+  const size = obj?.size;
   if (!isNaN(size)) {
     const deviceInfo = allWebGPUObjectsById.get(obj.deviceId);
     if (deviceInfo) {
@@ -1613,9 +1604,9 @@ function freeObjectById(id, webgpuObject) {
  * @param {GPUTexture | GPUBuffer} webgpuObject
  * @param {string} category
  */
-function freeObject(webgpuObject) {
+function freeObject(webgpuObject, category) {
   const id = webgpuObject[webgpuMemoryIdSymbol];
-  freeObjectById(id, webgpuObject);
+  freeObjectById(id);
 }
 
 /**
@@ -1668,7 +1659,7 @@ function getWebGPUMemoryUsage(device) {
     }
   }
 
-  idsToDelete.forEach(id => freeObjectById(id));
+  idsToDelete.forEach(freeObjectById);
 
   return info;
 }
@@ -1834,17 +1825,6 @@ function removeContext(context) {
   freeObject(context);
 }
 
-function resizeContext(context) {
-  const id = context[webgpuMemoryIdSymbol];
-  const info = allWebGPUObjectsById.get(id);
-  const deviceInfo = allWebGPUObjectsById.get(info.deviceId);
-  deviceInfo.runningTotal -= info.oldSize;
-  const size = info.size(context);
-  deviceInfo.runningTotal += size;
-  info.oldSize = size;
-  deviceInfo.maxTotal = Math.max(deviceInfo.maxTotal, deviceInfo.runningTotal);
-}
-
 function wrapCreationDestroy(factoryClass, objectClass, fnName, category) {
   wrapFunction(factoryClass, fnName, function(device, object) {
     addDeviceObject(device, object, category);
@@ -1879,7 +1859,6 @@ if (typeof GPUAdapter !== 'undefined') {
 
   wrapFunction(GPUCanvasContext, 'configure', addContext);
   wrapFunction(GPUCanvasContext, 'unconfigure', removeContext);
-  wrapFunction(GPUCanvasContext, 'getCurrentTexture', resizeContext);
 
   wrapFunction(GPUDevice, 'createBuffer', addBuffer);
   wrapFunction(GPUBuffer, 'destroy', removeBuffer);
@@ -1996,7 +1975,7 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
 
   GPUAdapter.prototype.requestDevice = (function(origFn) {
     return async function(...args) {
-      const device = await origFn.call(this, args);
+      const device = await origFn.call(this, ...args);
       if (device) {
         deviceRefs.push(new WeakRef(device));
         checkDeviceRefs();
