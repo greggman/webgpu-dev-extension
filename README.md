@@ -18,11 +18,9 @@ For example in Chrome
 3. pick "Load Unpacked"
 4. Select the "extension" folder from this repo
 
-## NOTE! Extension doesn't appear issue!!!
+## Usage
 
-Currently, the plugin UI does not work if you are stopped at a breakpoint in the debugger.
-Unpause execution in the debugger or close the DevTools and the UI should appear.
-(PRs/ideas welcome! [See this issue](https://github.com/greggman/webgpu-dev-extension/issues/5))
+Pick an option then **refresh the page**.
 
 ## Options
 
@@ -222,9 +220,14 @@ Remember this is not instant. You must refresh the page for it to take affect.
   Attempt to capture WebGPU calls to an HTML file using [webgpu_recorder](https://github.com/brendan-duncan/webgpu_recorder)
 
 ---
+
+## Limits
+
+Does not currently work in workers. [See Issue](https://github.com/greggman/webgpu-dev-extension/issues/6).
+
 ## Development
 
-I don't know all the procedures for other browser but in Chrome, load the extension by cloning this repo and then
+I don't know all the procedures for other browsers but in Chrome, load the extension by cloning this repo and then
 
 1. go to `about://extensions`
 2. enable developer mode
