@@ -1,3 +1,4 @@
+// DO NOT EDIT !!! AUTO-GENERATED-FILE !!!
 (function () {
   'use strict';
 

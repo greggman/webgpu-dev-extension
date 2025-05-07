@@ -1,3 +1,4 @@
+// DO NOT EDIT !!! AUTO-GENERATED-FILE !!!
 (function () {
   'use strict';
 
@@ -14,6 +15,10 @@
     const injectScript = (url) => {
       scripts.push(url);
     };
+
+    if (settings.showCallCounts) {
+      injectScript('scripts/show-call-counts.js');
+    }
 
     if (settings.enforceDefaultLimits) {
       injectScript('scripts/enforce-default-limits.js');
