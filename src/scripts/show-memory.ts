@@ -1,11 +1,13 @@
+/* eslint-disable no-inner-declarations */
 import { getWebGPUMemoryUsage, resetMaxTotal } from 'webgpu-memory';
 
+// eslint-disable-next-line valid-typeof
 if (typeof GPUAdapter !== undefined) {
   console.log('webgpu-dev-extension: show-memory');
 
-  const shortSize = (function() {
+  const shortSize = (function () {
     const suffixes = ['b', 'k', 'mb', 'gb', 'tb', 'pb'];
-    return function(size) {
+    return function (size: number) {
       const suffixNdx = Math.log2(Math.abs(size)) / 10 | 0;
       const suffix = suffixes[Math.min(suffixNdx, suffixes.length - 1)];
       const base = 2 ** (suffixNdx * 10);
@@ -13,11 +15,11 @@ if (typeof GPUAdapter !== undefined) {
     };
   })();
 
-  let baseElem;
-  let summaryContentElem;
-  let infoElem;
-  const deviceRefs = [];
-  let intervalId;
+  let baseElem: HTMLElement;
+  let summaryContentElem: HTMLElement;
+  let infoElem: HTMLElement;
+  const deviceRefs: WeakRef<GPUDevice>[] = [];
+  let intervalId: number | undefined;
 
   function checkMemory() {
     const {memory, resources} = getWebGPUMemoryUsage();
@@ -29,9 +31,9 @@ memory:
 ${Object.entries(memory).map(([k, v]) => `  ${k}: ${shortSize(v)}`).join('\n')}
 resources:
 ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
-`
+`;
     checkDeviceRefs();
-  };
+  }
 
   function checkDeviceRefs() {
     if (intervalId) {
@@ -53,7 +55,7 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
             cursor: 'pointer',
           });
 
-          const resetElem = document.createElement('span')
+          const resetElem = document.createElement('span');
           Object.assign(resetElem.style, {
             marginLeft: '0.5em',
             cursor: 'pointer',
@@ -90,8 +92,8 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
     }
   }
 
-  GPUAdapter.prototype.requestDevice = (function(origFn) {
-    return async function(...args) {
+  GPUAdapter.prototype.requestDevice = (function (origFn) {
+    return async function (this: GPUAdapter, ...args) {
       const device = await origFn.call(this, ...args);
       if (device) {
         deviceRefs.push(new WeakRef(device));
@@ -101,8 +103,8 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
     };
   })(GPUAdapter.prototype.requestDevice);
 
-  GPUDevice.prototype.destroy = (function(origFn) {
-    return async function(...args) {
+  GPUDevice.prototype.destroy = (function (origFn) {
+    return function (this: GPUDevice, ...args) {
       origFn.call(this, ...args);
       const ndx = deviceRefs.findIndex(ref => ref.deref() === this);
       if (ndx >= 0) {
@@ -112,4 +114,4 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
     };
   })(GPUDevice.prototype.destroy);
 
-};
+}

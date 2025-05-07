@@ -14,8 +14,6 @@
   },
   "include": [
     "src/**/*.js",
-  ],
-  "typeAcquisition": {
-    "include": ["@webgpu/types"]
-  }
+    "src/**/*.ts",
+  ]
 }
