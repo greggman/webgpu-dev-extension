@@ -25,7 +25,7 @@
     "tslib": "^2.8.1"
   },
   "dependencies": {
-    "webgpu-memory": "^1.5.2",
+    "webgpu-memory": "^1.5.3",
     "webgpu-utils": "^1.8.2"
   }
 }
