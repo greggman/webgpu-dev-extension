@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "outDir": "dist/0.x",
+    "outDir": "extension",
     "moduleResolution": "NodeNext",
     "allowJs": true,
     "declaration": false,
@@ -13,8 +13,7 @@
     ],
   },
   "include": [
-    "extension/scripts/*.js",
-    "extension/src/*.js",
+    "src/**/*.js",
   ],
   "typeAcquisition": {
     "include": ["@webgpu/types"]

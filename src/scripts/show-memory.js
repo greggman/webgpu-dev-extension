@@ -1,7 +1,7 @@
+import { getWebGPUMemoryUsage, resetMaxTotal } from 'webgpu-memory';
+
 if (typeof GPUAdapter !== undefined) {
   console.log('webgpu-dev-extension: show-memory');
-
-//insert-webgpu-memory-here
 
   const shortSize = (function() {
     const suffixes = ['b', 'k', 'mb', 'gb', 'tb', 'pb'];
