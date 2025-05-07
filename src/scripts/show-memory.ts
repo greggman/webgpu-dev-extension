@@ -1,5 +1,6 @@
 /* eslint-disable no-inner-declarations */
 import { getWebGPUMemoryUsage, resetMaxTotal } from 'webgpu-memory';
+import { addElementToWebgpuDevExtension } from '../lib/html.js';
 
 // eslint-disable-next-line valid-typeof
 if (typeof GPUAdapter !== undefined) {
@@ -74,19 +75,7 @@ ${Object.entries(resources).map(([k, v]) => `  ${k}: ${(v)}`).join('\n')}
           summaryElem.append(summaryContentElem);
           summaryElem.append(resetElem);
 
-          Object.assign(baseElem.style, {
-            margin: '0',
-            padding: '0.25em',
-            fontSize: '8px',
-            fontFamily: 'monospace',
-            color: '#fff',
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            position: 'fixed',
-            left: '0',
-            bottom: '0',
-            zIndex: 1000000,
-          });
-          document.documentElement.append(baseElem);
+          addElementToWebgpuDevExtension(baseElem);
         }
       }
     }

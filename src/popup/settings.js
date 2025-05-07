@@ -13,6 +13,7 @@ const defaultSettings = {
   showAdapterInfo: false,
   showErrors: false,
   showCalls: false,
+  showCallCounts: false,
   showMemory: false,
   showShaderErrors: false,
   enforceDefaultLimits: false,

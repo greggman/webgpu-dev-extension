@@ -8,11 +8,11 @@ import {
 } from './utils.js';
 import {GUI} from './gui.js';
 
-function log(...args) {
+function log(/*...args*/) {
   // console.log(...args);
 }
 
-window.browser = (function() {
+window.browser = (function () {
     return window.msBrowser ||
         window.browser ||
         window.chrome ||
@@ -21,7 +21,7 @@ window.browser = (function() {
 
 const setError = (() => {
   const errorElem = document.querySelector('#error');
-  return function(msg) {
+  return function (msg) {
     errorElem.textContent = msg || '';
     errorElem.style.display = msg ? '' : 'none';
   };
@@ -30,7 +30,7 @@ const setError = (() => {
 const callAsyncFnWithErrorCheck = (() => {
   let sameErrorCount = 1;
   let lastErrorMsg = '';
-  return async function(fn) {
+  return async function (fn) {
     try {
       setError();
       await fn();
@@ -89,6 +89,7 @@ async function main() {
   gui.add(settings, 'dumpShaders').name('Dump Shaders');
   gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
   gui.add(settings, 'showMemory').name('Show Memory');
+  gui.add(settings, 'showCallCounts').name('Show Calls Per Frame');
   gui.add(settings, 'showCalls').name('Show Calls');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');

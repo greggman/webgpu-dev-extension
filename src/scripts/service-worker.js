@@ -12,6 +12,10 @@ function getContentScripts(settings) {
     scripts.push(url);
   }
 
+  if (settings.showCallCounts) {
+    injectScript('scripts/show-call-counts.js');
+  }
+
   if (settings.enforceDefaultLimits) {
     injectScript('scripts/enforce-default-limits.js');
   }

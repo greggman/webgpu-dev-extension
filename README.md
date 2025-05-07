@@ -81,6 +81,20 @@ how much WebGPU memory is in use
 The "max" is maximum amount of memory that was used since the last click on 🔄. 
 
 ---
+### Show Call Counts
+
+Shows the number of WebGPU calls per `requestAnimationFrame`.
+This can be useful to see if the numbers match your expectations.
+Like maybe you expected you were not creating any bindGroups but
+you see there are 16 call per frame to `createBindGroup`.
+
+Call counts of 0 are kept in the list until you click 🔄 so that
+the list does not jumble around.
+
+<img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-call-counts.png" width="600">
+
+
+---
 ### Add Descriptors
 
   Adds the descriptors used to create many objects to those objects. For example:
