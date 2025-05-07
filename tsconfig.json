@@ -15,5 +15,6 @@
   "include": [
     "src/**/*.js",
     "src/**/*.ts",
+    "rollup.config.js",
   ]
 }

@@ -9,6 +9,8 @@ function setExtensionTo(p, newExt) {
     return `${p.substring(0, p.length - ext.length)}${newExt}`;
 }
 
+const banner = '// DO NOT EDIT !!! AUTO-GENERATED-FILE !!!';
+
 const plugins = [
     nodeResolve(),
     typescript({ tsconfig: './tsconfig.json' }),
@@ -28,11 +30,12 @@ const targets = [
                 format: 'esm',
                 sourcemap: true,
                 freeze: false,
+                banner,
             },
         ],
         plugins,
         ...shared,
-    }
+    },
 ];
 
 targets.push(...fs.readdirSync('src/scripts')
@@ -46,6 +49,7 @@ targets.push(...fs.readdirSync('src/scripts')
                     format: 'iife',
                     sourcemap: true,
                     freeze: false,
+                    banner,
                 },
             ],
             plugins,
