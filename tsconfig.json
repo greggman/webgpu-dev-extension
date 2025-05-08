@@ -9,6 +9,7 @@
     "declaration": false,
     "typeRoots": [
       "./node_modules/@webgpu/types",
+      "./node_modules/@types/chrome",
       "./node_modules/@types",
     ],
   },

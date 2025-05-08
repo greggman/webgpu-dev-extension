@@ -81,6 +81,61 @@ how much WebGPU memory is in use
 The "max" is maximum amount of memory that was used since the last click on 🔄. 
 
 ---
+### Show Redundant State Setting
+
+This open shows the amount of redundant state set per frame.
+It uses the [webgpu-avoid-redundant-state-setting library](https://github.com/greggman/webgpu-avoid-redundant-state-setting).
+
+<img src="https://greggman.github.io/webgpu-dev-extension/screenshots/show-redundant-state-setting.png" width="600">
+
+Note: The library actually stops your app from setting redundant state
+so in affect it's proof the state didn't need to be set.
+
+An example of setting redundant state. Imagine you draw a bunch of object
+in a loop
+
+```js
+{
+  const pass = encoder.beginRenderPass(...);
+  for (const obj of objects) {
+    pass.setPipeline(obj.pipeline);
+    pass.setBindGroup(0, obj.bindGroup0);
+    pass.setVertexBuffer(0, obj.vertexBuffer0);
+    pass.draw(obj.vertexCount);
+  }
+  pass.end();
+}
+```
+
+If `obj.pipeline` is the same for all objects then you only needed to
+call `setPipeline` once and the redundant state count setting will be > 0.
+
+Note: Having a count > 0 is **NOT** a cardinal sin. That said, if your
+number is in the 100s or 1000s then there is probably a measurable
+amount of at least JavaScript perf to be had from skipping setting the
+state 100s of extra times per frame.
+
+Given the above code, a simple example might be
+
+```js
+{
+  let lastPipeline;
+  const pass = encoder.beginRenderPass(...);
+  for (const obj of objects) {
+    // don't set the pipeline if it's the same one.
+    if (lastPipeline !== obj.pipeline) {
+      lastPipeline = obj.pipeline;
+      pass.setPipeline(obj.pipeline);
+    }
+    pass.setBindGroup(0, obj.bindGroup0);
+    pass.setVertexBuffer(0, obj.vertexBuffer0);
+    pass.draw(obj.vertexCount);
+  }
+  pass.end();
+}
+```
+
+---
 ### Show Call Counts
 
 Shows the number of WebGPU calls per `requestAnimationFrame`.
