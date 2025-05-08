@@ -1,6 +1,6 @@
 {
   "name": "WebGPU Dev Extension",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "manifest_version": 3,
   "description": "Provide some features helpful for WebGPU Development",
   "default_locale": "en",
@@ -35,6 +35,7 @@
         "scripts/show-calls-counts.js",
         "scripts/show-errors.js",
         "scripts/show-shader-errors.js",
+        "scripts/show-redundant-state-setting.js",
         "scripts/track-pass-state.js",
         "scripts/utils.js",
         "scripts/webgpu-compat-validation.js",
