@@ -1,4 +1,5 @@
-import { addElementToWebgpuDevExtension } from "../lib/html.js";
+import { addElementToWebgpuDevExtension } from '../lib/html.js';
+import { rafCallbackWhenDevicesExist } from '../lib/raf.js';
 
 /* eslint-disable no-inner-declarations */
 if (typeof GPUDevice !== 'undefined') {
@@ -86,11 +87,9 @@ if (typeof GPUDevice !== 'undefined') {
     calls.sort();
     infoElem.textContent = calls.join('\n');
     summaryContentElem.textContent = `cpf: ${total}`;
-
-    requestAnimationFrame(updateAndResetCount);
   }
 
-  requestAnimationFrame(updateAndResetCount);
+  rafCallbackWhenDevicesExist(updateAndResetCount);
 }
 
 document.currentScript?.remove();

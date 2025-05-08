@@ -16,6 +16,7 @@ const defaultSettings = {
   showCallCounts: false,
   showMemory: false,
   showShaderErrors: false,
+  showRedundantStateSetting: false,
   enforceDefaultLimits: false,
   webgpuDebugHelper: false,
   trackPassState: false,
