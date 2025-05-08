@@ -17,6 +17,7 @@ const defaultSettings = {
   showCallCounts: false,
   showMemory: false,
   showShaderErrors: false,
+  showRedundantStateSetting: false,
   enforceDefaultLimits: false,
   webgpuDebugHelper: false,
   trackPassState: false,
@@ -497,6 +498,7 @@ async function main() {
   gui.add(settings, 'webgpuDebugHelper').name('WebGPU Debug Helper');
   gui.add(settings, 'showMemory').name('Show Memory');
   gui.add(settings, 'showCallCounts').name('Show Calls Per Frame');
+  gui.add(settings, 'showRedundantStateSetting').name('Show Redundant State Setting');
   gui.add(settings, 'showCalls').name('Show Calls');
   gui.add(settings, 'addDescriptors').name('Add Descriptors');
   gui.add(settings, 'autoLabel').name('Auto Label');

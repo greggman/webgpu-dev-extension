@@ -20,6 +20,10 @@
       injectScript('scripts/show-call-counts.js');
     }
 
+    if (settings.showRedundantStateSetting) {
+      injectScript('scripts/show-redundant-state-setting.js');
+    }
+
     if (settings.enforceDefaultLimits) {
       injectScript('scripts/enforce-default-limits.js');
     }

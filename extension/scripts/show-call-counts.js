@@ -25,6 +25,87 @@
         webgpuDevExtensionElem.append(elem);
     }
 
+    function callbackWhenDevicesGoFrom0to1Or1To0(callback) {
+        const s_deviceRefs = [];
+        function removeGCed() {
+            const refs = s_deviceRefs.filter(ref => !!ref.deref());
+            s_deviceRefs.length = 0;
+            s_deviceRefs.push(...refs);
+        }
+        function checkDevices() {
+            removeGCed();
+            update();
+        }
+        let intervalId;
+        function update() {
+            removeGCed();
+            if (!intervalId) {
+                if (s_deviceRefs.length > 0) {
+                    intervalId = setInterval(checkDevices, 1000);
+                    callback(true);
+                }
+            }
+            else {
+                if (s_deviceRefs.length === 0) {
+                    clearInterval(intervalId);
+                    intervalId = undefined;
+                    callback(false);
+                }
+            }
+        }
+        GPUAdapter.prototype.requestDevice = (function (origFn) {
+            return async function (...args) {
+                const device = await origFn.call(this, ...args);
+                if (device) {
+                    s_deviceRefs.push(new WeakRef(device));
+                    update();
+                }
+                return device;
+            };
+        })(GPUAdapter.prototype.requestDevice);
+        GPUDevice.prototype.destroy = (function (origFn) {
+            return function () {
+                origFn.call(this);
+                const device = this;
+                const ndx = s_deviceRefs.findIndex(ref => ref.deref() === device);
+                s_deviceRefs.splice(ndx, 0);
+                update();
+            };
+        })(GPUDevice.prototype.destroy);
+    }
+
+    function rafCallbackWhenDevicesExist(callback) {
+        let running;
+        let rafId;
+        function updateAndResetCount() {
+            rafId = undefined;
+            callback();
+            if (running) {
+                startRaf();
+            }
+        }
+        function startRaf() {
+            if (!rafId) {
+                rafId = requestAnimationFrame(updateAndResetCount);
+            }
+        }
+        function stopRaf() {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = undefined;
+            }
+        }
+        callbackWhenDevicesGoFrom0to1Or1To0((haveDevices) => {
+            if (haveDevices) {
+                running = true;
+                startRaf();
+            }
+            else {
+                stopRaf();
+            }
+        });
+    }
+
     /* eslint-disable no-inner-declarations */
     if (typeof GPUDevice !== 'undefined') {
         const s_counts = new Map();
@@ -101,9 +182,8 @@
             calls.sort();
             infoElem.textContent = calls.join('\n');
             summaryContentElem.textContent = `cpf: ${total}`;
-            requestAnimationFrame(updateAndResetCount);
         }
-        requestAnimationFrame(updateAndResetCount);
+        rafCallbackWhenDevicesExist(updateAndResetCount);
     }
     document.currentScript?.remove();
 
