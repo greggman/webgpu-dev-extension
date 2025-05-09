@@ -6,20 +6,35 @@ import { addElementToWebgpuDevExtension } from '../lib/html.js';
 if (typeof GPUAdapter !== undefined) {
   console.log('webgpu-dev-extension: show-redundant-state-setting');
 
-  const baseElem = document.createElement('details');
-  const summaryElem = document.createElement('summary');
-  const infoElem = document.createElement('pre');
+  const getElements = (() => {
+    let baseElem: HTMLElement;
+    let summaryElem: HTMLElement;
+    let infoElem: HTMLElement;
+    let summaryContentElem: HTMLElement;
 
-  const summaryContentElem = document.createElement('span');
-  Object.assign(summaryContentElem.style, {
-    cursor: 'pointer',
-  });
+    return function () {
+      if (!baseElem) {
+        baseElem = document.createElement('details');
+        summaryElem = document.createElement('summary');
+        infoElem = document.createElement('pre');
+        summaryContentElem = document.createElement('span');
+        Object.assign(summaryContentElem.style, {
+          cursor: 'pointer',
+        });
 
-  baseElem.append(summaryElem);
-  baseElem.append(infoElem);
-  summaryElem.append(summaryContentElem);
+        baseElem.append(summaryElem);
+        baseElem.append(infoElem);
+        summaryElem.append(summaryContentElem);
 
-  addElementToWebgpuDevExtension(baseElem);
+        addElementToWebgpuDevExtension(baseElem);
+      }
+
+      return {
+        infoElem,
+        summaryContentElem,
+      };
+    };
+  })();
 
   rafCallbackWhenDevicesExist(() => {
     const info = getAndResetRedundantCallInfo();
@@ -29,6 +44,7 @@ if (typeof GPUAdapter !== undefined) {
       return `${name}: ${count}`;
     });
 
+    const { infoElem, summaryContentElem } = getElements();
     infoElem.textContent = counts.join('\n');
     summaryContentElem.textContent = `redundant state call count: ${total}`;
 

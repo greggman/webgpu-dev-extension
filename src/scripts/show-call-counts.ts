@@ -46,35 +46,50 @@ if (typeof GPUDevice !== 'undefined') {
     }
   }
 
-  const baseElem = document.createElement('details');
-  const summaryElem = document.createElement('summary');
-  const infoElem = document.createElement('pre');
+  const getElements = (() => {
+    let baseElem: HTMLElement;
+    let summaryElem: HTMLElement;
+    let infoElem: HTMLElement;
+    let summaryContentElem: HTMLElement;
 
-  const summaryContentElem = document.createElement('span');
-  Object.assign(summaryContentElem.style, {
-    cursor: 'pointer',
-  });
+    return function () {
+      if (!baseElem) {
+        baseElem = document.createElement('details');
+        summaryElem = document.createElement('summary');
+        infoElem = document.createElement('pre');
+        summaryContentElem = document.createElement('span');
+        Object.assign(summaryContentElem.style, {
+          cursor: 'pointer',
+        });
 
-  const resetElem = document.createElement('span');
-  Object.assign(resetElem.style, {
-    marginLeft: '0.5em',
-    cursor: 'pointer',
-    title: 'remove zero count',
-  });
-  resetElem.textContent = '🔄';
-  resetElem.addEventListener('click', e => {
-    e.preventDefault();
-    e.stopPropagation();
-    s_counts.clear();
-    return false;
-  }, { passive: false });
+        const resetElem = document.createElement('span');
+        Object.assign(resetElem.style, {
+          marginLeft: '0.5em',
+          cursor: 'pointer',
+          title: 'remove zero count',
+        });
+        resetElem.textContent = '🔄';
+        resetElem.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          s_counts.clear();
+          return false;
+        }, { passive: false });
 
-  baseElem.append(summaryElem);
-  baseElem.append(infoElem);
-  summaryElem.append(summaryContentElem);
-  summaryElem.append(resetElem);
+        baseElem.append(summaryElem);
+        baseElem.append(infoElem);
+        summaryElem.append(summaryContentElem);
+        summaryElem.append(resetElem);
 
-  addElementToWebgpuDevExtension(baseElem);
+        addElementToWebgpuDevExtension(baseElem);
+      }
+
+      return {
+        infoElem,
+        summaryContentElem,
+      };
+    };
+  })();
 
   function updateAndResetCount() {
     let total = 0;
@@ -85,6 +100,7 @@ if (typeof GPUDevice !== 'undefined') {
       s_counts.set(k, 0);
     });
     calls.sort();
+    const { infoElem, summaryContentElem } = getElements();
     infoElem.textContent = calls.join('\n');
     summaryContentElem.textContent = `cpf: ${total}`;
   }
