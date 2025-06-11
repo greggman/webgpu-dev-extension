@@ -1,4 +1,6 @@
 {
+  console.log('webgpu-dev-extension: raf-skip-frames');
+
   const log = (/*...args*/) => {
     // console.log(...args);
   };

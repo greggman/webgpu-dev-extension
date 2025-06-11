@@ -1,4 +1,6 @@
 if (typeof GPU !== 'undefined') {
+  console.log('webgpu-dev-extension: show-adapter-info');
+
   GPU.prototype.requestAdapter = (function (origFn) {
     return async function (...args) {
       const adapter = await origFn.call(this, ...args);

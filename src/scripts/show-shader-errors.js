@@ -1,4 +1,5 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: show-shader-errors');
 
   const showError = async function (module, code, stack) {
     const info = await module.getCompilationInfo();

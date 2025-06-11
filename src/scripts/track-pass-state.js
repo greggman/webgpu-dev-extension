@@ -1,4 +1,6 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: track-pass-state');
+
   function addStateWrapper(API, fnName, fn) {
     const origFn = API.prototype[fnName];
     API.prototype[fnName] = function (...args) {

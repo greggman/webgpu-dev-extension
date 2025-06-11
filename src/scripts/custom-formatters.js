@@ -1,4 +1,6 @@
 if (typeof GPUAdapter !== 'undefined') {
+  console.log('webgpu-dev-extension: custom-formatters');
+
   const expandStyle = {style: 'list-style-type: none; margin: 0; padding-left: 24px;'};
 
   const headerConfig = {

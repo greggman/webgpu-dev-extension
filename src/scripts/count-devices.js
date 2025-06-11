@@ -1,4 +1,6 @@
 if (typeof GPUAdapter !== 'undefined') {
+  console.log('webgpu-dev-extension: count-devices');
+
   let maxActiveDevices = 0;
   let allDevices = [];
 

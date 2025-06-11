@@ -1,4 +1,6 @@
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: show-calls');
+
   function addShowWrapper(API, apiName, methodName, origFn) {
     const name = `${apiName}.${methodName}`;
     // Set disable (in devtools) to true to disable this specific method breakpoint
