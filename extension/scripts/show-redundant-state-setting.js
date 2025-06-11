@@ -441,17 +441,31 @@
   // eslint-disable-next-line valid-typeof
   if (typeof GPUAdapter !== undefined) {
       console.log('webgpu-dev-extension: show-redundant-state-setting');
-      const baseElem = document.createElement('details');
-      const summaryElem = document.createElement('summary');
-      const infoElem = document.createElement('pre');
-      const summaryContentElem = document.createElement('span');
-      Object.assign(summaryContentElem.style, {
-          cursor: 'pointer',
-      });
-      baseElem.append(summaryElem);
-      baseElem.append(infoElem);
-      summaryElem.append(summaryContentElem);
-      addElementToWebgpuDevExtension(baseElem);
+      const getElements = (() => {
+          let baseElem;
+          let summaryElem;
+          let infoElem;
+          let summaryContentElem;
+          return function () {
+              if (!baseElem) {
+                  baseElem = document.createElement('details');
+                  summaryElem = document.createElement('summary');
+                  infoElem = document.createElement('pre');
+                  summaryContentElem = document.createElement('span');
+                  Object.assign(summaryContentElem.style, {
+                      cursor: 'pointer',
+                  });
+                  baseElem.append(summaryElem);
+                  baseElem.append(infoElem);
+                  summaryElem.append(summaryContentElem);
+                  addElementToWebgpuDevExtension(baseElem);
+              }
+              return {
+                  infoElem,
+                  summaryContentElem,
+              };
+          };
+      })();
       rafCallbackWhenDevicesExist(() => {
           const info = getAndResetRedundantCallInfo();
           let total = 0;
@@ -459,6 +473,7 @@
               total += count;
               return `${name}: ${count}`;
           });
+          const { infoElem, summaryContentElem } = getElements();
           infoElem.textContent = counts.join('\n');
           summaryContentElem.textContent = `redundant state call count: ${total}`;
       });

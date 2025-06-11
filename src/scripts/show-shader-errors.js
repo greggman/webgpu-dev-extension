@@ -1,6 +1,6 @@
 if (typeof GPUDevice !== 'undefined') {
 
-  const showError = async function(module, code, stack) {
+  const showError = async function (module, code, stack) {
     const info = await module.getCompilationInfo();
     const lines = code.split('\n');
     const messages = [...info.messages];
@@ -23,8 +23,8 @@ if (typeof GPUDevice !== 'undefined') {
     console.error(lines.join('\n'));
   };
 
-  GPUDevice.prototype.createShaderModule = (function(origFn) {
-    return function(desc = {}) {
+  GPUDevice.prototype.createShaderModule = (function (origFn) {
+    return function (desc = {}) {
       const code = desc.code;
       const stack = new Error();
       this.pushErrorScope('validation');
@@ -33,7 +33,7 @@ if (typeof GPUDevice !== 'undefined') {
         if (err) {
           showError(module, code, stack);
         }
-      })
+      });
       return module;
     };
   })(GPUDevice.prototype.createShaderModule);

@@ -1,6 +1,6 @@
 const eventRE = /on([A-Z])(\w+)/;
 
-export function createElem(tag, attrs = {}) { 
+export function createElem(tag, attrs = {}) {
   const elem = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
     if (typeof value === 'object') {

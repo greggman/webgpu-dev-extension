@@ -32,8 +32,8 @@ export function callbackWhenDevicesGoFrom0to1Or1To0(callback: (haveDevice: boole
     }
   }
 
-  GPUAdapter.prototype.requestDevice = (function(origFn) {
-    return async function(this: GPUAdapter, ...args) {
+  GPUAdapter.prototype.requestDevice = (function (origFn) {
+    return async function (this: GPUAdapter, ...args) {
       const device = await origFn.call(this, ...args);
       if (device) {
         s_deviceRefs.push(new WeakRef(device));
@@ -41,15 +41,14 @@ export function callbackWhenDevicesGoFrom0to1Or1To0(callback: (haveDevice: boole
       }
       return device;
     };
-  })(GPUAdapter.prototype.requestDevice)
+  })(GPUAdapter.prototype.requestDevice);
 
-  GPUDevice.prototype.destroy = (function(origFn) {
-    return function(this: GPUDevice) {
+  GPUDevice.prototype.destroy = (function (origFn) {
+    return function (this: GPUDevice) {
       origFn.call(this);
-      const device = this;
-      const ndx = s_deviceRefs.findIndex(ref => ref.deref() === device);
+      const ndx = s_deviceRefs.findIndex(ref => ref.deref() === this);
       s_deviceRefs.splice(ndx, 0);
       update();
-    }
+    };
   })(GPUDevice.prototype.destroy);
 }

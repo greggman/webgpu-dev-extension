@@ -1,0 +1,3 @@
+src/scripts/show-errors.js
+src/scripts/webgpu_recorder.js
+src/scripts/webgpu-debug-helper.js

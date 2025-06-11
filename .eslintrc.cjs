@@ -57,6 +57,7 @@ module.exports = {
         'no-extra-parens': [2, 'functions'],
         'no-implied-eval': 2,
         'no-irregular-whitespace': 2,
+        'no-inner-declarations': 0,
         'no-iterator': 2,
         'no-label-var': 2,
         'no-labels': 2,
@@ -81,8 +82,8 @@ module.exports = {
         'no-spaced-func': 2,
         'no-trailing-spaces': 2,
         'no-undef-init': 2,
-        //'no-undef': 2, // ts recommends this be off: https://typescript-eslint.io/linting/troubleshooting
-        'no-underscore-dangle': 2,
+        'no-undef': 0, // ts recommends this be off: https://typescript-eslint.io/linting/troubleshooting
+        'no-underscore-dangle': 0,
         'no-unreachable': 2,
         'no-unused-expressions': 2,
         'no-use-before-define': 0,

@@ -12,6 +12,7 @@ function isColumnEmpty(pixels, width, height, x) {
   return true;
 }
 
+/*
 function isRowEmpty(pixels, width, y) {
   for (let x = 0; x < width; ++x) {
     const offset = y * width + x;
@@ -21,11 +22,12 @@ function isRowEmpty(pixels, width, y) {
   }
   return true;
 }
+*/
 
 export function getGap(element) {
   const style = window.getComputedStyle(element);
   const left =
-      style.textAlign === 'left' || 
+      style.textAlign === 'left' ||
       (style.textAlign === 'start' && style.direction === 'ltr') ||
       (style.textAlign === 'end' && style.direction === 'rtl');
   const right =

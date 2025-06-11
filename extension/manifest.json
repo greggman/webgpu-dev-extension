@@ -38,7 +38,6 @@
         "scripts/show-redundant-state-setting.js",
         "scripts/track-pass-state.js",
         "scripts/utils.js",
-        "scripts/webgpu-compat-validation.js",
         "scripts/webgpu-debug-helper.js",
         "scripts/webgpu-memory.js",
         "scripts/webgpu_recorder.js"

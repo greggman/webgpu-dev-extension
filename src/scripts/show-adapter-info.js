@@ -1,6 +1,6 @@
 if (typeof GPU !== 'undefined') {
-  GPU.prototype.requestAdapter = (function(origFn) {
-    return async function(...args) {
+  GPU.prototype.requestAdapter = (function (origFn) {
+    return async function (...args) {
       const adapter = await origFn.call(this, ...args);
       if (adapter) {
         try {
@@ -15,8 +15,8 @@ if (typeof GPU !== 'undefined') {
     };
   })(GPU.prototype.requestAdapter);
 
-  GPUAdapter.prototype.requestDevice = (function(origFn) {
-    return async function(...args) {
+  GPUAdapter.prototype.requestDevice = (function (origFn) {
+    return async function (...args) {
       const device = await origFn.call(this, ...args);
       if (device) {
         console.log('device:', device);

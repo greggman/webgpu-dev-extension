@@ -1,4 +1,4 @@
-function log(...args) {
+function log(/*...args*/) {
   // console.log(...args);
 }
 
@@ -10,7 +10,7 @@ function getContentScripts(settings) {
 
   const injectScript = (url) => {
     scripts.push(url);
-  }
+  };
 
   if (settings.showCallCounts) {
     injectScript('scripts/show-call-counts.js');
@@ -173,5 +173,4 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return;
   }
   fn(data, sender, sendResponse);
-  return true;
 });

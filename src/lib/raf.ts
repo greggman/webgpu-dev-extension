@@ -33,7 +33,7 @@ export function rafCallbackWhenDevicesExist(callback: () => void) {
       running = true;
       startRaf();
     } else {
-      stopRaf()
+      stopRaf();
     }
   });
 

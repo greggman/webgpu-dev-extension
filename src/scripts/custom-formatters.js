@@ -13,7 +13,7 @@ if (typeof GPUAdapter !== 'undefined') {
         ...props.flatMap(v => [', ', v]).slice(1),
         '}',
       ];
-    }
+    },
   };
 
   const bodyConfig = {
@@ -25,8 +25,8 @@ if (typeof GPUAdapter !== 'undefined') {
       return [
         'ol', expandStyle, ...props,
       ];
-    }
-  }
+    },
+  };
 
   function getJsonML(object, config) {
     const {
@@ -78,7 +78,7 @@ if (typeof GPUAdapter !== 'undefined') {
     ];
   }
 
-  function getSetAsArrayJsonML(value, config) {
+  function getSetAsArrayJsonML(value) {
     const array = [...value.values()].sort();
     return ['object', {object: array}];
   }
@@ -126,7 +126,7 @@ if (typeof GPUAdapter !== 'undefined') {
     body: {
       ...bodyConfig,
       propertyFormatters: gpuBufferPropertyFormatters,
-    }
+    },
   };
 
   const gpuTextureConfig = {
@@ -137,7 +137,7 @@ if (typeof GPUAdapter !== 'undefined') {
     body: {
       ...bodyConfig,
       propertyFormatters: gpuTexturePropertyFormatters,
-    }
+    },
   };
 
   const gpuHeapPropertyConfig = {
@@ -148,7 +148,7 @@ if (typeof GPUAdapter !== 'undefined') {
     body: {
       ...bodyConfig,
       propertyFormatters: gpuHeapPropertyFormatters,
-    }
+    },
   };
 
   const gpuAdapterConfig = {
@@ -159,7 +159,7 @@ if (typeof GPUAdapter !== 'undefined') {
     body: {
       ...bodyConfig,
       propertyFormatters: gpuAdapterPropertyFormatters,
-    }
+    },
   };
 
   const gpuDeviceConfig = {
@@ -170,7 +170,7 @@ if (typeof GPUAdapter !== 'undefined') {
     body: {
       ...bodyConfig,
       propertyFormatters: gpuDevicePropertyFormatters,
-    }
+    },
   };
 
   function getConfig(object) {

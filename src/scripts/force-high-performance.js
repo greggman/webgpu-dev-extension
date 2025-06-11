@@ -1,7 +1,7 @@
 if (typeof GPU !== 'undefined') {
   console.log('webgpu-dev-extension: force-high-performance');
-  GPU.prototype.requestAdapter = (function(origFn) {
-    return async function(desc = {}) {
+  GPU.prototype.requestAdapter = (function (origFn) {
+    return async function (desc = {}) {
       const adapter = await origFn.call(this, {...desc, powerPreference: 'high-performance'});
       if (adapter) {
         try {

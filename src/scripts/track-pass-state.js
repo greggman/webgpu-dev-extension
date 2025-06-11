@@ -7,8 +7,8 @@ if (typeof GPUDevice !== 'undefined') {
     };
   }
 
-  GPUCommandEncoder.prototype.beginComputePass = (function(origFn) {
-    return function(desc = {}) {
+  GPUCommandEncoder.prototype.beginComputePass = (function (origFn) {
+    return function (desc = {}) {
       const result = origFn.call(this, desc);
       result.state = {
         bindGroups: [],
@@ -17,8 +17,8 @@ if (typeof GPUDevice !== 'undefined') {
     };
   })(GPUCommandEncoder.prototype.beginComputePass);
 
-  GPUCommandEncoder.prototype.beginRenderPass = (function(origFn) {
-    return function(desc = {}) {
+  GPUCommandEncoder.prototype.beginRenderPass = (function (origFn) {
+    return function (desc = {}) {
       const result = origFn.call(this, desc);
       result.state = {
         bindGroups: [],
@@ -28,8 +28,8 @@ if (typeof GPUDevice !== 'undefined') {
     };
   })(GPUCommandEncoder.prototype.beginRenderPass);
 
-  GPUDevice.prototype.createRenderBundle = (function(origFn) {
-    return function(desc = {}) {
+  GPUDevice.prototype.createRenderBundle = (function (origFn) {
+    return function (desc = {}) {
       const result = origFn.call(this, desc);
       result.state = {
         bindGroups: [],
@@ -55,21 +55,21 @@ if (typeof GPUDevice !== 'undefined') {
   });
 
   for (const api of [GPURenderPassEncoder, GPURenderBundleEncoder]) {
-    addStateWrapper(GPURenderPassEncoder, 'setPipeline', (state, pipeline) => {
+    addStateWrapper(api, 'setPipeline', (state, pipeline) => {
       state.pipeline = pipeline;
     });
 
-    addStateWrapper(GPURenderPassEncoder, 'setBindGroup', (state, group, bindGroup, ...args) => {
+    addStateWrapper(api, 'setBindGroup', (state, group, bindGroup, ...args) => {
       if (args.length === 0) {
         state.bindGroups[group] = { bindGroup };
       } else if (args.length === 1) {
         state.bindGroups[group] = { bindGroup, dynamicOffsets: args[0] };
       } else {
         state.bindGroups[group] = {
-          bindGroup, 
+          bindGroup,
           dynamicOffsetsData: args[0],
           dynamicOffsetsDataStart: args[1],
-          dynamicOffsetsDataLength: args[2],      
+          dynamicOffsetsDataLength: args[2],
          };
       }
     });
@@ -102,11 +102,11 @@ if (typeof GPUDevice !== 'undefined') {
   addStateWrapper(GPURenderPassEncoder, 'beginOcclusionQuery', (state, ...args) => {
     state.queryIndex = args[0];
   });
- 
-  addStateWrapper(GPURenderPassEncoder, 'endOcclusionQuery', (state, ...args) => {
+
+  addStateWrapper(GPURenderPassEncoder, 'endOcclusionQuery', (state, /*...args*/) => {
     delete state.queryIndex;
   });
- 
+
 }
 
 document.currentScript?.remove();

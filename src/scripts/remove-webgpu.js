@@ -208,7 +208,7 @@ if (navigator.gpu) {
     'GPUOrigin3D;',
     'GPUExtent3DDict',
     'GPUExtent3DDict)',
-    'GPUExtent3D;'
+    'GPUExtent3D;',
   ].forEach(k => {
     delete globalThis[k];
   });

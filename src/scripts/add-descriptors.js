@@ -1,25 +1,25 @@
 if (typeof GPUDevice !== 'undefined') {
   console.log('webgpu-dev-extension: add-descriptors');
-  function addDescriptorWrapper(API, fnName) {
+  const addDescriptorWrapper = function (API, fnName) {
     const origFn = API.prototype[fnName];
     API.prototype[fnName] = function (desc) {
       const result = origFn.call(this, desc);
       result.description = {...desc};
       return result;
     };
-  }
+  };
 
-  function addDescriptorWrapperAsync(API, fnName) {
+  const addDescriptorWrapperAsync = function (API, fnName) {
     const origFn = API.prototype[fnName];
     API.prototype[fnName] = async function (desc) {
       const result = await origFn.call(this, desc);
       result.description = {...desc};
       return result;
     };
-  }
+  };
 
-  addDescriptorWrapper(GPUCommandEncoder, 'beginRenderPass')
-  addDescriptorWrapper(GPUCommandEncoder, 'beginComputePass')
+  addDescriptorWrapper(GPUCommandEncoder, 'beginRenderPass');
+  addDescriptorWrapper(GPUCommandEncoder, 'beginComputePass');
 
   addDescriptorWrapper(GPUDevice, 'createBindGroup');
   addDescriptorWrapper(GPUDevice, 'createBindGroupLayout');
@@ -34,8 +34,8 @@ if (typeof GPUDevice !== 'undefined') {
   addDescriptorWrapper(GPUDevice, 'createShaderModule');
   addDescriptorWrapper(GPUDevice, 'importExternalTexture');
 
-  GPUTexture.prototype.createView = (function(origFn) {
-    return function(desc = {}) {
+  GPUTexture.prototype.createView = (function (origFn) {
+    return function (desc = {}) {
       const view = origFn.call(this, desc);
       view.description = {
         ...desc,

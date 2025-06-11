@@ -3,6 +3,7 @@ import { rafCallbackWhenDevicesExist } from '../lib/raf.js';
 
 /* eslint-disable no-inner-declarations */
 if (typeof GPUDevice !== 'undefined') {
+  console.log('webgpu-dev-extension: show-call-counts');
   const s_counts = new Map<string, number>();
 
   function addCount(name: string) {

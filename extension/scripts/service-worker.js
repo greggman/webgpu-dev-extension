@@ -45,10 +45,6 @@
       injectScript('scripts/gpu-injected.js');
     }
 
-    if (settings.compat) {
-      injectScript('scripts/webgpu-compat-validation.js');
-    }
-
     if (settings.customFormatters) {
       injectScript('scripts/custom-formatters.js');
     }

@@ -1,9 +1,9 @@
 if (typeof GPUAdapter !== 'undefined') {
-  const log = (...args) => {
+  const log = (/*...args*/) => {
     // console.log(...args);
   };
 
-  const settingsPromise = new Promise((resolve, reject) => {
+  const settingsPromise = new Promise((resolve) => {
     document.addEventListener('webgpu-dev-extension-settings', (event) => {
       // Handle data from event.detail
       log('got special event:', event);
@@ -33,7 +33,7 @@ if (typeof GPUAdapter !== 'undefined') {
         }
       }
       return false;
-    }
+    };
     return isBlocked;
   }
 

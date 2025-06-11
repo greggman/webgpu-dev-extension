@@ -43,7 +43,7 @@ class Slider extends Control {
       min,
       max,
       step: step || '1',
-      type: 'range', 
+      type: 'range',
       value: obj[prop],
       onInput: () => {
         obj[prop] = parseFloat(this.value);
@@ -51,8 +51,8 @@ class Slider extends Control {
         this.changed();
       },
     });
-    this.labelElem = el('label', {for: id, textContent: prop}),
-    this.valueElem = el('div',{textContent: obj[prop]}),
+    this.labelElem = el('label', {for: id, textContent: prop});
+    this.valueElem = el('div', {textContent: obj[prop]});
     this.elem.classList.add('slider');
     this.elem.appendChild(this.inputElem);
     this.elem.appendChild(this.labelElem);
@@ -71,15 +71,15 @@ class Checkbox extends Control {
     super(obj, prop);
     const id = getId();
     this.inputElem = el('input', {
-      id, 
-      type: 'checkbox', 
+      id,
+      type: 'checkbox',
       checked: obj[prop],
       onChange: () => {
         obj[prop] = this.inputElem.checked;
         this.changed();
       },
     });
-    this.labelElem = el('label', {for: id, textContent: prop}),
+    this.labelElem = el('label', {for: id, textContent: prop});
     this.elem.classList.add('checkbox');
     this.elem.appendChild(this.inputElem);
     this.elem.appendChild(this.labelElem);
@@ -98,10 +98,11 @@ class Radio extends Control {
         ? options.map((a, i) => [a, i])
         : Object.entries(options));
     this._valueToInputMap = new Map();
-    const sharedName = getId();
-    const div = el('div', {className: 'radio'}, [...options].map(([name, value]) => {
+    //const sharedName = getId();
+    const div = el('div', {className: 'radio'}, [...options].map((/*[name, value]*/) => {
 
       throw new Error('on change need fix');
+      /*
       const id = getId();
       const input = el('input', {
         name: sharedName,
@@ -118,6 +119,7 @@ class Radio extends Control {
         input,
         el('label', {for: id, textContent: name}),
       ]);
+      */
     }));
     this.elem.appendChild(div);
   }
@@ -130,7 +132,7 @@ class Radio extends Control {
 }
 
 class Text extends Control {
-  constructor(obj, prop, options) {
+  constructor(obj, prop/*, options*/) {
     super(obj, prop);
 
     this.inputElem = el('input', {
@@ -172,7 +174,7 @@ class TextNumber extends Control {
         this.changed();
       },
     });
-    this.labelElem = el('label', {for: id, textContent: prop}),
+    this.labelElem = el('label', {for: id, textContent: prop});
     this.elem.appendChild(this.inputElem);
     this.elem.appendChild(this.labelElem);
   }
@@ -187,7 +189,7 @@ class TextNumber extends Control {
 }
 
 class TextArea extends Control {
-  constructor(obj, prop, options) {
+  constructor(obj, prop/*, options*/) {
     super(obj, prop);
 
     this.textarea = el('textarea', {
@@ -228,12 +230,11 @@ class MultiSelect extends Control {
           obj[prop].push(k);
         }
       }
-    }
+    };
 
     const div = el('fieldset', {className: 'text'}, [
       el('legend', {textContent: prop}),
-      ...Object.keys(settings).map(k =>
-        new Checkbox(settings, k).onChange(update).elem)
+      ...Object.keys(settings).map(k => new Checkbox(settings, k).onChange(update).elem),
     ]);
 
     this.elem.appendChild(div);
@@ -259,7 +260,7 @@ class Select extends Control {
     }, options.map((v, i) => {
       const [value, label] = Array.isArray(v) ? v : [v, v];
       return el('option', {selected: value === obj[prop], value: i, textContent: label});
-    })),
+    }));
 
     this.labelElem = el('label', {/*for: id,*/ textContent: prop});
     this.elem.classList.add('select');
@@ -268,7 +269,7 @@ class Select extends Control {
   }
   set(v) {
     super.set(v);
-    const ndx = Math.max(0, this.options.findIndex(vv => v === Array.isArray(v) ? v[0] : v));
+    const ndx = Math.max(0, this.options.findIndex(v => v === Array.isArray(v) ? v[0] : v));
     this.selectElem.selectedIndex = ndx;
   }
 }
@@ -296,7 +297,7 @@ function createControl(obj, prop, a1, a2, a3) {
       if (typeof a3 === 'number') {
         step = a3;
       }
-      return new Slider(obj, prop, min, max, step)
+      return new Slider(obj, prop, min, max, step);
     }
   } else if (typeof v === 'string') {
     if (Array.isArray(a1)) {
@@ -304,9 +305,8 @@ function createControl(obj, prop, a1, a2, a3) {
     } else {
       return new Text(obj, prop);
     }
-  } else {
-    throw new Error('unhandled type');
   }
+  throw new Error('unhandled type');
 }
 
 export class GUI {
