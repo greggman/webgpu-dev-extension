@@ -66,8 +66,7 @@
         GPUDevice.prototype.destroy = (function (origFn) {
             return function () {
                 origFn.call(this);
-                const device = this;
-                const ndx = s_deviceRefs.findIndex(ref => ref.deref() === device);
+                const ndx = s_deviceRefs.findIndex(ref => ref.deref() === this);
                 s_deviceRefs.splice(ndx, 0);
                 update();
             };
@@ -108,6 +107,7 @@
 
     /* eslint-disable no-inner-declarations */
     if (typeof GPUDevice !== 'undefined') {
+        console.log('webgpu-dev-extension: show-call-counts');
         const s_counts = new Map();
         function addCount(name) {
             s_counts.set(name, (s_counts.get(name) ?? 0) + 1);

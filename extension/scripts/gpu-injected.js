@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  (function() {
+  (function () {
     if (typeof GPU === 'undefined') {
       return;
     }
@@ -35,7 +35,7 @@
     const oldProto = Worker.prototype;
     Worker = function(...args) {
       console.log('worker-------:', ...args);
-      return new oldClass(...args); 
+      return new oldClass(...args);
     };
     Worker.prototype = oldProto;
     Worker.prototype.constructor = Worker;

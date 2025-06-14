@@ -3,10 +3,12 @@
   'use strict';
 
   if (typeof GPUDevice !== 'undefined') {
+    console.log('webgpu-dev-extension: show-calls');
+
     function addShowWrapper(API, apiName, methodName, origFn) {
       const name = `${apiName}.${methodName}`;
       // Set disable (in devtools) to true to disable this specific method breakpoint
-      API.prototype[methodName] = function(...args) {
+      API.prototype[methodName] = function (...args) {
         console.log(name);
         return origFn.call(this, ...args);
       };
@@ -31,7 +33,7 @@
       const apiName = API.prototype.constructor.name;
       const prototype = API.prototype;
       const methodNames = Object.entries(Object.getOwnPropertyDescriptors(prototype))
-          .filter(([k, v]) => v.writable && v.enumerable && v.configurable && typeof v.value === 'function')
+          .filter(([, v]) => v.writable && v.enumerable && v.configurable && typeof v.value === 'function')
           .map(([k]) => k);
       for (const name of methodNames) {
         addShowWrapper(API, apiName, name, API.prototype[name]);

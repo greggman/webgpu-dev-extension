@@ -43,6 +43,7 @@
         }
       }
     }
+
     const origRequestAdapter = GPU.prototype.requestAdapter;
     const origRequestDevice = GPUAdapter.prototype.requestDevice;
 
@@ -53,13 +54,13 @@
         const tempDevice = await origRequestDevice.call(tempAdapter);
         defaultLimits = objLikeToObj(tempDevice.limits);
         tempDevice.destroy();
-      } catch (e) {
+      } catch {
         //
       }
       return defaultLimits;
     }
 
-    GPU.prototype.requestAdapter = async function(desc = {}) {
+    GPU.prototype.requestAdapter = async function (desc = {}) {
       const limits = await getDefaultLimits(desc);
       const adapter = await origRequestAdapter.call(this, desc);
       if (adapter && limits) {
@@ -68,7 +69,7 @@
       return adapter;
     };
 
-    GPUAdapter.prototype.requestDevice = async function(desc = {}) {
+    GPUAdapter.prototype.requestDevice = async function (desc = {}) {
       enforceDefaultLimits(this, desc);
       return await origRequestDevice.call(this, desc);
     };

@@ -3,6 +3,8 @@
   'use strict';
 
   if (typeof GPUAdapter !== 'undefined') {
+    console.log('webgpu-dev-extension: custom-formatters');
+
     const expandStyle = {style: 'list-style-type: none; margin: 0; padding-left: 24px;'};
 
     const headerConfig = {
@@ -17,7 +19,7 @@
           ...props.flatMap(v => [', ', v]).slice(1),
           '}',
         ];
-      }
+      },
     };
 
     const bodyConfig = {
@@ -29,7 +31,7 @@
         return [
           'ol', expandStyle, ...props,
         ];
-      }
+      },
     };
 
     function getJsonML(object, config) {
@@ -82,7 +84,7 @@
       ];
     }
 
-    function getSetAsArrayJsonML(value, config) {
+    function getSetAsArrayJsonML(value) {
       const array = [...value.values()].sort();
       return ['object', {object: array}];
     }
@@ -130,7 +132,7 @@
       body: {
         ...bodyConfig,
         propertyFormatters: gpuBufferPropertyFormatters,
-      }
+      },
     };
 
     const gpuTextureConfig = {
@@ -141,7 +143,7 @@
       body: {
         ...bodyConfig,
         propertyFormatters: gpuTexturePropertyFormatters,
-      }
+      },
     };
 
     const gpuHeapPropertyConfig = {
@@ -152,7 +154,7 @@
       body: {
         ...bodyConfig,
         propertyFormatters: gpuHeapPropertyFormatters,
-      }
+      },
     };
 
     const gpuAdapterConfig = {
@@ -163,7 +165,7 @@
       body: {
         ...bodyConfig,
         propertyFormatters: gpuAdapterPropertyFormatters,
-      }
+      },
     };
 
     const gpuDeviceConfig = {
@@ -174,7 +176,7 @@
       body: {
         ...bodyConfig,
         propertyFormatters: gpuDevicePropertyFormatters,
-      }
+      },
     };
 
     function getConfig(object) {

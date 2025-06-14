@@ -2,11 +2,9 @@
 (function () {
   'use strict';
 
-  function log(...args) {
+  function log(/*...args*/) {
     // console.log(...args);
   }
-
-  log('hello from service-worker.js');
 
   function getContentScripts(settings) {
     settings = settings ?? {};
@@ -43,6 +41,10 @@
     if (settings.capture) {
       injectScript('scripts/webgpu_recorder.js');
       injectScript('scripts/gpu-injected.js');
+    }
+
+    if (settings.compat) {
+      injectScript('scripts/webgpu-compat-validation.js');
     }
 
     if (settings.customFormatters) {
@@ -119,10 +121,7 @@
 
   const commands = {
     async registerScripts({tabId, settings}) {
-      log('tabId:', tabId);
       await chrome.scripting.unregisterContentScripts();
-
-      log('registering scripts');
       const scripts = getContentScripts(settings);
       if (scripts.length) {
         log(scripts.map(s => `  ${s}`).join('\n'));
@@ -145,27 +144,18 @@
         ], () => {
           if (chrome.runtime.lastError) {
             console.error('Error registering content script:', chrome.runtime.lastError);
-          } else {
-            log('Content script registered successfully!');
           }
         });
-      } else {
-        log('no scripts');
       }
     },
     async getSettings(data, sender, sendResponse) {
       const keys = await chrome.storage.session.get(['webgpu-dev-extension-settings']);
-      log(keys);
       const settings = (keys && keys['webgpu-dev-extension-settings']) ?? {};
-      log(settings);
       sendResponse(settings);
     },
   };
 
-  log('addListener in service-worker.js');
-
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    log('got message from popup', msg);
     const {cmd, data} = msg;
     const fn = commands[cmd];
     if (!fn) {
@@ -173,7 +163,6 @@
       return;
     }
     fn(data, sender, sendResponse);
-    return true;
   });
 
 })();

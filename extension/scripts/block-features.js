@@ -4,7 +4,7 @@
 
   if (typeof GPUAdapter !== 'undefined') {
 
-    const settingsPromise = new Promise((resolve, reject) => {
+    const settingsPromise = new Promise((resolve) => {
       document.addEventListener('webgpu-dev-extension-settings', (event) => {
         resolve(event.detail);
       }, { once: true });

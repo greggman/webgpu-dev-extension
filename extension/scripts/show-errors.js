@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    /* show-errors@0.2.2, license MIT */
+    /* show-errors@0.2.3, license MIT */
     (function (factory) {
         typeof define === 'function' && define.amd ? define(factory) :
         factory();

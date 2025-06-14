@@ -3,18 +3,12 @@
   'use strict';
 
   if (typeof GPUDevice !== 'undefined') {
-    const log = (...args) => {
-      //  console.log(...args);
-    };
 
-    const settingsPromise = new Promise((resolve, reject) => {
+    const settingsPromise = new Promise((resolve) => {
       document.addEventListener('webgpu-dev-extension-settings', (event) => {
-        // Handle data from event.detail
-        log('got special event:', event);
         setBreakpoints(event.detail);
         resolve(event.detail);
       }, { once: true });
-      log('sent message');
       document.dispatchEvent(new CustomEvent('webgpu-dev-extension-event', {
         detail: {
           cmd: 'getSettings',
@@ -56,11 +50,10 @@
     // This is called when the event with our settings arrives
     // which is after user code has started. But, we'll pause
     // when they ask for an adapter, wait for that event, then call this
-    // before returning the adapter (see requestAdapter) 
+    // before returning the adapter (see requestAdapter)
     function setBreakpoints(settings) {
       const breakpointStrings = (settings.breakpoints || '').split(/[,\s]+/).map(v => v.trim());
       const breakpointREs = breakpointStrings.map(v => new RegExp(`^${v.replaceAll('.', '\\.').replaceAll('*', '.*')}$`));
-      log(breakpointREs);
       function needsWrap(methodName) {
         for (const re of breakpointREs) {
           if (re.test(methodName)) {
@@ -80,8 +73,9 @@
     // pull out functions before we get a change to wrap them.
     function addBreakpointWrapper(id, API, methodName, origFn) {
       // Set disable (in devtools) to true to disable this specific method breakpoint
-      API.prototype[methodName] = function(...args) {
+      API.prototype[methodName] = function (...args) {
         if (s_breakpointIds.has(id) && true) {
+          // eslint-disable-next-line no-debugger
           debugger;
         }
         return origFn.call(this, ...args);
@@ -91,9 +85,7 @@
 
     GPU.prototype.requestAdapter = (function (origFn) {
       return async function (desc) {
-        log('waiting for settings');
         await settingsPromise;
-        log('got settings');
         const adapter = await origFn.call(this, desc);
         return adapter;
       };

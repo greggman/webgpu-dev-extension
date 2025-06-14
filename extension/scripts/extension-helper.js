@@ -6,7 +6,7 @@
 
     let settingsPromise;
 
-    document.addEventListener('webgpu-dev-extension-event', async (e) => {
+    document.addEventListener('webgpu-dev-extension-event', async () => {
       settingsPromise = settingsPromise ?? new Promise(resolve => {
         chrome.runtime.sendMessage({cmd: 'getSettings'}, (response) => {
           resolve(response);

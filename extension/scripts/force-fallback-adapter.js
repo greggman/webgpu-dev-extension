@@ -4,8 +4,8 @@
 
   if (typeof GPU !== 'undefined') {
     console.log('webgpu-dev-extension: force-fallback-adapter');
-    GPU.prototype.requestAdapter = (function(origFn) {
-      return async function(desc = {}) {
+    GPU.prototype.requestAdapter = (function (origFn) {
+      return async function (desc = {}) {
         const adapter = await origFn.call(this, {...desc, forceFallbackAdapter: true});
         if (adapter) {
           try {

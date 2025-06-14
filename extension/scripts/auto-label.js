@@ -13,7 +13,7 @@
       API.prototype[fnName] = function (_desc) {
         const desc = {
           label: `${prefix}${++count}`,
-          ..._desc || {}
+          ..._desc || {},
         };
         return origFn.call(this, desc);
       };
@@ -39,8 +39,8 @@
 
     {
       const textureToViewCount = new WeakMap();
-      GPUTexture.prototype.createView = (function(origFn) {
-        return function(_desc) {
+      GPUTexture.prototype.createView = (function (origFn) {
+        return function (_desc) {
           const count = (textureToViewCount.get(this) || 0) + 1;
           textureToViewCount.set(this, count);
           const desc = {
@@ -55,8 +55,8 @@
 
     {
       let count = 0;
-      GPUCanvasContext.prototype.getCurrentTexture = (function(origFn) {
-        return function(...args) {
+      GPUCanvasContext.prototype.getCurrentTexture = (function (origFn) {
+        return function (...args) {
           const texture = origFn.call(this, ...args);
           if (texture.label === '') {
             texture.label = `canvasTexture${++count}[${this.canvas.id || ''}]`;

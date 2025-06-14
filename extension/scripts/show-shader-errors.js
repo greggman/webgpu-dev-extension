@@ -3,8 +3,9 @@
   'use strict';
 
   if (typeof GPUDevice !== 'undefined') {
+    console.log('webgpu-dev-extension: show-shader-errors');
 
-    const showError = async function(module, code, stack) {
+    const showError = async function (module, code, stack) {
       const info = await module.getCompilationInfo();
       const lines = code.split('\n');
       const messages = [...info.messages];
@@ -27,8 +28,8 @@
       console.error(lines.join('\n'));
     };
 
-    GPUDevice.prototype.createShaderModule = (function(origFn) {
-      return function(desc = {}) {
+    GPUDevice.prototype.createShaderModule = (function (origFn) {
+      return function (desc = {}) {
         const code = desc.code;
         const stack = new Error();
         this.pushErrorScope('validation');

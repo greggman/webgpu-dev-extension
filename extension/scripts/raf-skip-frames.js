@@ -3,18 +3,17 @@
   'use strict';
 
   {
+    console.log('webgpu-dev-extension: raf-skip-frames');
 
     let settings;
-    {
-      document.addEventListener('webgpu-dev-extension-settings', (event) => {
-        settings = event.detail;
-      }, { once: true });
-      document.dispatchEvent(new CustomEvent('webgpu-dev-extension-event', {
-        detail: {
-          cmd: 'getSettings',
-        },
-      }));
-    }
+    document.addEventListener('webgpu-dev-extension-settings', (event) => {
+      settings = event.detail;
+    }, { once: true });
+    document.dispatchEvent(new CustomEvent('webgpu-dev-extension-event', {
+      detail: {
+        cmd: 'getSettings',
+      },
+    }));
 
     function getRafSkipFrames() {
       return settings?.rafSkipFrames ?? 0;
@@ -31,6 +30,7 @@
     let currentId = 0;
     let callbacks = new Map();
     let processingCallbacks = new Map();
+
     function process(time) {
       currentId = 0;
       --frameCount;
@@ -57,8 +57,8 @@
       }
     }
 
-    performance.now = (function(origFn) {
-      return function() {
+    performance.now = (function (origFn) {
+      return function () {
         const now = origFn.call(this) *  getTimeMult();
         return now;
       };
@@ -67,30 +67,30 @@
     // I'm not sure if this is a good idea or not. I've seen apps that user
     // Date.now for animation. One issue those is `Date.now()` will not match
     // `new Date().valueOf()`
-    Date.now = (function(origFn) {
-      return function() {
+    Date.now = (function (origFn) {
+      return function () {
         const now = origFn.call(this) - (performance.now() | 0);
         //console.log('Date.now():', now);
         return now;
       };
     })(Date.now);
 
-    window.setTimeout = (function(origFn) {
-      return function(callback, duration, ...args) {
+    window.setTimeout = (function (origFn) {
+      return function (callback, duration, ...args) {
         const d = (duration ?? 0) *  getTimeMult();
         return origFn.call(this, callback, d, ...args);
       };
     })(window.setTimeout);
 
-    window.setInterval = (function(origFn) {
-      return function(callback, duration, ...args) {
+    window.setInterval = (function (origFn) {
+      return function (callback, duration, ...args) {
         const d = (duration ?? 0) *  getTimeMult();
         return origFn.call(this, callback, d, ...args);
       };
     })(window.setInterval);
 
-    window.requestAnimationFrame = (function(origFn) {
-      return function(callback) {
+    window.requestAnimationFrame = (function (origFn) {
+      return function (callback) {
         ++id;
         callbacks.set(id, callback);
         if (!currentId) {
@@ -100,8 +100,8 @@
       };
     })(window.requestAnimationFrame);
 
-    window.cancelAnimationFrame = (function(origFn) {
-      return function(id) {
+    window.cancelAnimationFrame = (function () {
+      return function (id) {
         callbacks.delete(id);
         processingCallbacks.delete(id);
       };
