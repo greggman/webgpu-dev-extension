@@ -1,6 +1,6 @@
 {
   "name": "webgpu-dev-extension",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "",
   "type": "module",
   "scripts": {
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "webgpu-avoid-redundant-state-setting": "^0.0.1",
+    "webgpu-debug-helper": "^0.2.8",
     "webgpu-memory": "^1.5.3",
     "webgpu-utils": "^1.10.3"
   }
