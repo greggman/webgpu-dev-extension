@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    /* show-errors@0.2.3, license MIT */
+    /* show-errors@0.2.8, license MIT */
     (function (factory) {
         typeof define === 'function' && define.amd ? define(factory) :
         factory();
@@ -14,6 +14,7 @@
             const deviceToErrorScopeStack = new WeakMap();
             const origPushErrorScope = GPUDevice.prototype.pushErrorScope;
             const origPopErrorScope = GPUDevice.prototype.popErrorScope;
+            const passToEncoderMap = new WeakMap();
             function errorWrapper(device, fnName, origFn, ...args) {
                 const stack = new Error();
                 origPushErrorScope.call(device, 'validation');
@@ -57,6 +58,21 @@
                 this.popDebugGroup();
                 return result;
             }
+            function pushDebugGroupWrapper(device, fnName, origFn, ...args) {
+                this.pushDebugGroup(`${fnName}:\n${new Error().stack}`);
+                const result = origFn.call(this, ...args);
+                passToEncoderMap.set(result, this);
+                return result;
+            }
+            function popDebugGroupWrapper(device, fnName, origFn, ...args) {
+                const result = origFn.call(this, ...args);
+                const encoder = passToEncoderMap.get(this);
+                if (encoder) {
+                    passToEncoderMap.delete(this);
+                    encoder.popDebugGroup();
+                }
+                return result;
+            }
             function addErrorWrapper(api, fnName) {
                 const origFn = api.prototype[fnName];
                 api.prototype[fnName] = function (...args) {
@@ -74,6 +90,18 @@
                 const origFn = api.prototype[fnName];
                 api.prototype[fnName] = function (...args) {
                     return debugGroupWrapper.call(this, this, fnName.toString(), origFn, ...args);
+                };
+            }
+            function addPushDebugGroupWrapper(api, fnName) {
+                const origFn = api.prototype[fnName];
+                api.prototype[fnName] = function (...args) {
+                    return pushDebugGroupWrapper.call(this, this, fnName.toString(), origFn, ...args);
+                };
+            }
+            function addPopDebugGroupWrapper(api, fnName) {
+                const origFn = api.prototype[fnName];
+                api.prototype[fnName] = function (...args) {
+                    return popDebugGroupWrapper.call(this, this, fnName.toString(), origFn, ...args);
                 };
             }
             /**
@@ -97,7 +125,14 @@
                     .forEach(n => addErrorWrapperWithDevice(GPUQueue, n));
             }
             {
-                const skip = new Set(['pushDebugGroup', 'popDebugGroup', 'finish', 'end']);
+                const skip = new Set([
+                    'pushDebugGroup',
+                    'popDebugGroup',
+                    'finish',
+                    'end',
+                    'beginComputePass',
+                    'beginRenderPass',
+                ]);
                 getAPIFunctionNames(GPUCommandEncoder)
                     .filter(n => !skip.has(n))
                     .forEach(n => addDebugGroupWrapper(GPUCommandEncoder, n));
@@ -110,6 +145,10 @@
                 getAPIFunctionNames(GPURenderBundleEncoder)
                     .filter(n => !skip.has(n))
                     .forEach(n => addDebugGroupWrapper(GPURenderBundleEncoder, n));
+                addPushDebugGroupWrapper(GPUCommandEncoder, 'beginComputePass');
+                addPushDebugGroupWrapper(GPUCommandEncoder, 'beginRenderPass');
+                addPopDebugGroupWrapper(GPUComputePassEncoder, 'end');
+                addPopDebugGroupWrapper(GPURenderPassEncoder, 'end');
             }
             GPUDevice.prototype.pushErrorScope = (function (origFn) {
                 return function (filter) {
