@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    /* webgpu-debug-helper@0.2.8, license MIT */
+    /* webgpu-debug-helper@0.2.9, license MIT */
     (function (factory) {
         typeof define === 'function' && define.amd ? define(factory) :
         factory();
@@ -2808,6 +2808,9 @@
                         : 1)),
             };
         }
+        function registerTextureDefaultView(texture) {
+            s_textureViewToDesc.set(texture, reifyTextureViewDescriptor(texture, undefined));
+        }
         let lastDesc;
         wrapFunctionBefore(GPUTexture, 'createView', function ([desc]) {
             lastDesc = desc;
@@ -2823,7 +2826,8 @@
             }
             else if (bindingResource instanceof GPUSampler ||
                 bindingResource instanceof GPUExternalTexture ||
-                bindingResource instanceof GPUBuffer) {
+                bindingResource instanceof GPUBuffer ||
+                bindingResource instanceof GPUTexture) {
                 return bindingResource;
             }
             else {
@@ -2882,6 +2886,9 @@ pipeline.group[${group}] requirements = ${JSON.stringify(bindGroupLayoutDescript
                 if (resource instanceof GPUTextureView) {
                     const texture = s_textureViewToTexture.get(resource);
                     assertNotDestroyed(texture);
+                }
+                else if (resource instanceof GPUTexture) {
+                    assertNotDestroyed(resource);
                 }
                 else {
                     const asBufferBinding = resource;
@@ -3307,6 +3314,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             for (const { binding, resource } of [...desc.entries]) {
                 const r = resource instanceof GPUBuffer ||
                     resource instanceof GPUSampler ||
+                    resource instanceof GPUTexture ||
                     resource instanceof GPUTextureView ||
                     resource instanceof GPUExternalTexture
                     ? resource
@@ -3345,6 +3353,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         wrapFunctionAfter(GPUDevice, 'createTexture', function (texture) {
             assertNotDestroyed(this);
             s_objToDevice.set(texture, this);
+            registerTextureDefaultView(texture);
         });
         wrapFunctionAfter(GPUDevice, 'importExternalTexture', function (externalTexture) {
             s_objToDevice.set(externalTexture, this);
@@ -3510,7 +3519,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
         function validateRenderPassColorAttachment(attachment, slot) {
             const { view, resolveTarget, depthSlice, loadOp } = attachment;
             const renderViewDesc = s_textureViewToDesc.get(view);
-            const renderTexture = s_textureViewToTexture.get(view);
+            const renderTexture = view instanceof GPUTexture ? view : s_textureViewToTexture.get(view);
             const formatInfo = kAllTextureFormatInfo[renderViewDesc.format];
             validateRenderableTextureView(renderTexture, renderViewDesc);
             assert(!!formatInfo.colorRender, () => `format(${renderViewDesc.format}) is not color renderable`);
@@ -3524,7 +3533,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
             }
             if (resolveTarget) {
                 const resolveViewDesc = s_textureViewToDesc.get(resolveTarget);
-                const resolveTexture = s_textureViewToTexture.get(resolveTarget);
+                const resolveTexture = resolveTarget instanceof GPUTexture ? resolveTarget : s_textureViewToTexture.get(resolveTarget);
                 const [tw, th] = logicalMipLevelSpecificTextureExtent(renderTexture, renderViewDesc.baseMipLevel);
                 const [rw, rh] = logicalMipLevelSpecificTextureExtent(resolveTexture, resolveViewDesc.baseMipLevel);
                 assert(tw === rw && th === rh, () => `resolveTarget render extent(${rw}, ${rh}) != view render extent (${tw}, ${th})`);
@@ -3568,7 +3577,7 @@ pipeline is: ${JSON.stringify(pipelineDesc.passLayoutInfo.renderPassLayout, null
                 }
                 ++numAttachments;
                 const { view } = attachment;
-                const texture = s_textureViewToTexture.get(view);
+                const texture = view instanceof GPUTexture ? view : s_textureViewToTexture.get(view);
                 assertNotDestroyed(texture);
                 assert(s_objToDevice.get(texture) === device, 'texture is not from same device as command encoder', [texture, commandEncoder]);
                 const { sampleCount, format } = texture;
@@ -3887,8 +3896,8 @@ bundle is: ${JSON.stringify(bundleDesc.passLayoutInfo.renderPassLayout, null, 2)
             const formatInfo = kAllTextureFormatInfo[src.texture.format];
             const isDepthStencil = !!formatInfo.depth && !!formatInfo.stencil;
             if (isDepthStencil) {
-                assert(src.aspect === 'all', () => `src.aspect must be 'all' when format(${src.texture.format}) is a depth-stencil format`, [src.texture]);
-                assert(dst.aspect === 'all', () => `dst.aspect must be 'all' when format(${dst.texture.format}) is a depth-stencil format`, [dst.texture]);
+                assert(src.aspect === 'all' || !src.aspect, () => `src.aspect must be 'all' when format(${src.texture.format}) is a depth-stencil format`, [src.texture]);
+                assert(dst.aspect === 'all' || !src.aspect, () => `dst.aspect must be 'all' when format(${dst.texture.format}) is a depth-stencil format`, [dst.texture]);
             }
             validateTextureCopyRange(src, copySize);
             validateTextureCopyRange(dst, copySize);
