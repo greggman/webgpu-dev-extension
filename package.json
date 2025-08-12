@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "webgpu-avoid-redundant-state-setting": "^0.0.1",
-    "webgpu-debug-helper": "^0.2.8",
+    "webgpu-debug-helper": "^0.2.9",
     "webgpu-memory": "^1.5.3",
     "webgpu-utils": "^1.10.3"
   }
