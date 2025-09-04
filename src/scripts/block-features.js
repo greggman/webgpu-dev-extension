@@ -1,7 +1,7 @@
 if (typeof GPUAdapter !== 'undefined') {
-  const log = (/*...args*/) => {
-    // console.log(...args);
-  };
+  // eslint-disable-next-line brace-style
+  // const log = (...args) => { console.log(...args); };
+  const log = () => {};
 
   const settingsPromise = new Promise((resolve) => {
     document.addEventListener('webgpu-dev-extension-settings', (event) => {
@@ -20,7 +20,7 @@ if (typeof GPUAdapter !== 'undefined') {
   async function getIsBlocked() {
     const settings = await settingsPromise;
     log('got settings:', settings);
-    const blockFeatureStrings = (settings.blockFeatures || '').split(/[,\s]+/).map(v => v.trim());
+    const blockFeatureStrings = (settings?.blockFeatures ?? '').split(/[,\s]+/).map(v => v.trim());
     const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replaceAll('*', '.*')}$`));
     if (blockFeatureStrings.length > 0) {
       console.log('blocking WebGPU Features:', blockFeatureStrings.join(', '));

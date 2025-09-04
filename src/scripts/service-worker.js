@@ -1,6 +1,5 @@
-function log(/*...args*/) {
-  // console.log(...args);
-}
+// const log = (...args) => { console.log(...args); };
+const log = () => {};
 
 log('hello from service-worker.js');
 
@@ -165,7 +164,7 @@ const commands = {
 log('addListener in service-worker.js');
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  log('got message from popup', msg);
+  log('got message from', sender, 'msg:', msg);
   const {cmd, data} = msg;
   const fn = commands[cmd];
   if (!fn) {
@@ -173,4 +172,5 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return;
   }
   fn(data, sender, sendResponse);
+  return true;  // This is undocumented but you need to return true to use sendResponse asynchronously
 });

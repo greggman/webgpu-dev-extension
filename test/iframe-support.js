@@ -1,4 +1,4 @@
-import { assertEqual, assertTruthy } from './assert.js';
+import { assertDeepEqual, assertTruthy } from './assert.js';
 
 function makeExposedPromise() {
   const p = {};
@@ -24,7 +24,7 @@ export async function testScriptInIFrame(scriptFilename) {
 
   const cmds = {
     result({actual, expected}) {
-      assertEqual(actual, expected);
+      assertDeepEqual(actual, expected);
     },
     end() {
       exposedPromise.resolve();
