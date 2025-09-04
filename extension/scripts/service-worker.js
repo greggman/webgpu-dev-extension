@@ -2,9 +2,8 @@
 (function () {
   'use strict';
 
-  function log(/*...args*/) {
-    // console.log(...args);
-  }
+  // const log = (...args) => { console.log(...args); };
+  const log = () => {};
 
   function getContentScripts(settings) {
     settings = settings ?? {};
@@ -163,6 +162,7 @@
       return;
     }
     fn(data, sender, sendResponse);
+    return true;  // This is undocumented but you need to return true to use sendResponse asynchronously
   });
 
 })();

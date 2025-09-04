@@ -17,7 +17,7 @@
 
     async function getIsBlocked() {
       const settings = await settingsPromise;
-      const blockFeatureStrings = (settings.blockFeatures || '').split(/[,\s]+/).map(v => v.trim());
+      const blockFeatureStrings = (settings?.blockFeatures ?? '').split(/[,\s]+/).map(v => v.trim());
       const blockFeatureREs = blockFeatureStrings.map(v => new RegExp(`^${v.replaceAll('*', '.*')}$`));
       if (blockFeatureStrings.length > 0) {
         console.log('blocking WebGPU Features:', blockFeatureStrings.join(', '));
