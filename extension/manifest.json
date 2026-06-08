@@ -1,6 +1,6 @@
 {
   "name": "WebGPU Dev Extension",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "manifest_version": 3,
   "description": "Provide some features helpful for WebGPU Development",
   "default_locale": "en",
@@ -17,6 +17,7 @@
         "scripts/auto-label.js",
         "scripts/breakpoints.js",
         "scripts/block-features.js",
+        "scripts/check-for-multiple-updates.js",
         "scripts/count-devices.js",
         "scripts/custom-formatters.js",
         "scripts/disable-webgpu.js",
