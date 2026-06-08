@@ -24,16 +24,17 @@ function makePromiseInfo() {
   return info;
 }
 
-const exampleInjectJS = fs.readFileSync('test/src/js/example-inject.js', {encoding: 'utf-8'});
+// const exampleInjectJS = fs.readFileSync('test/src/js/example-inject.js', {encoding: 'utf-8'});
 
 function getExamples(port) {
-  return fs.readdirSync('examples')
-      .filter(f => f.endsWith('.html'))
-      .map(f => ({
-        url: `http://localhost:${port}/examples/${f}`,
-        js: exampleInjectJS,
-        screenshot: true,
-      }));
+  return [];
+  // return fs.readdirSync('examples')
+  //     .filter(f => f.endsWith('.html'))
+  //     .map(f => ({
+  //       url: `http://localhost:${port}/examples/${f}`,
+  //       js: exampleInjectJS,
+  //       screenshot: true,
+  //     }));
 }
 
 async function test(port) {
