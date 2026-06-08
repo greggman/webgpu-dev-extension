@@ -18,7 +18,6 @@ const defaultSettings = {
   showMemory: false,
   showShaderErrors: false,
   showRedundantStateSetting: false,
-  checkForMultipleUpdates: false,
   enforceDefaultLimits: false,
   webgpuDebugHelper: false,
   trackPassState: false,
