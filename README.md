@@ -136,6 +136,37 @@ Given the above code, a simple example might be
 ```
 
 ---
+### Check for Multiple Updates
+
+Turning this on checks if you update a buffer multiple times
+before submit and if so, emits an error.
+
+Example:
+
+```js
+  const encoder = device.createCommandEncoder();
+  const pass = encoder.beginRenderPass(renderPassDesc);
+  pass.setPipeline(somePipeline);
+  pass.setBindGroup(0, someBindGroupThatUsesSomeBuffer);
+  device.queue.writeBuffer(someBuffer, 0, data0ForBuffer);
+  pass.draw(numVertices);
+  device.queue.writeBuffer(someBuffer, 0, data1ForBuffer); // ERROR!?
+  pass.draw(numVertices);
+  pass.end();
+  device.queue.submit([encoder.finish()]);
+```
+
+The code above is most likely an error as it updates the same
+buffer twice.
+
+The actual check this script does is for each buffer, it tracks
+updated to ranges. If an overlapping range is updated it emits
+an error. On `submit`, all the buffers used in that submit have
+their ranges cleared.
+
+It does the same for textures.
+
+---
 ### Show Call Counts
 
 Shows the number of WebGPU calls per `requestAnimationFrame`.

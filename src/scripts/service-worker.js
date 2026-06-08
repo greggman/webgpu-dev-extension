@@ -19,6 +19,10 @@ function getContentScripts(settings) {
     injectScript('scripts/show-redundant-state-setting.js');
   }
 
+  if (settings.checkForMultipleUpdates) {
+    injectScript('scripts/check-for-multiple-updates.js');
+  }
+
   if (settings.enforceDefaultLimits) {
     injectScript('scripts/enforce-default-limits.js');
   }

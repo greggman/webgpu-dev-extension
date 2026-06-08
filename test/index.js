@@ -1,6 +1,7 @@
 /* global mocha */
 import './tests/block-features-test.js';
 import './tests/enforce-default-limits-test.js';
+import './tests/check-for-multiple-updates-test.js';
 
 function main() {
   const settings = typeof window === 'undefined' ? {} : Object.fromEntries(new URLSearchParams(window.location.search).entries());
