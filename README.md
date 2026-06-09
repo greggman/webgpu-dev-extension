@@ -139,7 +139,7 @@ Given the above code, a simple example might be
 ### Check for Multiple Updates
 
 Turning this on checks if you update a buffer multiple times
-before submit and if so, emits an error.
+before submit and if so, emits an error in the console if so.
 
 Example:
 
@@ -157,14 +157,23 @@ Example:
 ```
 
 The code above is most likely an error as it updates the same
-buffer twice.
+buffer twice which means at submit time, the both draw calls
+will see `data1ForBuffer`.
 
 The actual check this script does is for each buffer, it tracks
-updated to ranges. If an overlapping range is updated it emits
+updates to ranges. If an overlapping range is updated it emits
 an error. On `submit`, all the buffers used in that submit have
 their ranges cleared.
 
 It does the same for textures.
+
+Note: Setting a buffer or texture twice is not necessarily an error.
+For example, maybe you clear some buffer at init time and then at
+render time you set it to something more appropriate. You'll get an
+error in this case but it's not actually wrong.
+
+On the other hand, if you see this error on every render or every
+compute then you probably have a bug.
 
 ---
 ### Show Call Counts
