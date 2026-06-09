@@ -2,3 +2,6 @@
 .DS_Store
 node_modules
 extension.zip
+/extension/scripts
+/extension/popup.js
+/extension/popup.js.map
